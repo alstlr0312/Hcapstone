@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorAccent">#D12727</color>
+
+    <color name="main_black">#272727</color>
+    <color name="main_black_dark">#202020</color>
+    <color name="main_red">#D12727</color>
+    <color name="main_red_dark">#AE2828</color>
+    <color name="red_btn_pressed">#7A1D1D</color>
+    <color name="main_gray_dark">#424242</color>
+    <color name="main_gray">#7C7C7C</color>
+    <color name="blue">#0099FF</color>
+
+    <color name="line_red">#871616</color>
+
+    <color name="calender_daily_challenge_color">#7E0000</color>
+    <color name="calender_memo_color">#006042</color>
+    <color name="memo_bg">#D1D1D1</color>
+
+    <color name="posting_bg">#3A3A3A</color>
+
+</resources>
