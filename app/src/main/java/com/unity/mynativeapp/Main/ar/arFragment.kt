@@ -24,8 +24,8 @@ class ArFragment : Fragment() {
         binding = FragmentArBinding.inflate(layoutInflater)
         binding.button3.setOnClickListener {
             isUnityLoaded = true
-            val nextIntent = Intent(context, MainActivity::class.java)
-            startActivity(nextIntent)
+            //val nextIntent = Intent(context, MainActivity::class.java)
+            //startActivity(nextIntent)
         }
         return binding.root
     }

@@ -33,8 +33,8 @@
     <string name="daily_challenge">일일 챌린지</string>
     <string name="register_daily_challenge">일일 챌린지 등록하기</string>
     <string name="health_dairy">운동 일지</string>
-    <string name="aerobic">유산소</string>
-    <string name="anaerobic">무산소</string>
+    <string name="cardio">유산소</string>
+    <string name="weight_training">무산소</string>
     <string name="calendar_monday">월</string>
     <string name="calendar_tuesday">화</string>
     <string name="calendar_wednesday">수</string>
@@ -67,10 +67,10 @@
     <string name="exercise_chest">가슴</string>
     <string name="exercise_shoulder">어깨</string>
     <string name="exercise_lower_body">하체</string>
-    <string name="exercise_biceps">이두근</string>
-    <string name="exercise_triceps">삼두근</string>
-    <string name="exercise_abdominal_muscle">복근</string>
+    <string name="exercise_bicep">이두근</string>
+    <string name="exercise_tricep">삼두근</string>
+    <string name="exercise_abs">복근</string>
     <string name="exercise_etc">기타</string>
-    <string name="exercise_detail_anaerobic">상세 입력 (ex.스쿼드)</string>
-    <string name="exercise_detail_aerobic">상세 입력 (ex.런닝)</string>
+    <string name="exercise_detail_weight_training">상세 입력 (ex.스쿼드)</string>
+    <string name="exercise_detail_cardio">상세 입력 (ex.런닝)</string>
 </resources>
