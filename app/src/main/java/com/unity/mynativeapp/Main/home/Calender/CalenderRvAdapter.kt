@@ -11,26 +11,26 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
-import com.example.capstone.Main.home.homeModels.DayItem
 import com.example.capstone.Main.home.homeModels.HomePageResponse
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryActivity
 import com.unity.mynativeapp.Main.home.HomeFragmentInterface
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
+import kotlin.properties.Delegates
 
-@RequiresApi(Build.VERSION_CODES.O)
 
 class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAdapter.ViewHolder>(),
     HomeFragmentInterface {
 
-    var list = mutableListOf<DayItem>()
+    var list = mutableListOf<CalenderRvItem>()
     var bindingList = mutableListOf<ItemRvCalenderBinding>()
+    lateinit var selectedDayBinding: ItemRvCalenderBinding
+    var selectedDayIdx: Int = -1
 
     inner class ViewHolder(val binding: ItemRvCalenderBinding): RecyclerView.ViewHolder(binding.root){
         init{
             bindingList.add(binding)
         }
-        fun bind(item: DayItem){
+        fun bind(item: CalenderRvItem){
 
             if(item.date == null){
                 binding.tvDay.text = ""
@@ -39,7 +39,8 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
             }
 
             // 선택한 날짜 focus
-            if(item.selected == true){
+            if(item.isSelectedDay == true){
+                selectedDayBinding = binding
                 binding.layoutDay.background = getDrawable(context, R.color.main_gray)
             }else{
                 if(item.date == null){
@@ -49,27 +50,27 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
                 }
             }
 
-            // 일일 챌린지 수행 수치
-            if(item.challenge != null){
-                binding.tvDailyChallenge.visibility = View.VISIBLE
-                binding.tvDailyChallenge.text = item.challenge.toString() + "%"
+            // 일일 운동 수행 퍼센트
+            if(item.percentage != null){
+                binding.tvDailyPercentage.visibility = View.VISIBLE
+                binding.tvDailyPercentage.text = item.percentage.toString() + "%"
             }else{
-                binding.tvDailyChallenge.visibility = View.GONE
+                binding.tvDailyPercentage.visibility = View.GONE
 
             }
 
             // 일지 작성 여부
-            if(item.memo != false){
-                binding.tvMemo.visibility = View.VISIBLE
+            if(item.diary != false){
+                binding.tvDiary.visibility = View.VISIBLE
             }else{
-                binding.tvMemo.visibility = View.GONE
+                binding.tvDiary.visibility = View.GONE
             }
 
 
             binding.layoutDay.setOnClickListener {
 
                 if(item.date != null){
-                    if(item.selected == true){ // 선택된 날짜를 클릭했다면 일지 화면으로 이동
+                    if(item.isSelectedDay == true){ // 선택된 날짜를 클릭했다면 일지 화면으로 이동
                         var intent = Intent(context, DiaryActivity::class.java)
                         var date = "${item.date.year}." + item.date.monthValue.toString().padStart(2,'0') + "." +
                                 item.date.dayOfMonth.toString().padStart(2, '0')
@@ -79,15 +80,22 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
                         // change callender 요청
 
                         // focus ui 변경 (test)
-                        for(i in 0 until bindingList.size){
+                        selectedDayBinding.layoutDay.background = getDrawable(context, R.drawable.shape_edge_gray)
+                        binding.layoutDay.background = getDrawable(context, R.color.main_gray)
+                        selectedDayBinding = binding
+
+                        list[selectedDayIdx].isSelectedDay = false
+                        item.isSelectedDay = true
+
+                        /*for(i in 0 until bindingList.size){
                             if(bindingList[i].tvDay.visibility == View.VISIBLE){
                                 //itemList[i].layoutDay.background = getDrawable(context, R.drawable.shape_edge_gray)
-                                list[i].selected = false
+                                list[i].isSelectedDay = false
                             }
                         }
                         //binding.layoutDay.background = getDrawable(context, R.color.main_gray)
-                        item.selected = true
-                        notifyDataSetChanged()
+                        item.isSelectedDay = true
+                        notifyDataSetChanged()*/
 
 
                         // 서버 연결
@@ -105,13 +113,16 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
 
     override fun onBindViewHolder(holder: CalenderRvAdapter.ViewHolder, position: Int) {
         holder.bind(list[position])
+        if(list[position].isSelectedDay == true){
+            selectedDayIdx = position
+        }
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    fun getListFormView(nList: MutableList<DayItem>){
+    fun getListFormView(nList: MutableList<CalenderRvItem>){
         list = nList
     }
 

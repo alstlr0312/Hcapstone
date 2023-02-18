@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_black"
-    tools:context=".Main.MainActivity">
+    tools:context=".Main.BaseActivity">
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -14,7 +14,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btmNavView"/>
+        app:layout_constraintBottom_toTopOf="@id/btmNavView">
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/iv_add_post"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_add"
+        app:tint="@color/white"
+        android:visibility="gone"
+        android:layout_margin="20dp"
+        app:fabCustomSize="45dp"
+        app:maxImageSize="35dp"
+        app:layout_constraintBottom_toBottomOf="@id/frameLayout"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btmNavView"

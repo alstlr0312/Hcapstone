@@ -15,15 +15,15 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/AppTheme.NoActionBar">
         >
 
         <activity
-            android:name=".Main.home.DailyChallenge.DailyChallengeActivity"
+            android:name=".Main.home.Calender.DiaryActivity"
             android:exported="false" />
         <activity
-            android:name=".Main.home.Calender.Diary.DiaryActivity"
-            android:exported="false" />
+            android:name=".Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity"
+            android:exported="false"/>
         <activity
             android:name=".SignUp.SignUpActivity"
             android:exported="false" />
@@ -51,6 +51,18 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".Main.ar.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:label="@string/app_name"
+            android:name=".Main.ar.MainUnityActivity"
+            android:screenOrientation="fullSensor"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
+            android:hardwareAccelerated="false"
+            android:process=":Unity" />
     </application>
 
 </manifest>

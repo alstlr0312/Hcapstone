@@ -219,8 +219,8 @@
 
     <ImageView
         android:id="@+id/btn_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:src="@drawable/ic_arrow_left"
         android:layout_margin="15dp"
         app:tint="@color/white"

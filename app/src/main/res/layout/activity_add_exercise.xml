@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_black"
+    tools:context=".Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginVertical="13dp"
+            android:src="@drawable/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_todays_exercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/todays_exercise"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_appbar"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_exercise_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_todays_exercise"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <CheckBox
+            android:id="@+id/cb_back"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_back"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/cb_chest"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_chest"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginStart="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintStart_toEndOf="@id/cb_back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/cb_shoulder"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_shoulder"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginStart="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintStart_toEndOf="@id/cb_chest"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/cb_legs"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_legs"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginTop="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintTop_toBottomOf="@id/cb_shoulder"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/cb_abs"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_abs"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginStart="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintStart_toEndOf="@id/cb_legs"
+            app:layout_constraintTop_toTopOf="@id/cb_legs"/>
+
+        <CheckBox
+            android:id="@+id/cb_biceps"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_biceps"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginStart="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintStart_toEndOf="@id/cb_abs"
+            app:layout_constraintTop_toTopOf="@id/cb_abs"/>
+
+
+        <CheckBox
+            android:id="@+id/cb_triceps"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_triceps"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginTop="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintTop_toBottomOf="@id/cb_biceps"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/cb_cardio"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/aerobic"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginStart="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintTop_toTopOf="@id/cb_triceps"
+            app:layout_constraintStart_toEndOf="@id/cb_triceps"/>
+
+        <CheckBox
+            android:id="@+id/cb_etc"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/exercise_etc"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:paddingHorizontal="25dp"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/sel_checkbox_box"
+            android:layout_marginStart="10dp"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintStart_toEndOf="@id/cb_cardio"
+            app:layout_constraintTop_toTopOf="@id/cb_cardio"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_weight_training"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="30dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_exercise_items"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/edt_detail_weight_training_name"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/exercise_detail_weight_training"
+            android:textColorHint="@color/main_gray_dark"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:maxLines="1"
+            android:inputType="text"
+            android:maxLength="10"
+            android:background="@drawable/shape_bg_black_rounded"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <EditText
+            android:id="@+id/edt_reps"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:padding="3dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_bg_black_rounded"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_detail_weight_training_name"/>
+
+        <TextView
+            android:id="@+id/tv_reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reps"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/edt_reps"
+            app:layout_constraintTop_toTopOf="@id/edt_reps"
+            app:layout_constraintBottom_toBottomOf="@id/edt_reps"/>
+
+
+        <TextView
+            android:id="@+id/tv_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="총"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toEndOf="@id/tv_reps"
+            app:layout_constraintTop_toTopOf="@id/tv_reps"
+            app:layout_constraintBottom_toBottomOf="@id/tv_reps"/>
+
+        <EditText
+            android:id="@+id/edt_sets"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textAlignment="center"
+            android:padding="3dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/shape_bg_black_rounded"
+            app:layout_constraintStart_toEndOf="@id/tv_total"
+            app:layout_constraintTop_toTopOf="@id/tv_total"
+            app:layout_constraintBottom_toBottomOf="@id/tv_total"/>
+
+        <TextView
+            android:id="@+id/tv_sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sets"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/edt_sets"
+            app:layout_constraintTop_toTopOf="@id/edt_sets"
+            app:layout_constraintBottom_toBottomOf="@id/edt_sets"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_cardio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="40dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_exercise_items"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_cardio_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 분"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <SeekBar
+            android:id="@+id/seekBar_cardio_time"
+            android:layout_width="280dp"
+            android:layout_height="22dp"
+            android:max="6"
+            android:progress="0"
+            android:thumbOffset="0dp"
+            android:thumb="@drawable/seekbar_cardio_time_thumb"
+            android:progressDrawable="@drawable/seekbar_cardio_time"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="-15dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_cardio_time"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <EditText
+            android:id="@+id/edt_detail_cardio_name"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/exercise_detail_cardio"
+            android:textColorHint="@color/main_gray_dark"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:maxLines="1"
+            android:inputType="text"
+            android:maxLength="10"
+            android:background="@drawable/shape_bg_black_rounded"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seekBar_cardio_time"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/register"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/sel_btn_red_pressed"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

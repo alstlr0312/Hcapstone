@@ -17,10 +17,9 @@
 
     <color name="line_red">#871616</color>
 
-    <color name="calender_daily_challenge_color">#7E0000</color>
-    <color name="calender_memo_color">#006042</color>
+    <color name="calender_note_color">#7E0000</color>
     <color name="memo_bg">#D1D1D1</color>
 
-    <color name="posting_bg">#3A3A3A</color>
+    <color name="posting_bg">#191919</color>
 
 </resources>

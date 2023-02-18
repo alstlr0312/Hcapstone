@@ -1,14 +1,17 @@
-package com.unity.mynativeapp.Main.home.Calender.Diary
-
+package com.unity.mynativeapp.Main.home.Calender
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryPhotoRv.DiaryPhotoRvAdapter
@@ -19,24 +22,26 @@ import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 
 class DiaryActivity : AppCompatActivity() {
     lateinit var binding: ActivityDiaryBinding
-    lateinit var dailyChallengeAdapter: DiaryExerciseRvAdapter
-    lateinit var additionalExerciseAdapter: DiaryExerciseRvAdapter
+    lateinit var exerciseAdapter: DiaryExerciseRvAdapter
     lateinit var photoAdapter: DiaryPhotoRvAdapter
     lateinit var videoAdapter: DiaryPhotoRvAdapter
-    lateinit var addExerciseDialog: AddExerciseDialog
+    lateinit var date: String
+    var firstStart = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDiaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dailyChallengeAdapter = DiaryExerciseRvAdapter(mutableListOf(), this)
-        binding.recyclerViewDailyChallenge.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewDailyChallenge.adapter = dailyChallengeAdapter
+        date = intent.getStringExtra("date").toString()
 
-        additionalExerciseAdapter = DiaryExerciseRvAdapter(mutableListOf(), this)
-        binding.recyclerViewAdditionalExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewAdditionalExercise.adapter = additionalExerciseAdapter
+        // 다이어리 날짜
+        binding.tvDate.text = date
+
+
+        exerciseAdapter = DiaryExerciseRvAdapter(getExerciseList(), this)
+        binding.recyclerViewTodaysExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewTodaysExercise.adapter = exerciseAdapter
 
         photoAdapter = DiaryPhotoRvAdapter(getPhotoList(), this)
         binding.recyclerViewPhotos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -46,30 +51,69 @@ class DiaryActivity : AppCompatActivity() {
         binding.recyclerViewVideos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewVideos.adapter = videoAdapter
 
+        binding.edtMemo.setText("열심히 했다.")
+
         binding.btnBack.setOnClickListener {
             finish()
         }
 
-        binding.tvDate.text = intent.getStringExtra("date")
 
 
-        // 추가 운동 설정
+
+
+        // 운동 추가
         binding.btnAddExercise.setOnClickListener {
-            addExerciseDialog = AddExerciseDialog(this)
-            addExerciseDialog.show()
+            var intent = Intent(this, AddExerciseActivity::class.java)
+            intent.putExtra("date", date)
+            startActivity(intent)
         }
 
-        var challengeList = mutableListOf<DiaryExerciseRvItem>()
-        if(challengeList.size == 0){
-            binding.btnSetDailyChallenge.visibility = View.VISIBLE
-        }else{
-            binding.btnSetDailyChallenge.visibility = View.GONE
+        // 사진 추가
+        binding.btnAddPhoto.setOnClickListener {
+            //openGallery()
         }
+
+        // 영상 추가
+        binding.btnAddVideo.setOnClickListener {
+
+        }
+
+        // 일지 정보가 있을 경우 -> 일지 조회(수정불가)
+        binding.ivEdit.visibility = View.VISIBLE
+        binding.ivSave.visibility = View.GONE
+        binding.edtMemo.isClickable = false
+        binding.btnAddExercise.visibility = View.GONE
+        binding.btnAddPhoto.visibility = View.GONE
+        binding.btnAddVideo.visibility = View.GONE
+            // 운동 완료 체크박스 isClickable = false
+
+        // 일지 정보가 있으며 수정 버튼을 누른 경우 (작성 후 저장 요청)
+        //binding.ivSave.visibility = View.VISIBLE
+        //binding.ivEdit.visibility = View.GONE
+        //binding.edtMemo.isClickable = true
+        //binding.btnAddExercise.visibility = View.VISIBLE
+        //binding.btnAddPhoto.visibility = View.VISIBLE
+        //binding.btnAddVideo.visibility = View.VISIBLE
+
+        // 일지 정보가 없을 경우(작성 후 저장 요청)
+        //binding.ivSave.visibility = View.VISIBLE
+        //binding.ivEdit.visibility = View.GONE
+        //binding.edtMemo.isClickable = true
+        //binding.edtMemo.hint = getString(R.string.please_input)
+        //binding.btnAddExercise.visibility = View.VISIBLE
+        //binding.btnAddPhoto.visibility = View.VISIBLE
+        //binding.btnAddVideo.visibility = View.VISIBLE
+
     }
 
     override fun onResume() {
         super.onResume()
-        overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
+        }
+
+        // 일지 정보 요청
     }
 
     fun getExerciseList(): MutableList<DiaryExerciseRvItem>{
@@ -90,24 +134,5 @@ class DiaryActivity : AppCompatActivity() {
         return list
     }
 
-    inner class AddExerciseDialog(context: Context): Dialog(context){
-
-        override fun create() {
-            super.create()
-
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setContentView(R.layout.dialog_add_exercise)
-            window!!.setBackgroundDrawable(ColorDrawable())
-            window!!.setDimAmount(0.0f)
-        }
-
-        override fun show() {
-            if(!this.isShowing) super.show()
-        }
-
-        override fun dismiss() {
-            if(this.isShowing) super.dismiss()
-        }
-    }
 
 }
