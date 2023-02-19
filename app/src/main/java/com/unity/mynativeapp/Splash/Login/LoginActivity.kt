@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity(){
 
                             Log.d("loginActivity",data.toString())
 
-                            if(data.status == 400){
+                            if(data.status == 401){
                                 runOnUiThread {
                                     Toast.makeText(this@LoginActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
                                 }
@@ -91,6 +91,9 @@ class LoginActivity : AppCompatActivity(){
                                     var edit = sSharedPreferences.edit()
                                     edit.putString(X_ACCESS_TOKEN, data.data.accessToken)
                                     edit.commit()
+                                }
+                                runOnUiThread {
+                                    Toast.makeText(this@LoginActivity, getString(R.string.success_sign_in), Toast.LENGTH_SHORT).show()
                                 }
                                 startActivity(Intent(applicationContext, BaseActivity::class.java))
                                 finish()

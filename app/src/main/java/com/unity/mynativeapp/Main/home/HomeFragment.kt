@@ -1,29 +1,24 @@
 package com.unity.mynativeapp.Main.home
 
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.capstone.Main.home.homeModels.DayItem
 import com.example.capstone.Main.home.homeModels.HomePageResponse
 import com.unity.mynativeapp.Main.home.Calender.CalenderRvAdapter
-import com.unity.mynativeapp.Main.home.DailyChallenge.DailyChallengeActivity
+import com.unity.mynativeapp.Main.home.Calender.CalenderRvItem
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
 import com.unity.mynativeapp.util.LoadingDialog
 import java.time.LocalDate
 import java.time.YearMonth
 
-lateinit var testList: MutableList<DayItem>
+lateinit var testList: MutableList<CalenderRvItem>
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 class HomeFragment : Fragment(), HomeFragmentInterface {
 
     lateinit var binding: FragmentHomeBinding
@@ -50,14 +45,14 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
 
 
-        for(i in 1 until 29){
-            if(i == 5){
+        for(i in 1 until todayDate.lengthOfMonth()+1){
+            if(i == todayDate.dayOfMonth){
                 testList.add(
-                    DayItem(LocalDate.of(2023, 2, i), true, 50, true)
+                    CalenderRvItem(LocalDate.of(2023, todayDate.monthValue, i), true, 50, true)
                 )
             }else{
                 testList.add(
-                    DayItem(LocalDate.of(2023, 2, i), false, 50, true)
+                    CalenderRvItem(LocalDate.of(2023, todayDate.monthValue, i), false, 50, true)
                 )
             }
 
@@ -70,7 +65,6 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         binding.ivPreviousMonth.setOnClickListener {
             selectedDate = selectedDate.minusMonths(1)
             selectedDate.atStartOfDay()
-            // 날짜 변경된 홈화면 요청
 
             calenderRvAdapter.notifyDataSetChanged()
         }
@@ -81,15 +75,6 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
             calenderRvAdapter.notifyDataSetChanged()
         }
 
-
-        // 일일챌린지 설정하기 버튼 이벤트
-        binding.btnSetDailyChallenge.setOnClickListener {
-            var intent = Intent(requireContext(), DailyChallengeActivity::class.java)
-            intent.putExtra("year", selectedDate.year)
-            intent.putExtra("month", selectedDate.monthValue)
-            intent.putExtra("dayOfMonth", selectedDate.dayOfMonth)
-            startActivity(intent)
-        }
 
 
         return binding.root
@@ -108,8 +93,8 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         calenderRvAdapter.notifyDataSetChanged()
     }
 
-    fun setDayList(calender: MutableList<DayItem>): MutableList<DayItem>{
-        var dayList = mutableListOf<DayItem>()
+    fun setDayList(calender: MutableList<CalenderRvItem>): MutableList<CalenderRvItem>{
+        var dayList = mutableListOf<CalenderRvItem>()
 
         var yearMonth = YearMonth.from(selectedDate) // 월
         var length = yearMonth.lengthOfMonth() // 월 길이 (28.30.31)
@@ -119,8 +104,6 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         /*var lastDay = selectedDate.withDayOfMonth(length) // 마지막 날
         var lastDayOfWeek = lastDay.dayOfWeek.value // 마지막 날 요일
-
-
         for(i in 1 until 43){
             if(i <= firstDayOfWeek){
                 if(firstDayOfWeek != 7){
@@ -140,7 +123,6 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
                     dayList.add(CalenderRvItem(date, true, 75, "memo"))
                 }else{
                     dayList.add(CalenderRvItem(date))
-
                 }
             }
         }*/
@@ -151,7 +133,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         }else{
             for(i in 0 until firstDayOfWeek){
-                dayList.add(DayItem())
+                dayList.add(CalenderRvItem())
             }
             dayList.addAll(firstDayOfWeek, calender)
         }
@@ -170,5 +152,3 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
     }
 
 }
-
-

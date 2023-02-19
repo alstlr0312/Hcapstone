@@ -7,6 +7,9 @@
         com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior
     </string>
 
+    <string name="action_settings">Settings</string>
+    <string name="game_view_content_description">Game view</string>
+
 
     <string name="id">아이디</string>
     <string name="password">비밀번호</string>
@@ -28,10 +31,7 @@
     <string name="email_invalied_format">이메일 형식이 옳바르지 않습니다.</string>
     <string name="password_not_same">비밀번호가 일치하지 않습니다.</string>
     <string name="complete_sign_up">회원가입을 완료하였습니다.</string>
-    <string name="action_settings">Settings</string>
-    <string name="game_view_content_description">Game view</string>
-    <string name="daily_challenge">일일 챌린지</string>
-    <string name="register_daily_challenge">일일 챌린지 등록하기</string>
+    <string name="success_sign_in">로그인 성공</string>
     <string name="health_dairy">운동 일지</string>
     <string name="aerobic">유산소</string>
     <string name="anaerobic">무산소</string>
@@ -53,7 +53,7 @@
 
     <string name="diary">일지</string>
     <string name="exercise">운동</string>
-    <string name="additional_exercise">추가 운동</string>
+    <string name="todays_exercise">오늘의 운동</string>
     <string name="memo">메모</string>
     <string name="photo">사진</string>
     <string name="video">동영상</string>
@@ -66,11 +66,19 @@
     <string name="exercise_back">등</string>
     <string name="exercise_chest">가슴</string>
     <string name="exercise_shoulder">어깨</string>
-    <string name="exercise_lower_body">하체</string>
+    <string name="exercise_legs">하체</string>
     <string name="exercise_biceps">이두근</string>
     <string name="exercise_triceps">삼두근</string>
-    <string name="exercise_abdominal_muscle">복근</string>
+    <string name="exercise_abs">복근</string>
     <string name="exercise_etc">기타</string>
-    <string name="exercise_detail_anaerobic">상세 입력 (ex.스쿼드)</string>
-    <string name="exercise_detail_aerobic">상세 입력 (ex.런닝)</string>
+    <string name="exercise_detail_weight_training">상세 입력 (ex.스쿼드)</string>
+    <string name="exercise_detail_cardio">상세 입력 (ex.런닝)</string>
+    <string name="time">시간</string>
+    <string name="minute">분</string>
+    <string name="reps">회/1세트</string>
+    <string name="sets">세트</string>
+
+    <string name="read_more">더보기</string>
+    <string name="read_less">닫기</string>
+
 </resources>

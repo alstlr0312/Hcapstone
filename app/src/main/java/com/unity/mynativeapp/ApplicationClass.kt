@@ -16,9 +16,6 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class ApplicationClass: Application() {
-
-
-
     companion object {
         lateinit var sSharedPreferences: SharedPreferences
 
@@ -27,9 +24,7 @@ class ApplicationClass: Application() {
 
         lateinit var okHttpClient: OkHttpClient
 
-        val API_URL = "http://15.164.98.240:8080/"
-
-
+        val API_URL = "http://43.201.82.205:8080/"
         ////
         lateinit var sRetrofit: Retrofit
 
@@ -45,9 +40,6 @@ class ApplicationClass: Application() {
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
             .build()
-
-
-
         ////
         initRetrofitInstance()
 

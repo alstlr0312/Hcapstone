@@ -3,6 +3,7 @@ package com.unity.mynativeapp.Main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.unity.mynativeapp.Main.ar.ArFragment
 import com.unity.mynativeapp.Main.community.CommunityFragment
 import com.unity.mynativeapp.Main.home.HomeFragment
@@ -30,21 +31,25 @@ class BaseActivity : AppCompatActivity() {
                 R.id.menuHome -> {
                     homeFragment = HomeFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.INVISIBLE
                     true
                 }
                 R.id.menuCommunity -> {
                     communityFragment = CommunityFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, communityFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.VISIBLE
                     true
                 }
                 R.id.menuAr -> {
                     arFragment = ArFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, arFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.INVISIBLE
                     true
                 }
                 R.id.menuMypage -> {
                     mypageFragment = MypageFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mypageFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.INVISIBLE
                     true
                 }
                 else -> false

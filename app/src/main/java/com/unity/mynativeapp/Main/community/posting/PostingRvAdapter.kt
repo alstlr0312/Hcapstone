@@ -40,6 +40,26 @@ class PostingRvAdapter(var list: MutableList<PostingRvItem>, val context: Contex
             binding.tvUsername.text = item.userName
 
             binding.tvPostingTxt.text = item.postingTxt
+            binding.tvReadMoreLess.visibility = View.GONE
+            binding.tvPostingTxt.post{
+                val lineCount = binding.tvPostingTxt.layout.lineCount
+                if(lineCount > 0){
+                    if(binding.tvPostingTxt.layout.getEllipsisCount(lineCount-1) > 0) {
+                        binding.tvReadMoreLess.visibility = View.VISIBLE
+
+                        binding.tvReadMoreLess.setOnClickListener {
+                            if(binding.tvPostingTxt.maxLines == 2){
+                                binding.tvReadMoreLess.text = context.getText(R.string.read_less)
+                                binding.tvPostingTxt.maxLines = Int.MAX_VALUE
+                            }else{
+                                binding.tvReadMoreLess.text = context.getText(R.string.read_more)
+                                binding.tvPostingTxt.maxLines = 2
+                            }
+                        }
+                    }
+                }
+            }
+
 
             binding.tvHeartNum.text = item.heartNum.toString()
             binding.tvCommentNum.text = item.commentNum.toString()
