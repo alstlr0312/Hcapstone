@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-
 import com.unity.mynativeapp.ApplicationClass.Companion.X_ACCESS_TOKEN
 import com.unity.mynativeapp.ApplicationClass.Companion.sSharedPreferences
-
 import com.unity.mynativeapp.Main.BaseActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.Splash.Login.LoginActivity

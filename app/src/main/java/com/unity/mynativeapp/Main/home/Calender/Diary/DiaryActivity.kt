@@ -1,14 +1,10 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary
 
 
-import android.app.Dialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter

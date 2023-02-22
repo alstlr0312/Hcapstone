@@ -1,11 +1,9 @@
 package com.unity.mynativeapp.Main.home
 
 
-import android.content.pm.ApplicationInfo
 import android.util.Log
 import com.example.capstone.Main.home.homeModels.HomePageResponse
 import com.unity.mynativeapp.ApplicationClass
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

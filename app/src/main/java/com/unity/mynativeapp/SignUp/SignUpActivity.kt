@@ -13,7 +13,6 @@ import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.ApplicationClass.Companion.API_URL
 import com.unity.mynativeapp.ApplicationClass.Companion.okHttpClient
 import com.unity.mynativeapp.R
-
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
 import com.unity.mynativeapp.util.LoadingDialog
 import com.unity.mynativeapp.util.hideKeyboard
