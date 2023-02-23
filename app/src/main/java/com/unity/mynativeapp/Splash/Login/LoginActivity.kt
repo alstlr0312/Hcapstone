@@ -8,12 +8,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.ApplicationClass
+import com.unity.mynativeapp.ApplicationClass.Companion.AUTHORIZATION
+import com.unity.mynativeapp.ApplicationClass.Companion.GRANT_TYPE
+import com.unity.mynativeapp.ApplicationClass.Companion.JSON
 import com.unity.mynativeapp.ApplicationClass.Companion.X_ACCESS_TOKEN
+import com.unity.mynativeapp.ApplicationClass.Companion.X_REFRESH_TOKEN
 import com.unity.mynativeapp.ApplicationClass.Companion.sSharedPreferences
 import com.unity.mynativeapp.Main.BaseActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.SignUp.SignUpActivity
-import com.unity.mynativeapp.Splash.LoginResponse
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
 import com.unity.mynativeapp.util.LoadingDialog
 import com.unity.mynativeapp.util.hideKeyboard
@@ -24,11 +27,11 @@ import okhttp3.RequestBody
 import org.json.JSONObject
 import java.io.IOException
 
-val SIGN_IN = "signin"
 
-class LoginActivity : AppCompatActivity(){
+class LoginActivity : AppCompatActivity(), LoginActivityInterface{
     lateinit var binding: ActivityLoginBinding
     lateinit var dialog: LoadingDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +42,12 @@ class LoginActivity : AppCompatActivity(){
         binding.btnLogin.setOnClickListener {
 
 
-            if(binding.edtId.text.toString() == ""){
+            if (binding.edtId.text.toString() == "") {
                 Toast.makeText(this, getString(R.string.please_input_id), Toast.LENGTH_SHORT).show()
-            }else if(binding.edtPassword.text.toString() == ""){
-                Toast.makeText(this, getString(R.string.please_input_password), Toast.LENGTH_SHORT).show()
-            }else{
+            } else if (binding.edtPassword.text.toString() == "") {
+                Toast.makeText(this, getString(R.string.please_input_password), Toast.LENGTH_SHORT)
+                    .show()
+            } else {
 
                 dialog = LoadingDialog(this)
                 dialog.show()
@@ -51,65 +55,13 @@ class LoginActivity : AppCompatActivity(){
                 val id = binding.edtId.text.toString()
                 val pw = binding.edtPassword.text.toString()
 
-                //val postRequest = PostLoginRequest(loginId = id, password = pw)
-                //LoginService(this).tryPostLogin(postRequest)
-
                 // 로그인 요청
                 val data = JSONObject()
                 data.put("loginId", id)
                 data.put("password", pw)
 
-                val requestBody: RequestBody =
-                    RequestBody.create("application/json; charset=utf-8".toMediaType(), data.toString())
+                LoginActivityService(this).tryPostLogin(data.toString())
 
-                val url = ApplicationClass.API_URL + SIGN_IN
-
-                val request = Request.Builder()
-                    .url(url)
-                    .post(requestBody)
-                    .build()
-
-
-                ApplicationClass.okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
-
-                    override fun onResponse(call: Call, response: okhttp3.Response) {
-                        dialog.dismiss()
-
-                        if (response.body != null) {
-                            val body = response.body?.string()
-                            val gson = GsonBuilder().create()
-                            val data = gson.fromJson(body, LoginResponse::class.java)
-
-                            Log.d("loginActivity",data.toString())
-
-                            if(data.status == 401){
-                                runOnUiThread {
-                                    Toast.makeText(this@LoginActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
-                                }
-                            }else if(data.status == 200){
-                                if(data.data?.accessToken != null){
-                                    var edit = sSharedPreferences.edit()
-                                    edit.putString(X_ACCESS_TOKEN, data.data.accessToken)
-                                    edit.commit()
-                                }
-                                runOnUiThread {
-                                    Toast.makeText(this@LoginActivity, getString(R.string.success_sign_in), Toast.LENGTH_SHORT).show()
-                                }
-                                startActivity(Intent(applicationContext, BaseActivity::class.java))
-                                finish()
-                            }
-
-
-                        } else {
-                            Log.d("loginActivity","response body is null")
-                        }
-                    }
-                    override fun onFailure(call: Call, e: IOException) {
-                        dialog.dismiss()
-
-                        Log.d("loginActivity", e.message.toString())
-                    }
-                })
             }
         }
 
@@ -122,5 +74,41 @@ class LoginActivity : AppCompatActivity(){
         }
     }
 
+    override fun onPostLoginSuccess(response: LoginResponse) {
+        dialog.dismiss()
+
+        if(response.status != 200){
+            runOnUiThread {
+                Toast.makeText(this@LoginActivity, response.error, Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            if (response.data?.accessToken != null) {
+                var edit = sSharedPreferences.edit()
+                edit.putString(AUTHORIZATION, response.data.accessToken)
+                edit.putString(X_ACCESS_TOKEN, response.data.accessToken)
+                edit.putString(X_REFRESH_TOKEN, response.data.refreshToken)
+                edit.putString(GRANT_TYPE, response.data.grantType)
+                //
+
+                edit.commit()
+            }
+            runOnUiThread {
+                Toast.makeText(
+                    this@LoginActivity,
+                    getString(R.string.success_sign_in),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            startActivity(Intent(applicationContext, BaseActivity::class.java))
+            finish()
+        }
+    }
+
+    override fun onPostLoginFailure(message: String) {
+        dialog.dismiss()
+        runOnUiThread {
+            Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
 }

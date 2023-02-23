@@ -11,8 +11,9 @@ import com.unity.mynativeapp.Main.community.PostingRvItem
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 
-class PostingRvAdapter(var list: MutableList<PostingRvItem>, val context: Context): RecyclerView.Adapter<PostingRvAdapter.ViewHolder>() {
+class PostingRvAdapter(val context: Context): RecyclerView.Adapter<PostingRvAdapter.ViewHolder>() {
 
+    var itemList = mutableListOf<PostingRvItem>()
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: PostingRvItem){
 
@@ -72,11 +73,15 @@ class PostingRvAdapter(var list: MutableList<PostingRvItem>, val context: Contex
     }
 
     override fun onBindViewHolder(holder: PostingRvAdapter.ViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(itemList[position])
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return itemList.size
+    }
+
+    fun addItem(item: PostingRvItem){
+        itemList.add(item)
     }
 
 }

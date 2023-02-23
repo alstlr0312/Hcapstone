@@ -8,7 +8,11 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.CheckBox
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
+import com.unity.mynativeapp.Main.home.Calender.DiaryActivity
+import com.unity.mynativeapp.Main.home.Calender.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
@@ -16,21 +20,33 @@ import java.time.LocalDate
 
 class AddExerciseActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddExerciseBinding
-    lateinit var date: String
-    var cbList = arrayListOf<CheckBox>()
-    var isCardio = false
+    lateinit var date: String   // 다이어리 날짜
+    var cbList = arrayListOf<CheckBox>()    // 운동 부위 체크박스 리스트
+    var isCardio = false    // 유산소 or 무산소 여부
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddExerciseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        date = intent.getStringExtra("date").toString()
 
-        setCbList()
+        setView()
+        setListener()
+    }
 
+    private fun setView(){
+        date = intent.getStringExtra("date").toString() // 다이어리 날짜
+        setCbList() // 운동 체크박스 리스트 세팅
+
+
+    }
+
+    private fun setListener(){
+
+        // 유산소 시간 설정 seekbar
         binding.seekBarCardioTime.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                var time = p1 * 30
+                var time = p1 * 30 // 30분 간격
                 binding.tvCardioTime.text = "${time} " + getString(R.string.minute)
             }
 
@@ -42,16 +58,68 @@ class AddExerciseActivity : AppCompatActivity() {
 
         })
 
+        // 등록하기
+        binding.btnRegister.setOnClickListener {
+
+            var selectedItem: CheckBox? = null
+            for(cb in cbList){
+                if(cb.isChecked){
+                    selectedItem = cb
+                    break
+                }
+            }
+            if(selectedItem == null){
+                Toast.makeText(this, getString(R.string.please_select_exercise_you_want_register), Toast.LENGTH_SHORT).show()
+            }else{
+                if(isCardio){
+                    val cardioTime = binding.seekBarCardioTime.progress * 30
+                    if(cardioTime == 0){
+                        Toast.makeText(this, getString(R.string.please_set_cardio_time), Toast.LENGTH_SHORT).show()
+                    }else{
+                        val exerciseName = binding.edtDetailCardioName.text.toString()
+                        val reps = 0
+                        val exSetCount = 0
+                        val bodyPart = selectedItem.text.toString()
+
+                        diaryActivity.exerciseAdapter.addItem(
+                            DiaryExerciseRvItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
+                        )
+                        finish()
+                    }
+
+                }else{
+
+                    val exerciseName = binding.edtDetailWeightTrainingName.text.toString()
+                    val reps = binding.edtReps.text.toString()
+                    val exSetCount = binding.edtSets.text.toString()
+                    val bodyPart = selectedItem.text.toString()
+
+                    if(reps == "" || exSetCount == "" || reps.toInt() == 0 || exSetCount.toInt() == 0){
+                        Toast.makeText(this, getString(R.string.please_input_exercise_count), Toast.LENGTH_SHORT).show()
+                    }else{
+                        diaryActivity.exerciseAdapter.addItem(
+                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, 0, bodyPart, false)
+                        )
+                        finish()
+                    }
+                }
+
+            }
+        }
+
+
+        // 키보드 숨기기
         binding.layoutActivity.setOnClickListener {
             this.hideKeyboard()
         }
 
+        // 닫기
         binding.ivClose.setOnClickListener {
             finish()
         }
     }
 
-    fun setCbList(){
+    private fun setCbList(){
         cbList.add(binding.cbBack)
         cbList.add(binding.cbChest)
         cbList.add(binding.cbShoulder)

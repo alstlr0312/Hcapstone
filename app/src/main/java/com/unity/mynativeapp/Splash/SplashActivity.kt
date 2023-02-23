@@ -6,13 +6,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.ApplicationClass
+import com.unity.mynativeapp.ApplicationClass.Companion.AUTHORIZATION
 
-import com.unity.mynativeapp.ApplicationClass.Companion.X_ACCESS_TOKEN
 import com.unity.mynativeapp.ApplicationClass.Companion.sSharedPreferences
+import com.unity.mynativeapp.BaseResponse
 
 import com.unity.mynativeapp.Main.BaseActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.Splash.Login.LoginActivity
+import com.unity.mynativeapp.Splash.Login.LoginActivityService
+import com.unity.mynativeapp.Splash.Login.LoginResponse
+import okhttp3.Call
+import okhttp3.Request
+import okhttp3.RequestBody
+import java.io.IOException
 
 
 class SplashActivity : AppCompatActivity() {
@@ -29,12 +39,14 @@ class SplashActivity : AppCompatActivity() {
 
     fun checkLogin(){
 
-        //sSharedPreferences.edit().remove(X_ACCESS_TOKEN).commit()
+        //sSharedPreferences.edit().remove(AUTHORIZATION).commit()
 
-        if(sSharedPreferences.getString(X_ACCESS_TOKEN, null) != null){
+        if(sSharedPreferences.getString(AUTHORIZATION, null) != null){
             startActivity(Intent(this, BaseActivity::class.java))
         }else{
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
+
 }
+
