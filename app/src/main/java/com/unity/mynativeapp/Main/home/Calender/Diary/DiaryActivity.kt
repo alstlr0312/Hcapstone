@@ -14,7 +14,6 @@ import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryPhotoRv.DiaryPhotoRvI
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 
-
 class DiaryActivity : AppCompatActivity() {
     lateinit var binding: ActivityDiaryBinding
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter
@@ -27,17 +26,13 @@ class DiaryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDiaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         date = intent.getStringExtra("date").toString()
-
         // 다이어리 날짜
+
         binding.tvDate.text = date
-
-
         exerciseAdapter = DiaryExerciseRvAdapter(getExerciseList(), this)
         binding.recyclerViewTodaysExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTodaysExercise.adapter = exerciseAdapter
-
         photoAdapter = DiaryPhotoRvAdapter(getPhotoList(), this)
         binding.recyclerViewPhotos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewPhotos.adapter = photoAdapter
@@ -51,9 +46,6 @@ class DiaryActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             finish()
         }
-
-
-
 
 
         // 운동 추가
