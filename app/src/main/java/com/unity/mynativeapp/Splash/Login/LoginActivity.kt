@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity(), LoginActivityInterface{
                 val id = binding.edtId.text.toString()
                 val pw = binding.edtPassword.text.toString()
 
-                // 로그인 요청
+                // 로그인 요청 (post)
                 val data = JSONObject()
                 data.put("loginId", id)
                 data.put("password", pw)
@@ -82,25 +82,27 @@ class LoginActivity : AppCompatActivity(), LoginActivityInterface{
                 Toast.makeText(this@LoginActivity, response.error, Toast.LENGTH_SHORT).show()
             }
         }else{
-            if (response.data?.accessToken != null) {
-                var edit = sSharedPreferences.edit()
-                edit.putString(AUTHORIZATION, response.data.accessToken)
-                edit.putString(X_ACCESS_TOKEN, response.data.accessToken)
-                edit.putString(X_REFRESH_TOKEN, response.data.refreshToken)
-                edit.putString(GRANT_TYPE, response.data.grantType)
+            if (response.data != null) {
+                var edit = ApplicationClass.sSharedPreferences.edit()
+                edit.putString(ApplicationClass.X_ACCESS_TOKEN, response.data.accessToken)
+                edit.putString(ApplicationClass.X_REFRESH_TOKEN, response.data.refreshToken)
                 //
 
                 edit.commit()
+
+                runOnUiThread {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        getString(R.string.success_sign_in),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                startActivity(Intent(applicationContext, BaseActivity::class.java))
+                finish()
+            }else{
+                Log.d("loginActivity", "response.data is null")
             }
-            runOnUiThread {
-                Toast.makeText(
-                    this@LoginActivity,
-                    getString(R.string.success_sign_in),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            startActivity(Intent(applicationContext, BaseActivity::class.java))
-            finish()
+
         }
     }
 

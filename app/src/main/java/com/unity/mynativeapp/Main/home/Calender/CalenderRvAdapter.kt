@@ -7,20 +7,23 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
+import com.unity.mynativeapp.util.DeleteDialog
 import java.time.format.DateTimeFormatter
 
 
 class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAdapter.ViewHolder>(){
 
-    var list = mutableListOf<CalenderRvItem>()
+    var itemList = mutableListOf<CalenderRvItem>()
     lateinit var selectedDayBinding: ItemRvCalenderBinding
     var selectedDayIdx: Int = -1
 
     inner class ViewHolder(val binding: ItemRvCalenderBinding): RecyclerView.ViewHolder(binding.root){
+
 
         fun bind(item: CalenderRvItem){
 
@@ -74,11 +77,37 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
                         binding.layoutDay.background = getDrawable(context, R.color.main_gray)
                         selectedDayBinding = binding
 
-                        list[selectedDayIdx].isSelectedDay = false
+                        itemList[selectedDayIdx].isSelectedDay = false
                         item.isSelectedDay = true
 
                     }
                 }
+            }
+
+            binding.layoutDay.setOnLongClickListener OnLongClickListener@{
+
+                if(item.exerciseDate != null){
+                    if(item.isSelectedDay == true && item.dailyPercentage != -1) {
+                        var dialog = DeleteDialog(context, context.getString(R.string.delete_diary), item.exerciseDate.toString())
+                        dialog.show()
+
+                        var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
+                        var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
+
+                        btnYes.setOnClickListener {
+
+                            item.dailyPercentage = -1
+                            dialog.dismiss()
+                            notifyDataSetChanged()
+
+                            // 다이어리 삭제 요청
+                        }
+                        btnNo.setOnClickListener {
+                            dialog.dismiss()
+                        }
+                    }
+                }
+                return@OnLongClickListener true
             }
         }
     }
@@ -88,18 +117,18 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
     }
 
     override fun onBindViewHolder(holder: CalenderRvAdapter.ViewHolder, position: Int) {
-        holder.bind(list[position])
-        if(list[position].isSelectedDay == true){
+        holder.bind(itemList[position])
+        if(itemList[position].isSelectedDay == true){
             selectedDayIdx = position
         }
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return itemList.size
     }
 
     fun getListFormView(nList: MutableList<CalenderRvItem>){
-        list = nList
+        itemList = nList
     }
 
 }

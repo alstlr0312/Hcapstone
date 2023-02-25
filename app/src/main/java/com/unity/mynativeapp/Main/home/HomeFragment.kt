@@ -13,27 +13,27 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.CalenderRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.CalenderRvItem
-import com.unity.mynativeapp.Splash.Login.LoginActivity
+import com.unity.mynativeapp.Splash.SplashActivity
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
 import com.unity.mynativeapp.util.LoadingDialog
 import java.text.DateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.system.exitProcess
 
 
-class HomeFragment : Fragment(), HomeFragmentInterface{
+class HomeFragment : Fragment(), HomeFragmentInterface {
 
-    lateinit var binding: FragmentHomeBinding
+    val binding by lazy{FragmentHomeBinding.inflate(layoutInflater)}
     lateinit var todayDate: LocalDate
     lateinit var selectedDate: LocalDate
     lateinit var calenderRvAdapter: CalenderRvAdapter
     lateinit var loadingDialog: LoadingDialog
-
+    lateinit var requestData: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(layoutInflater)
         loadingDialog = LoadingDialog(requireContext())
 
         todayDate = LocalDate.now()
@@ -56,9 +56,8 @@ class HomeFragment : Fragment(), HomeFragmentInterface{
 
 
         // 홈화면 요청
-        val date = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
-
-        HomeFragmentService(this).tryGetHomePage(date)
+        requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
+        HomeFragmentService(this).tryGetHomePage(requestData)
 
 
     }
@@ -84,6 +83,11 @@ class HomeFragment : Fragment(), HomeFragmentInterface{
 
     override fun onGetHomePageSuccess(response: HomePageResponse) {
 
+        if(ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null) == null){
+            requireActivity().finishAffinity()
+            startActivity(Intent(requireActivity(), SplashActivity::class.java))
+            exitProcess(0)
+        }
 
         var dayList = mutableListOf<CalenderRvItem>()
 
@@ -98,35 +102,30 @@ class HomeFragment : Fragment(), HomeFragmentInterface{
 
         var compareDate = selectedDate.withDayOfMonth(1)
 
-        if(response.status == 401){
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
-            requireActivity().finish()
-        }
-        else if(response.status == 400){ // 다이어리 내용 없음
+        if(response.status == 400){ // 다이어리 목록 없음
             for(i in 1 until selectedDate.lengthOfMonth()+1){
                 if(i == selectedDate.dayOfMonth)
-                    dayList.add(CalenderRvItem(compareDate, true))
+                    dayList.add(CalenderRvItem(compareDate, true, 10))
                 else
                     dayList.add(CalenderRvItem(compareDate, false))
 
                 compareDate = compareDate.plusDays(1)
-                Log.d("homeFragment", compareDate.dayOfMonth.toString())
-
             }
             // 월 평균 퍼센트
             binding.progressBarMonthly.progress = 0
-        }else{ // 다이어리 내용 있음
+        }
+        else{ // 다이어리 목록 있음
             val result = response.data?.calenders
             var j = 0
             for(i in 1 until selectedDate.lengthOfMonth()+1){
-                if(j < result!!.size && result[j].exerciseDate!! == compareDate){
+                if(j < result!!.size && result[j].exerciseDate!! == compareDate){ // 다이어리 있음
                     if(i == selectedDate.dayOfMonth){
                         dayList.add(CalenderRvItem(compareDate, true, result[j].dailyPercentage))
                     }else{
                         dayList.add(CalenderRvItem(compareDate, false, result[j].dailyPercentage))
                     }
                     j++
-                }else{
+                }else{  // 다이어리 없음
                     if(i == selectedDate.dayOfMonth){
                         dayList.add(CalenderRvItem(compareDate, true))
                     }else{
@@ -151,8 +150,10 @@ class HomeFragment : Fragment(), HomeFragmentInterface{
 
         requireActivity().runOnUiThread {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            Log.d("homeFragment", message)
         }
     }
+
 
 }
 

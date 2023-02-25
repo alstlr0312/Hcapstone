@@ -11,4 +11,4 @@ data class DiaryExerciseRvItem(
 
     var isClickable: Boolean ?= true,
 
-)
+    )

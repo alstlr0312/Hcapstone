@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.Main.home.Calender.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
+import com.unity.mynativeapp.util.DeleteDialog
 
 
 class DiaryExerciseRvAdapter(var context: Context)
@@ -23,11 +24,9 @@ class DiaryExerciseRvAdapter(var context: Context)
 
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = Dialog(context)
-                dialog.setContentView(R.layout.dialog_remove_diary_exercise)
+                var dialog = DeleteDialog(context, context.getString(R.string.delete_exercise))
                 dialog.show()
 
-                diaryActivity.resizeDialog(dialog, 0.85, 0.28)
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
                 var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
 

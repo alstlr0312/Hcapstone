@@ -7,22 +7,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.ApplicationClass
-import com.unity.mynativeapp.ApplicationClass.Companion.AUTHORIZATION
-
-import com.unity.mynativeapp.ApplicationClass.Companion.sSharedPreferences
-import com.unity.mynativeapp.BaseResponse
-
 import com.unity.mynativeapp.Main.BaseActivity
+import com.unity.mynativeapp.Main.home.HomeFragmentService
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.Splash.Login.LoginActivity
-import com.unity.mynativeapp.Splash.Login.LoginActivityService
-import com.unity.mynativeapp.Splash.Login.LoginResponse
-import okhttp3.Call
 import okhttp3.Request
-import okhttp3.RequestBody
 import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class SplashActivity : AppCompatActivity() {
@@ -32,20 +25,37 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            checkLogin()
-            finish()
-        },2000)
+            checkLogin()}, 2000)
     }
 
     fun checkLogin(){
 
-        //sSharedPreferences.edit().remove(AUTHORIZATION).commit()
+        val accessToken = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
 
-        if(sSharedPreferences.getString(AUTHORIZATION, null) != null){
-            startActivity(Intent(this, BaseActivity::class.java))
+        if(accessToken != null){ // refresh Token 유효 확인
+            val today = LocalDate.now().format(DateTimeFormatter.ofPattern("YYYY-MM"))
+            val request = Request.Builder()
+                .url(ApplicationClass.API_URL + HomeFragmentService.HOME_PAGE + today).get().build()
+
+            ApplicationClass.okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    if(response.code != 401){ // 유효
+                        startActivity(Intent(this@SplashActivity, BaseActivity::class.java))
+                        finish()
+                    }else{ // 만료
+                        startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                        finish()
+                    }
+                }
+                override fun onFailure(call: okhttp3.Call, e: IOException) {
+                    Log.d("splashActivity", e.message.toString())
+                }
+            })
         }else{
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+            finish()
         }
+
     }
 
 }

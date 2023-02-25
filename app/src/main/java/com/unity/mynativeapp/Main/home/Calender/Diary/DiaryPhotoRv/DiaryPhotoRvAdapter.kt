@@ -23,7 +23,7 @@ class DiaryPhotoRvAdapter(val context: Context)
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
                 var dialog = Dialog(context)
-                dialog.setContentView(R.layout.dialog_remove_diary_exercise)
+                dialog.setContentView(R.layout.dialog_delete)
                 dialog.show()
 
                 diaryActivity.resizeDialog(dialog, 0.85, 0.28)
