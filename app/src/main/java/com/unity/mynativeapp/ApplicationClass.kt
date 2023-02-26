@@ -24,7 +24,7 @@ class ApplicationClass: Application() {
         lateinit var okHttpClient: OkHttpClient
 
         val API_URL = "http://43.201.82.205:8080/"
-        ////
+
         lateinit var sRetrofit: Retrofit
 
     }
