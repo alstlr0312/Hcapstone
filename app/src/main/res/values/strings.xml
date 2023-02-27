@@ -57,6 +57,7 @@
     <string name="memo">메모</string>
     <string name="photo">사진</string>
     <string name="video">동영상</string>
+    <string name="gallery">갤러리</string>
     <string name="add">추가</string>
     <string name="please_input">입력해주세요...</string>
 

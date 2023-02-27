@@ -1,49 +1,84 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv
 
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
+import com.unity.mynativeapp.util.DeleteDialog
 
 
-class DiaryExerciseRvAdapter(var list: MutableList<DiaryExerciseRvItem>, var context: Context)
+class DiaryExerciseRvAdapter(var context: Context)
     : RecyclerView.Adapter<DiaryExerciseRvAdapter.ViewHolder>() {
 
+    var itemList = mutableListOf<DiaryExerciseRvItem>()
     inner class ViewHolder(val binding: ItemRvDiaryExerciseBinding): RecyclerView.ViewHolder(binding.root){
 
+        init{
+            binding.root.setOnLongClickListener OnLongClickListener@{
+                var dialog = DeleteDialog(context, context.getString(R.string.delete_exercise))
+                dialog.show()
+
+                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
+                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
+
+                btnYes.setOnClickListener {
+                    itemList.removeAt(adapterPosition)
+                    dialog.dismiss()
+                    notifyDataSetChanged()
+                }
+                btnNo.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                return@OnLongClickListener true
+            }
+        }
         fun bind(item: DiaryExerciseRvItem){
 
-            binding.checkbox.isChecked = item.isChecked == true
+            binding.checkbox.isChecked = item.finished
 
-            binding.tvExerciseName.text = item.name
+            if(item.exerciseName != ""){
+                binding.tvExerciseName.text = item.bodyPart + " - " + item.exerciseName
+            }else{
+                binding.tvExerciseName.text = item.bodyPart
+            }
 
-            if(item.numbers != null){
-                binding.tvExerciseNumbers.text = item.numbers.toString()
+            if(item.reps != 0){
+                binding.tvExerciseNumbers.text = item.reps.toString()
                 binding.layoutExerciseNumbers.visibility = View.VISIBLE
             }else{
                 binding.layoutExerciseNumbers.visibility = View.GONE
             }
 
-            if(item.sets != null){
-                binding.tvExerciseSet.text = item.sets.toString()
+            if(item.exSetCount != 0){
+                binding.tvExerciseSet.text = item.exSetCount.toString()
                 binding.layoutExerciseSet.visibility = View.VISIBLE
             }else{
                 binding.layoutExerciseSet.visibility = View.GONE
             }
 
-            if(item.times != null){
-                binding.tvExerciseTime.text = item.times.toString()
+            if(item.cardioTime != 0){
+                binding.tvExerciseTime.text = item.cardioTime.toString()
                 binding.layoutExerciseTime.visibility = View.VISIBLE
             }else{
                 binding.layoutExerciseTime.visibility = View.GONE
             }
 
+            binding.checkbox.isClickable = item.isClickable == true
+
             binding.checkbox.setOnClickListener {
-                //
+                itemList[adapterPosition].finished = binding.checkbox.isChecked
             }
+
+
         }
     }
 
@@ -52,13 +87,29 @@ class DiaryExerciseRvAdapter(var list: MutableList<DiaryExerciseRvItem>, var con
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(itemList[position])
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return itemList.size
     }
 
+    fun getListFormView(nList: MutableList<DiaryExerciseRvItem>){
+        itemList = nList
+    }
 
+    fun addItem(item: DiaryExerciseRvItem){
+        itemList.add(item)
+        notifyDataSetChanged()
+    }
+
+    fun checkBoxIsClickable(b: Boolean){
+        if(itemCount != 0){
+            for(item in itemList){
+                item.isClickable = b
+            }
+            notifyDataSetChanged()
+        }
+    }
 
 }

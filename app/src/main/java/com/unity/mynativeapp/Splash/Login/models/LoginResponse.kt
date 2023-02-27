@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.Splash
 
+
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(

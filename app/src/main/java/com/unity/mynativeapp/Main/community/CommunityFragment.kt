@@ -22,7 +22,7 @@ class CommunityFragment : Fragment() {
     ): View? {
         binding = FragmentCommunityBinding.inflate(layoutInflater)
 
-        postingRvAdapter = PostingRvAdapter(getPostingList(), requireContext())
+        postingRvAdapter = PostingRvAdapter(requireContext())
         binding.recyclerViewPosting.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewPosting.adapter = postingRvAdapter
 
