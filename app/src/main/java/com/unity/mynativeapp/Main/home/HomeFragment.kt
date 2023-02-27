@@ -105,7 +105,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         if(response.status == 400){ // 다이어리 목록 없음
             for(i in 1 until selectedDate.lengthOfMonth()+1){
                 if(i == selectedDate.dayOfMonth)
-                    dayList.add(CalenderRvItem(compareDate, true, 10))
+                    dayList.add(CalenderRvItem(compareDate, true))
                 else
                     dayList.add(CalenderRvItem(compareDate, false))
 

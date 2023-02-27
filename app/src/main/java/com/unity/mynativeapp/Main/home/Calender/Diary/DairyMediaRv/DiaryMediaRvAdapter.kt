@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryPhotoRv
+package com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv
 
 import android.app.Dialog
 import android.content.Context
@@ -11,14 +11,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.Main.home.Calender.diaryActivity
 import com.unity.mynativeapp.R
-import com.unity.mynativeapp.databinding.ItemRvDiaryPhotoBinding
+import com.unity.mynativeapp.databinding.ItemRvDiaryMediaBinding
 
 
-class DiaryPhotoRvAdapter(val context: Context)
-    : RecyclerView.Adapter<DiaryPhotoRvAdapter.ViewHolder>(){
+class DiaryMediaRvAdapter(val context: Context)
+    : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){
 
     var itemList = mutableListOf<Uri>()
-    inner class ViewHolder(val binding: ItemRvDiaryPhotoBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(val binding: ItemRvDiaryMediaBinding): RecyclerView.ViewHolder(binding.root){
 
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
@@ -53,11 +53,11 @@ class DiaryPhotoRvAdapter(val context: Context)
                 .into(binding.photo)
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryPhotoRvAdapter.ViewHolder {
-        return ViewHolder(ItemRvDiaryPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryMediaRvAdapter.ViewHolder {
+        return ViewHolder(ItemRvDiaryMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: DiaryPhotoRvAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DiaryMediaRvAdapter.ViewHolder, position: Int) {
         holder.bind(itemList[position])
     }
 
