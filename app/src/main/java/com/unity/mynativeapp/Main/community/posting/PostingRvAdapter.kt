@@ -10,59 +10,59 @@ import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.Main.community.PostingRvItem
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class PostingRvAdapter(val context: Context): RecyclerView.Adapter<PostingRvAdapter.ViewHolder>() {
 
     var itemList = mutableListOf<PostingRvItem>()
+    var today = LocalDateTime.now()
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: PostingRvItem){
 
             //binding.ivProfileImg.setImageURI()
-            binding.ivProfileImg.setImageResource(R.drawable.ic_profile_photo_base)
 
-            if(item.postingImg != null){
-                binding.ivPostingImg.visibility = View.VISIBLE
-                Glide.with(binding.ivPostingImg)
-                    .load(item.postingImg)
-                    .placeholder(R.drawable.shape_bg_black_rounded)
-                    .error(R.drawable.shape_bg_black_rounded)
-                    .fallback(R.drawable.shape_bg_black_rounded)
-                    .centerCrop()
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(binding.ivPostingImg)
-            }else{
-                binding.ivPostingImg.visibility = View.GONE
-            }
-
-
-
+            // 유저 이름
             binding.tvUsername.text = item.userName
 
-            binding.tvPostingTxt.text = item.postingTxt
-            binding.tvReadMoreLess.visibility = View.GONE
-            binding.tvPostingTxt.post{
-                val lineCount = binding.tvPostingTxt.layout.lineCount
-                if(lineCount > 0){
-                    if(binding.tvPostingTxt.layout.getEllipsisCount(lineCount-1) > 0) {
-                        binding.tvReadMoreLess.visibility = View.VISIBLE
+            // 유저 프로필 사진
+            Glide.with(binding.ivProfileImg)
+                .load(item.profileImg)
+                .placeholder(R.drawable.shape_bg_black_rounded)
+                .error(R.drawable.shape_bg_black_rounded)
+                .fallback(R.drawable.shape_bg_black_rounded)
+                .centerCrop()
+                .apply(RequestOptions.centerCropTransform())
+                .into(binding.ivProfileImg)
 
-                        binding.tvReadMoreLess.setOnClickListener {
-                            if(binding.tvPostingTxt.maxLines == 2){
-                                binding.tvReadMoreLess.text = context.getText(R.string.read_less)
-                                binding.tvPostingTxt.maxLines = Int.MAX_VALUE
-                            }else{
-                                binding.tvReadMoreLess.text = context.getText(R.string.read_more)
-                                binding.tvPostingTxt.maxLines = 2
-                            }
-                        }
-                    }
+            // 게시글 제목
+            binding.tvPostTitle.text = item.postTitle
+
+            // 게시글 작성일
+
+            var uploadDate = ""
+            if(today.toLocalDate().equals(item.postDate.toLocalDate())){ // 오늘
+                if(today.hour == item.postDate.hour && today.minute == item.postDate.minute){ // 방금
+                    uploadDate = context.getString(R.string.now)
+               }else{
+                    uploadDate = item.postDate.format(DateTimeFormatter.ofPattern("HH:mm"))
                 }
+            }else{
+                uploadDate = item.postDate.format(DateTimeFormatter.ofPattern("yy.MM.dd"))
             }
+            binding.tvPostDate.text = uploadDate
 
-
+            // 미디어, 좋아요, 댓글 개수
+            if(item.mediaNum != 0){
+                binding.tvMediaNum.text = item.mediaNum.toString()
+                binding.tvMediaNum.visibility = View.VISIBLE
+                binding.ivMedia.visibility = View.VISIBLE
+            }else{
+                binding.tvMediaNum.visibility = View.INVISIBLE
+                binding.ivMedia.visibility = View.INVISIBLE
+            }
             binding.tvHeartNum.text = item.heartNum.toString()
             binding.tvCommentNum.text = item.commentNum.toString()
-
 
         }
     }
@@ -78,6 +78,10 @@ class PostingRvAdapter(val context: Context): RecyclerView.Adapter<PostingRvAdap
 
     override fun getItemCount(): Int {
         return itemList.size
+    }
+
+    fun getListFromView(nList: MutableList<PostingRvItem>){
+        itemList = nList
     }
 
     fun addItem(item: PostingRvItem){

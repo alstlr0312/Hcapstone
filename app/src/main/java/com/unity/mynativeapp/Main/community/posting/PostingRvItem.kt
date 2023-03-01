@@ -1,23 +1,17 @@
 package com.unity.mynativeapp.Main.community
 
+import com.unity.mynativeapp.R
+import java.net.URL
+import java.time.LocalDate
+import java.time.LocalDateTime
+
 data class PostingRvItem(
     val userName: String,
-    val postingTxt: String,
-    val heartNum: Int,
-    val commentNum: Int,
-    val profileImg: Int ?= null,
-    val postingImg: Int ?= null,
+    val postTitle: String,
+    val postDate: LocalDateTime,
+    val heartNum: Int ?= 0,
+    val commentNum: Int ?= 0,
+    val mediaNum: Int ?= 0,
+    val profileImg: Int ?= R.drawable.ic_profile_photo_base,
+    //val profileImg: URL ?= null
     )
-
-
-/*
-data class PostingRvItem(
-    val postingId: Int,
-    val profileImg: String,
-    val userName: String,
-    val postingImg: ArrayList<String>,
-    val postingVideo: ArrayList<String>,
-    val heartNum: Int,
-    val commentNum: Int,
-)
- */

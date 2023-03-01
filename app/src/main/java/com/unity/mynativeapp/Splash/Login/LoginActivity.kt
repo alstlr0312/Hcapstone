@@ -90,6 +90,9 @@ class LoginActivity : AppCompatActivity(), LoginActivityInterface{
 
                 edit.commit()
 
+                val accessToken = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null).toString()
+                Log.d("accessToken", accessToken)
+
                 runOnUiThread {
                     Toast.makeText(
                         this@LoginActivity,
