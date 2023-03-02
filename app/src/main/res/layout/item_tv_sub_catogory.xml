@@ -4,17 +4,20 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <CheckBox
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:button="@android:color/transparent"
+        android:background="@drawable/sel_tab_color"
+
         android:text="sub1"
         android:textColor="@color/main_gray_light"
         android:textSize="15sp"
-        android:background="@drawable/shape_category_unselected"
+
         android:paddingHorizontal="15dp"
         android:paddingVertical="5dp"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

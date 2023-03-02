@@ -42,7 +42,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/layout_tab_main"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="40dp"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorFullWidth="true"
             app:tabIndicatorHeight="2dp"
@@ -54,26 +54,6 @@
             app:tabTextAppearance="@style/tabBar_text_bold_style"
             app:tabTextColor="@color/main_gray">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="main1" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="main2" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="main3" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="main4" />
-
         </com.google.android.material.tabs.TabLayout>
 
         <View
@@ -81,38 +61,15 @@
             android:layout_height="1dp"
             android:background="@color/main_gray"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_subCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="15dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_posting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.core.widget.NestedScrollView>
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

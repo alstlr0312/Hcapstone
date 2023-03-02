@@ -82,10 +82,12 @@ class PostingRvAdapter(val context: Context): RecyclerView.Adapter<PostingRvAdap
 
     fun getListFromView(nList: MutableList<PostingRvItem>){
         itemList = nList
+        notifyDataSetChanged()
     }
 
     fun addItem(item: PostingRvItem){
         itemList.add(item)
+        notifyDataSetChanged()
     }
 
 }
