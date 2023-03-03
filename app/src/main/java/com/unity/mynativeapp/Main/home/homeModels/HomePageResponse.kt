@@ -17,5 +17,4 @@ data class ResultHome(
 data class CalenderItem(
     val exerciseDate: LocalDate? = null,
     val dailyPercentage: Int = -1,
-
-    )
+)

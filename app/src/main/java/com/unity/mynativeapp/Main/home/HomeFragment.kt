@@ -2,14 +2,15 @@ package com.unity.mynativeapp.Main.home
 
 
 
+import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.capstone.Main.home.homeModels.HomePageResponse
 import com.unity.mynativeapp.ApplicationClass
@@ -18,7 +19,9 @@ import com.unity.mynativeapp.Main.home.Calender.CalenderRvItem
 import com.unity.mynativeapp.Splash.SplashActivity
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
 import com.unity.mynativeapp.util.LoadingDialog
-import java.text.DateFormat
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.lang.ref.Cleaner.create
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
@@ -40,12 +43,25 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         todayDate = LocalDate.now()
         selectedDate = todayDate
-
+        getdata()
         setCalenderView()
 
         setListener()
 
         return binding.root
+    }
+    fun getdata(){
+        val client = OkHttpClient().newBuilder()
+            .build()
+        val mediaType: MediaType? = "text/plain".toMediaTypeOrNull()
+        val body: RequestBody = RequestBody.create(mediaType, "")
+        val request: Request = Request.Builder()
+            .url(ApplicationClass.API_URL+"diary?date="+todayDate)
+            .method("GET", body)
+            .addHeader("Authorization", ApplicationClass.AUTHORIZATION)
+            .build()
+        val response: Response = client.newCall(request).execute()
+
     }
 
     fun setCalenderView(){
@@ -59,7 +75,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         // 홈화면 요청
         requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
-        HomeFragmentService(this).tryGetHomePage(requestData)
+        HomeFragmentService(    this).tryGetHomePage(requestData)
 
 
     }
@@ -155,6 +171,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
             Log.d("homeFragment", message)
         }
     }
+
 
 
 }

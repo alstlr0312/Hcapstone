@@ -6,14 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.ApplicationClass
-import com.unity.mynativeapp.ApplicationClass.Companion.AUTHORIZATION
-import com.unity.mynativeapp.ApplicationClass.Companion.GRANT_TYPE
-import com.unity.mynativeapp.ApplicationClass.Companion.JSON
-import com.unity.mynativeapp.ApplicationClass.Companion.X_ACCESS_TOKEN
-import com.unity.mynativeapp.ApplicationClass.Companion.X_REFRESH_TOKEN
-import com.unity.mynativeapp.ApplicationClass.Companion.sSharedPreferences
 import com.unity.mynativeapp.Main.BaseActivity
 import com.unity.mynativeapp.Main.home.LoginActivityService
 import com.unity.mynativeapp.R
@@ -23,12 +16,7 @@ import com.unity.mynativeapp.Splash.LoginResponse
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
 import com.unity.mynativeapp.util.LoadingDialog
 import com.unity.mynativeapp.util.hideKeyboard
-import okhttp3.Call
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONObject
-import java.io.IOException
 
 
 class LoginActivity : AppCompatActivity(), LoginActivityInterface {

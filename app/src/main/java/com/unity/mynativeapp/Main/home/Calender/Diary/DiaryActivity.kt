@@ -17,16 +17,28 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.ApplicationClass
+import com.unity.mynativeapp.ApplicationClass.Companion.API_URL
+import com.unity.mynativeapp.ApplicationClass.Companion.okHttpClient
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
+import okhttp3.Call
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 lateinit var diaryActivity: DiaryActivity
 class DiaryActivity : AppCompatActivity() {
     val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
+    val Authorization = ApplicationClass.AUTHORIZATION
     lateinit var date: String   // 다이어리 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
@@ -66,7 +78,12 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     private fun setView(){
-
+        val url = API_URL + "diary?date="+date
+        val regionRetrofit = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    //    var regionServer: DiaryService? = regionRetrofit.create(DiaryService::class.java)
         // 일지 상세 정보 조회 요청
 
         if(status == 0) setReadView()
@@ -125,20 +142,9 @@ class DiaryActivity : AppCompatActivity() {
         // 저장 아이콘 클릭
         binding.ivSave.setOnClickListener {
 
-            if(exerciseAdapter.itemCount != 0){
+            if (exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
-
-                //응답 성공
-                setReadView()
-
-            }else{
-                Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        // 뒤로 가기
-        binding.btnBack.setOnClickListener {
-            finish()
         }
 
     }
