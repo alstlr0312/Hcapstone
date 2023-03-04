@@ -7,6 +7,7 @@ import retrofit2.http.*
 interface AddexResponse {
 
     @FormUrlEncoded
+
     @POST("diary/write")
     fun AddexResponse(
         @Header("AUTHORIZATION") AUTH: String,

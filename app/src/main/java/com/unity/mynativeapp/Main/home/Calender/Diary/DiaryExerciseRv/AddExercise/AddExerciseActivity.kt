@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.unity.mynativeapp.ApplicationClass
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.AddexResponse
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExData
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
@@ -20,6 +22,8 @@ import com.unity.mynativeapp.Main.home.Calender.Diary.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,8 +36,8 @@ class AddExerciseActivity : AppCompatActivity() {
     lateinit var date: String   // 다이어리 날짜
     var cbList = arrayListOf<CheckBox>()    // 운동 부위 체크박스 리스트
     var isCardio = false    // 유산소 or 무산소 여부
-    val uri = ApplicationClass.API_URL+"diary/write"
-    val uid = ApplicationClass.AUTHORIZATION
+    val exdata = JSONObject()
+    val Aexdata = JSONArray()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddExerciseBinding.inflate(layoutInflater)
@@ -43,25 +47,7 @@ class AddExerciseActivity : AppCompatActivity() {
         setView()
         setListener()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(uri)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val api = retrofit.create(AddexResponse::class.java)
-        val callpostexdata = api.AddexResponse(uid,)
 
-        callpostexdata.enqueue(object : Callback<ExData> {
-            override fun onResponse(
-                call: Call<ExData>,
-                response: Response<ExData>
-            ) {
-                Log.d(TAG, "성공 : ${response.raw()}")
-            }
-
-            override fun onFailure(call: Call<ExData>, t: Throwable) {
-                Log.d(TAG, "실패 : $t")
-            }
-        })
     }
 
     private fun setView(){
@@ -114,6 +100,16 @@ class AddExerciseActivity : AppCompatActivity() {
                         diaryActivity.exerciseAdapter.addItem(
                             DiaryExerciseRvItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
                         )
+
+                        exdata.put("exerciseName", exerciseName)
+                        exdata.put("reps", reps)
+                        exdata.put("exSetCount", exSetCount)
+                        exdata.put("isCardio", isCardio)
+                        exdata.put("cardioTime", cardioTime)
+                        exdata.put("bodyPart", bodyPart)
+                        Aexdata.put(exdata)
+                        val intent = Intent(this, DiaryActivity::class.java)
+                        intent.putExtra("Data", Aexdata.toString())
                         finish()
                     }
 
@@ -130,6 +126,15 @@ class AddExerciseActivity : AppCompatActivity() {
                         diaryActivity.exerciseAdapter.addItem(
                             DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, 0, bodyPart, false)
                         )
+                        exdata.put("exerciseName", exerciseName)
+                        exdata.put("reps", reps)
+                        exdata.put("exSetCount", exSetCount)
+                        exdata.put("isCardio", isCardio)
+                        exdata.put("cardioTime", 0)
+                        exdata.put("bodyPart", bodyPart)
+                        Aexdata.put(exdata)
+                        val intent = Intent(this, DiaryActivity::class.java)
+                        intent.putExtra("Data", Aexdata.toString())
                         finish()
                     }
                 }

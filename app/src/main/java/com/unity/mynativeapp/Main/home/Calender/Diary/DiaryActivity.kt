@@ -2,6 +2,7 @@ package com.unity.mynativeapp.Main.home.Calender.Diary
 
 
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
@@ -10,6 +11,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -24,13 +26,18 @@ import com.unity.mynativeapp.ApplicationClass.Companion.okHttpClient
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.AddexResponse
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExData
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONArray
 import org.json.JSONObject
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -44,6 +51,11 @@ class DiaryActivity : AppCompatActivity() {
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
     var firstStart = true
     var status = 0 // 0(read), 1(write)
+    val uri = ApplicationClass.API_URL+"diary/write"
+    val uid = ApplicationClass.AUTHORIZATION
+    val data = JSONObject()
+    val data2 = JSONObject()
+    val exdata = JSONArray()
     var galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
         if(uri != null){
             mediaAdapter.addItem(uri)
@@ -76,14 +88,16 @@ class DiaryActivity : AppCompatActivity() {
 
 
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, Data)
+
+        if (resultCode == RESULT_OK) {
+            var MEMO = Data?.getStringExtra("data")!!
+            exdata.put(MEMO)
+        }
+    }
 
     private fun setView(){
-        val url = API_URL + "diary?date="+date
-        val regionRetrofit = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    //    var regionServer: DiaryService? = regionRetrofit.create(DiaryService::class.java)
         // 일지 상세 정보 조회 요청
 
         if(status == 0) setReadView()
@@ -113,6 +127,7 @@ class DiaryActivity : AppCompatActivity() {
 
         if(binding.edtMemo.text.toString() == "")
             binding.edtMemo.hint = getString(R.string.please_input)
+
     }
 
     private fun setClickListener(){
@@ -144,6 +159,29 @@ class DiaryActivity : AppCompatActivity() {
 
             if (exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
+                data.put("writeDiaryDto",exdata)
+                data.put("review", binding.edtMemo.text.toString())
+                data.put("date",date)
+
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(uri)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val api = retrofit.create(AddexResponse::class.java)
+                val callpostexdata = api.AddexResponse(uid,data.toString())
+
+                callpostexdata.enqueue(object : Callback<ExData> {
+                    override fun onResponse(
+                        call: retrofit2.Call<ExData>,
+                        response: Response<ExData>
+                    ) {
+                        Log.d(ContentValues.TAG, "성공 : ${response.raw()}")
+                    }
+
+                    override fun onFailure(call: retrofit2.Call<ExData>, t: Throwable) {
+                        Log.d(ContentValues.TAG, "실패 : $t")
+                    }
+                })
             }
         }
 
