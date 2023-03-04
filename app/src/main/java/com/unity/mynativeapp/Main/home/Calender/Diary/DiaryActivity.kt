@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capstone.SignUp.models.SignUpResponse
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.ApplicationClass.Companion.API_URL
@@ -28,6 +29,7 @@ import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerc
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.AddexResponse
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExData
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExResponse
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import okhttp3.Call
@@ -40,6 +42,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 
 lateinit var diaryActivity: DiaryActivity
@@ -51,7 +54,6 @@ class DiaryActivity : AppCompatActivity() {
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
     var firstStart = true
     var status = 0 // 0(read), 1(write)
-    val uri = ApplicationClass.API_URL+"diary/write"
     val uid = ApplicationClass.AUTHORIZATION
     val data = JSONObject()
     val data2 = JSONObject()
@@ -157,14 +159,14 @@ class DiaryActivity : AppCompatActivity() {
         // 저장 아이콘 클릭
         binding.ivSave.setOnClickListener {
 
-            if (exerciseAdapter.itemCount != 0) {
+           /* if (exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
                 data.put("writeDiaryDto",exdata)
                 data.put("review", binding.edtMemo.text.toString())
                 data.put("date",date)
-
+                val URI = "http://175.114.240.162:8080/diary/write/"
                 val retrofit = Retrofit.Builder()
-                    .baseUrl(uri)
+                    .baseUrl(URI)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 val api = retrofit.create(AddexResponse::class.java)
@@ -181,11 +183,65 @@ class DiaryActivity : AppCompatActivity() {
                     override fun onFailure(call: retrofit2.Call<ExData>, t: Throwable) {
                         Log.d(ContentValues.TAG, "실패 : $t")
                     }
-                })
+                })*/
+            data.put("writeDiaryDto",exdata)
+            data.put("review", binding.edtMemo.text.toString())
+            data.put("date",date)
+            val requestBody: RequestBody =
+                RequestBody.create("application/json; charset=utf-8".toMediaType(), data.toString())
+            Log.d("signUpActivity",data.toString())
+            val url = API_URL + "diary/write"
+
+            val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+
+            okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
+
+                override fun onResponse(call: Call, response: okhttp3.Response) {
+                    if (response.body != null) {
+                        val body = response.body?.string()
+                        val gson = GsonBuilder().create()
+                        val data = gson.fromJson(body, ExResponse::class.java)
+
+                        Log.d("signUpActivity",data.toString())
+
+                        if(data.status == 500){
+                            runOnUiThread {
+                                Toast.makeText(this@DiaryActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
+                            }
+                        }else if(data.status == 201){
+
+                            runOnUiThread {
+                                Toast.makeText(this@DiaryActivity, "성공", Toast.LENGTH_SHORT).show()
+                            }
+                            finish()
+                        } else if(data.status == 415){
+                            runOnUiThread {
+                                Toast.makeText(this@DiaryActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
+                            }
+                        }else if(data.status == 401){
+                            runOnUiThread {
+                                Toast.makeText(this@DiaryActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+
+                    } else {
+                        Log.d("DiaryActivity","response body is null")
+                    }
+                }
+                override fun onFailure(call: Call, e: IOException) {
+
+                    Log.d("DiaryActivity", e.message.toString())
+                }
+            })
             }
         }
 
-    }
+
 
 
     override fun onResume() {

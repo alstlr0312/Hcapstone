@@ -43,25 +43,12 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         todayDate = LocalDate.now()
         selectedDate = todayDate
-        getdata()
+
         setCalenderView()
 
         setListener()
 
         return binding.root
-    }
-    fun getdata(){
-        val client = OkHttpClient().newBuilder()
-            .build()
-        val mediaType: MediaType? = "text/plain".toMediaTypeOrNull()
-        val body: RequestBody = RequestBody.create(mediaType, "")
-        val request: Request = Request.Builder()
-            .url(ApplicationClass.API_URL+"diary?date="+todayDate)
-            .method("GET", body)
-            .addHeader("Authorization", ApplicationClass.AUTHORIZATION)
-            .build()
-        val response: Response = client.newCall(request).execute()
-
     }
 
     fun setCalenderView(){
@@ -75,7 +62,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         // 홈화면 요청
         requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
-        HomeFragmentService(    this).tryGetHomePage(requestData)
+        HomeFragmentService(this).tryGetHomePage(requestData)
 
 
     }
@@ -171,7 +158,6 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
             Log.d("homeFragment", message)
         }
     }
-
 
 
 }
