@@ -1,20 +1,30 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise
 
+import android.content.ContentValues.TAG
 import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.unity.mynativeapp.ApplicationClass
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.AddexResponse
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExData
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
 import com.unity.mynativeapp.Main.home.Calender.Diary.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 
 class AddExerciseActivity : AppCompatActivity() {
@@ -22,7 +32,8 @@ class AddExerciseActivity : AppCompatActivity() {
     lateinit var date: String   // 다이어리 날짜
     var cbList = arrayListOf<CheckBox>()    // 운동 부위 체크박스 리스트
     var isCardio = false    // 유산소 or 무산소 여부
-
+    val uri = ApplicationClass.API_URL+"diary/write"
+    val uid = ApplicationClass.AUTHORIZATION
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddExerciseBinding.inflate(layoutInflater)
@@ -31,6 +42,26 @@ class AddExerciseActivity : AppCompatActivity() {
 
         setView()
         setListener()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(uri)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(AddexResponse::class.java)
+        val callpostexdata = api.AddexResponse(uid,)
+
+        callpostexdata.enqueue(object : Callback<ExData> {
+            override fun onResponse(
+                call: Call<ExData>,
+                response: Response<ExData>
+            ) {
+                Log.d(TAG, "성공 : ${response.raw()}")
+            }
+
+            override fun onFailure(call: Call<ExData>, t: Throwable) {
+                Log.d(TAG, "실패 : $t")
+            }
+        })
     }
 
     private fun setView(){
