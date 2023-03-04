@@ -184,6 +184,7 @@ class DiaryActivity : AppCompatActivity() {
                         Log.d(ContentValues.TAG, "실패 : $t")
                     }
                 })*/
+            //파일가져오는거 고민좀 하기
             data.put("writeDiaryDto",exdata)
             data.put("review", binding.edtMemo.text.toString())
             data.put("date",date)
