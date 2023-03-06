@@ -20,10 +20,10 @@ class ApplicationClass: Application() {
         // JWT Token
         val AUTHORIZATION = "Authorization"
         val REFRESH_TOKEN = "refreshToken"
+        val GRANT_TYPE = "Bearer"
 
         val X_ACCESS_TOKEN = "X_ACCESS_TOKEN"
         val X_REFRESH_TOKEN = "X_REFRESH_TOKEN"
-        val GRANT_TYPE = "Bearer"
 
         lateinit var okHttpClient: OkHttpClient
 

@@ -62,9 +62,9 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
                     if(item.isSelectedDay == true){ // 선택된 날짜를 클릭했다면 일지 화면으로 이동
                         var intent = Intent(context, DiaryActivity::class.java)
 
-                        var date = item.exerciseDate.format(DateTimeFormatter.ofPattern("YYYY.MM.dd"))
-                        intent.putExtra("date", date)
-
+                        var formatDate = item.exerciseDate.format(DateTimeFormatter.ofPattern("YYYY.MM.dd"))
+                        intent.putExtra("formatDate", formatDate)
+                        intent.putExtra("diaryDate", item.exerciseDate.toString())
                         var status: Int = if(item.dailyPercentage != -1){
                             0
                         }else 1
@@ -130,5 +130,6 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
     fun getListFormView(nList: MutableList<CalenderRvItem>){
         itemList = nList
     }
+
 
 }

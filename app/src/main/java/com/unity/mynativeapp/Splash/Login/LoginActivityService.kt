@@ -6,6 +6,7 @@ import com.unity.mynativeapp.ApplicationClass
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 class LoginActivityService(val loginActivityInterface: LoginActivityInterface) {
@@ -17,7 +18,7 @@ class LoginActivityService(val loginActivityInterface: LoginActivityInterface) {
 
         val postLoginRequest = Request.Builder()
             .url(ApplicationClass.API_URL + SIGN_IN)
-            .post(RequestBody.create(ApplicationClass.JSON, data))
+            .post(data.toRequestBody(ApplicationClass.JSON))
             .build()
 
         ApplicationClass.okHttpClient.newCall(postLoginRequest).enqueue(object : okhttp3.Callback {

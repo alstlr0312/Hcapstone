@@ -6,18 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
-import com.unity.mynativeapp.Main.BaseActivity
 import com.unity.mynativeapp.Main.community.posting.PostingRvAdapter
-import com.unity.mynativeapp.Main.community.subCategory.SubCategoryAdapter
-import com.unity.mynativeapp.Main.community.tabFragments.Tab2Fragment
-import com.unity.mynativeapp.Main.community.tabFragments.Tab3Fragment
-import com.unity.mynativeapp.Main.community.tabFragments.TabFragment
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
 import java.time.LocalDateTime
 
@@ -26,7 +16,7 @@ class CommunityFragment : Fragment() {
     val binding by lazy { FragmentCommunityBinding.inflate(layoutInflater) }
 
 
-    val mainCategoryList = listOf("전체", "main2", "main3")
+    private lateinit var postingRvAdapter: PostingRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,37 +31,30 @@ class CommunityFragment : Fragment() {
 
         with(binding){
 
-            // 뷰페이저
-            viewPager2.adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
-
-            // 탭 타이틀 셋팅, 뷰페이저 연결
-            TabLayoutMediator(layoutTabMain, viewPager2) { tab, position ->
-                tab.text = mainCategoryList[position]
-            }.attach()
+            // 게시글 어댑터 설정
+            postingRvAdapter = PostingRvAdapter(requireContext())
+            rvPosting.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            rvPosting.adapter = postingRvAdapter
+            postingRvAdapter.getListFromView(getPostingList())
 
         }
 
     }
 
-    inner class ViewPagerAdapter(supportFragmentManager: FragmentManager, lifecycle: Lifecycle)
-        : FragmentStateAdapter(supportFragmentManager, lifecycle) {
+    fun getPostingList(): MutableList<PostingRvItem>{
 
-        val PAGENUMBER = 3
-        override fun getItemCount(): Int = PAGENUMBER //3
+        val test = LocalDateTime.now()
 
-        override fun createFragment(position: Int): Fragment {
-
-            return when(position){
-                0 -> {
-                    TabFragment() }
-                1 -> {
-                    Tab2Fragment()}
-                2 -> {
-                    Tab3Fragment()}
-                else -> {
-                    TabFragment()}
-            }
-        }
-
+        var list = mutableListOf<PostingRvItem>()
+        list.add(PostingRvItem("userName", "게시물 제목...", LocalDateTime.now(), 5, 5))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusHours(1), 0, 5, 1))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusMinutes(5), 5, 5, 1))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusMonths(1), 0, 0))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 2))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 2, 5, 0))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 1))
+        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 1))
+        return list
     }
+
 }

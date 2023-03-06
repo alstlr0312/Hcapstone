@@ -19,10 +19,12 @@ import com.unity.mynativeapp.util.DeleteDialog
 class DiaryExerciseRvAdapter(var context: Context)
     : RecyclerView.Adapter<DiaryExerciseRvAdapter.ViewHolder>() {
 
-    var itemList = mutableListOf<DiaryExerciseRvItem>()
+    private var itemList = mutableListOf<DiaryExerciseRvItem>()
+    private var bindingList = mutableListOf<ItemRvDiaryExerciseBinding>()
     inner class ViewHolder(val binding: ItemRvDiaryExerciseBinding): RecyclerView.ViewHolder(binding.root){
 
         init{
+            bindingList.add(binding)
             binding.root.setOnLongClickListener OnLongClickListener@{
                 var dialog = DeleteDialog(context, context.getString(R.string.delete_exercise))
                 dialog.show()
@@ -32,6 +34,7 @@ class DiaryExerciseRvAdapter(var context: Context)
 
                 btnYes.setOnClickListener {
                     itemList.removeAt(adapterPosition)
+                    bindingList.remove(binding)
                     dialog.dismiss()
                     notifyDataSetChanged()
                 }
@@ -52,28 +55,27 @@ class DiaryExerciseRvAdapter(var context: Context)
                 binding.tvExerciseName.text = item.bodyPart
             }
 
-            if(item.reps != 0){
+            if(item.reps != null){
                 binding.tvExerciseNumbers.text = item.reps.toString()
                 binding.layoutExerciseNumbers.visibility = View.VISIBLE
             }else{
                 binding.layoutExerciseNumbers.visibility = View.GONE
             }
 
-            if(item.exSetCount != 0){
+            if(item.exSetCount != null){
                 binding.tvExerciseSet.text = item.exSetCount.toString()
                 binding.layoutExerciseSet.visibility = View.VISIBLE
             }else{
                 binding.layoutExerciseSet.visibility = View.GONE
             }
 
-            if(item.cardioTime != 0){
+            if(item.cardioTime != null){
                 binding.tvExerciseTime.text = item.cardioTime.toString()
                 binding.layoutExerciseTime.visibility = View.VISIBLE
             }else{
                 binding.layoutExerciseTime.visibility = View.GONE
             }
 
-            binding.checkbox.isClickable = item.isClickable == true
 
             binding.checkbox.setOnClickListener {
                 itemList[adapterPosition].finished = binding.checkbox.isChecked
@@ -106,11 +108,16 @@ class DiaryExerciseRvAdapter(var context: Context)
 
     fun checkBoxIsClickable(b: Boolean){
         if(itemCount != 0){
-            for(item in itemList){
-                item.isClickable = b
+            for(item in bindingList){
+                item.checkbox.isEnabled = b
             }
             notifyDataSetChanged()
         }
+    }
+
+    fun getExerciseList(): List<DiaryExerciseRvItem> {
+
+        return itemList
     }
 
 }

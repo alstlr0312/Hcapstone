@@ -1,22 +1,16 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise
 
-import android.opengl.Visibility
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
-import com.unity.mynativeapp.Main.home.Calender.DiaryActivity
 import com.unity.mynativeapp.Main.home.Calender.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
-import java.time.LocalDate
 
 class AddExerciseActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddExerciseBinding
@@ -77,8 +71,8 @@ class AddExerciseActivity : AppCompatActivity() {
                         Toast.makeText(this, getString(R.string.please_set_cardio_time), Toast.LENGTH_SHORT).show()
                     }else{
                         val exerciseName = binding.edtDetailCardioName.text.toString()
-                        val reps = 0
-                        val exSetCount = 0
+                        val reps = null
+                        val exSetCount = null
                         val bodyPart = selectedItem.text.toString()
 
                         diaryActivity.exerciseAdapter.addItem(
@@ -98,7 +92,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         Toast.makeText(this, getString(R.string.please_input_exercise_count), Toast.LENGTH_SHORT).show()
                     }else{
                         diaryActivity.exerciseAdapter.addItem(
-                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, 0, bodyPart, false)
+                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
                         )
                         finish()
                     }
