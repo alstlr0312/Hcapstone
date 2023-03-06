@@ -1,22 +1,14 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.opengl.Visibility
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryActivity
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.AddexResponse
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExData
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
 import com.unity.mynativeapp.Main.home.Calender.Diary.diaryActivity
 import com.unity.mynativeapp.R
@@ -24,12 +16,6 @@ import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
 import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.time.LocalDate
 
 class AddExerciseActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddExerciseBinding
@@ -108,8 +94,12 @@ class AddExerciseActivity : AppCompatActivity() {
                         exdata.put("cardioTime", cardioTime)
                         exdata.put("bodyPart", bodyPart)
                         Aexdata.put(exdata)
-                        val intent = Intent(this, DiaryActivity::class.java)
-                        intent.putExtra("Data", Aexdata.toString())
+                        val intent = Intent(this,DiaryActivity::class.java)
+                        intent.putExtra("exerciseInfo", Aexdata.toString())
+                        setResult(RESULT_OK, intent)
+                       // val returnIntent:Intent = intent
+                       // intent.putExtra("exerciseInfo", Aexdata.toString())
+
                         finish()
                     }
 
@@ -133,6 +123,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         exdata.put("cardioTime", 0)
                         exdata.put("bodyPart", bodyPart)
                         Aexdata.put(exdata)
+                        Log.d("post data",Aexdata.toString())
                         val intent = Intent(this, DiaryActivity::class.java)
                         intent.putExtra("Data", Aexdata.toString())
                         finish()

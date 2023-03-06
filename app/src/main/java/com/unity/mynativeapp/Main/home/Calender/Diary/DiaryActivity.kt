@@ -2,33 +2,26 @@ package com.unity.mynativeapp.Main.home.Calender.Diary
 
 
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
-import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.capstone.SignUp.models.SignUpResponse
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.ApplicationClass.Companion.API_URL
 import com.unity.mynativeapp.ApplicationClass.Companion.okHttpClient
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.AddexResponse
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExData
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExResponse
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
@@ -38,25 +31,18 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 
 lateinit var diaryActivity: DiaryActivity
 class DiaryActivity : AppCompatActivity() {
     val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
-    val Authorization = ApplicationClass.AUTHORIZATION
     lateinit var date: String   // 다이어리 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
     var firstStart = true
     var status = 0 // 0(read), 1(write)
-    val uid = ApplicationClass.AUTHORIZATION
     val data = JSONObject()
-    val data2 = JSONObject()
     val exdata = JSONArray()
     var galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
         if(uri != null){
@@ -85,34 +71,44 @@ class DiaryActivity : AppCompatActivity() {
 
 
         setView()
-
+        init()
         setClickListener()
 
 
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, Data)
+    private fun init() {
+        val activityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == RESULT_OK) {
+                val intent = it.data
+                val returnValue = intent!!.getStringExtra("exerciseInfo")
+                Toast.makeText(this, returnValue.toString(), Toast.LENGTH_SHORT).show()
+                exdata.put(returnValue)
+            }
 
-        if (resultCode == RESULT_OK) {
-            var MEMO = Data?.getStringExtra("data")!!
-            exdata.put(MEMO)
+        }
+        binding.btnAddExercise.setOnClickListener {
+            val intent = Intent(this, AddExerciseActivity::class.java)
+            intent.putExtra("date", date)
+            activityResultLauncher.launch(intent)
+            // var intent = Intent(this, AddExerciseActivity::class.java)
+            //intent.putExtra("date", date)
+            //startActivity(intent)
         }
     }
 
     private fun setView(){
         // 일지 상세 정보 조회 요청
-
         if(status == 0) setReadView()
         else setWriteView()
-
-
     }
 
     private fun setReadView(){ // 일지 정보가 있을 경우 -> 일지 조회 화면 (read)
         binding.ivEdit.visibility = View.VISIBLE            // 수정 아이콘 보이기
         binding.ivSave.visibility = View.INVISIBLE          // 저장 아이콘 숨기기
         binding.btnAddExercise.visibility = View.INVISIBLE  // 추가 버튼 숨기기
-        binding.btnAddMedia.visibility = View.INVISIBLE     //
+        binding.btnAddMedia.visibility = View.INVISIBLE     //+
         binding.edtMemo.hint = ""
         binding.edtMemo.isEnabled = false                   // 메모 수정 불가능
         exerciseAdapter.checkBoxIsClickable(false)       // 체크박스 수정 불가능
@@ -132,20 +128,27 @@ class DiaryActivity : AppCompatActivity() {
 
     }
 
-    private fun setClickListener(){
-
+    private fun setClickListener() {
         // 운동 추가
-        binding.btnAddExercise.setOnClickListener {
-            var intent = Intent(this, AddExerciseActivity::class.java)
+        /*binding.btnAddExercise.setOnClickListener {
+            val intent = Intent(this, AddExerciseActivity::class.java)
             intent.putExtra("date", date)
-            startActivity(intent)
-        }
+            activityResultLauncher.launch(intent)
+           // var intent = Intent(this, AddExerciseActivity::class.java)
+            //intent.putExtra("date", date)
+            //startActivity(intent)
+
+        }*/
 
         // 미디어 추가
         binding.btnAddMedia.setOnClickListener {
-            if(mediaAdapter.itemCount == 4){
-                Toast.makeText(this, getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
-            }else{
+            if (mediaAdapter.itemCount == 4) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.you_can_register_four_medias),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 galleryLauncher.launch("image/*")
             }
         }
@@ -184,8 +187,7 @@ class DiaryActivity : AppCompatActivity() {
                         Log.d(ContentValues.TAG, "실패 : $t")
                     }
                 })*/
-            //파일가져오는거 고민좀 하기
-            data.put("writeDiaryDto",exdata)
+            data.put("exerciseInfo",exdata)
             data.put("review", binding.edtMemo.text.toString())
             data.put("date",date)
             val requestBody: RequestBody =
@@ -239,8 +241,9 @@ class DiaryActivity : AppCompatActivity() {
                     Log.d("DiaryActivity", e.message.toString())
                 }
             })
-            }
         }
+    }
+
 
 
 
