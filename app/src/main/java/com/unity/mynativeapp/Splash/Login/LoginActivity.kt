@@ -19,7 +19,7 @@ import com.unity.mynativeapp.util.hideKeyboard
 import org.json.JSONObject
 
 
-class LoginActivity : AppCompatActivity(), LoginActivityInterface {
+class LoginActivity : AppCompatActivity(), LoginActivityInterface{
     lateinit var binding: ActivityLoginBinding
     lateinit var dialog: LoadingDialog
 
@@ -80,6 +80,9 @@ class LoginActivity : AppCompatActivity(), LoginActivityInterface {
                 //
 
                 edit.commit()
+
+                val accessToken = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null).toString()
+                Log.d("accessToken", accessToken)
 
                 runOnUiThread {
                     Toast.makeText(

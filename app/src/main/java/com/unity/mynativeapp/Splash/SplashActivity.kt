@@ -40,6 +40,8 @@ class SplashActivity : AppCompatActivity() {
             ApplicationClass.okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
                 override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                     if(response.code != 401){ // 유효
+                        val accessToken = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null).toString()
+                        Log.d("accessToken", accessToken)
                         startActivity(Intent(this@SplashActivity, BaseActivity::class.java))
                         finish()
                     }else{ // 만료

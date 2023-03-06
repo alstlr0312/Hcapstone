@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Point
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -22,41 +23,52 @@ import com.unity.mynativeapp.ApplicationClass.Companion.okHttpClient
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddexModels.ExResponse
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteRequest
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteResponse
+
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 
 
 lateinit var diaryActivity: DiaryActivity
-class DiaryActivity : AppCompatActivity() {
+class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
     val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
-    lateinit var date: String   // 다이어리 날짜
+    lateinit var diaryDate: String   // 다이어리 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
     var firstStart = true
     var status = 0 // 0(read), 1(write)
-    val data = JSONObject()
-    val exdata = JSONArray()
-    var galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri ->
-        if(uri != null){
-            mediaAdapter.addItem(uri)
+
+    var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        if(result.resultCode == RESULT_OK){
+            val imageUri = result.data?.data
+            imageUri?.let{
+                mediaAdapter.addItem(it)
+            }
         }
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         diaryActivity = this
+
         // 다이어리 날짜 설정
-        date = intent.getStringExtra("date").toString()
-        binding.tvDate.text = date
+        val formatDate = intent.getStringExtra("formatDate").toString()
+        binding.tvDate.text = formatDate
+        diaryDate = intent.getStringExtra("diaryDate").toString()
 
         // 화면 모드
         status = intent.getIntExtra("mode", -1)
@@ -71,44 +83,27 @@ class DiaryActivity : AppCompatActivity() {
 
 
         setView()
-        init()
+
         setClickListener()
 
 
     }
-    private fun init() {
-        val activityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            if (it.resultCode == RESULT_OK) {
-                val intent = it.data
-                val returnValue = intent!!.getStringExtra("exerciseInfo")
-                Toast.makeText(this, returnValue.toString(), Toast.LENGTH_SHORT).show()
-                exdata.put(returnValue)
-            }
-
-        }
-        binding.btnAddExercise.setOnClickListener {
-            val intent = Intent(this, AddExerciseActivity::class.java)
-            intent.putExtra("date", date)
-            activityResultLauncher.launch(intent)
-            // var intent = Intent(this, AddExerciseActivity::class.java)
-            //intent.putExtra("date", date)
-            //startActivity(intent)
-        }
-    }
 
     private fun setView(){
+
         // 일지 상세 정보 조회 요청
+
         if(status == 0) setReadView()
         else setWriteView()
+
+
     }
 
     private fun setReadView(){ // 일지 정보가 있을 경우 -> 일지 조회 화면 (read)
         binding.ivEdit.visibility = View.VISIBLE            // 수정 아이콘 보이기
         binding.ivSave.visibility = View.INVISIBLE          // 저장 아이콘 숨기기
         binding.btnAddExercise.visibility = View.INVISIBLE  // 추가 버튼 숨기기
-        binding.btnAddMedia.visibility = View.INVISIBLE     //+
+        binding.btnAddMedia.visibility = View.INVISIBLE     //
         binding.edtMemo.hint = ""
         binding.edtMemo.isEnabled = false                   // 메모 수정 불가능
         exerciseAdapter.checkBoxIsClickable(false)       // 체크박스 수정 불가능
@@ -125,31 +120,25 @@ class DiaryActivity : AppCompatActivity() {
 
         if(binding.edtMemo.text.toString() == "")
             binding.edtMemo.hint = getString(R.string.please_input)
-
     }
 
-    private fun setClickListener() {
-        // 운동 추가
-        /*binding.btnAddExercise.setOnClickListener {
-            val intent = Intent(this, AddExerciseActivity::class.java)
-            intent.putExtra("date", date)
-            activityResultLauncher.launch(intent)
-           // var intent = Intent(this, AddExerciseActivity::class.java)
-            //intent.putExtra("date", date)
-            //startActivity(intent)
+    private fun setClickListener(){
 
-        }*/
+        // 운동 추가
+        binding.btnAddExercise.setOnClickListener {
+            var intent = Intent(this, AddExerciseActivity::class.java)
+            intent.putExtra("diaryDate", diaryDate)
+            startActivity(intent)
+        }
 
         // 미디어 추가
         binding.btnAddMedia.setOnClickListener {
-            if (mediaAdapter.itemCount == 4) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.you_can_register_four_medias),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                galleryLauncher.launch("image/*")
+            if(mediaAdapter.itemCount == 4){
+                Toast.makeText(this, getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
+            }else{
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                imageResult.launch(intent)
             }
         }
 
@@ -162,90 +151,47 @@ class DiaryActivity : AppCompatActivity() {
         // 저장 아이콘 클릭
         binding.ivSave.setOnClickListener {
 
-           /* if (exerciseAdapter.itemCount != 0) {
+            if(exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
-                data.put("writeDiaryDto",exdata)
-                data.put("review", binding.edtMemo.text.toString())
-                data.put("date",date)
-                val URI = "http://175.114.240.162:8080/diary/write/"
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(URI)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                val api = retrofit.create(AddexResponse::class.java)
-                val callpostexdata = api.AddexResponse(uid,data.toString())
 
-                callpostexdata.enqueue(object : Callback<ExData> {
-                    override fun onResponse(
-                        call: retrofit2.Call<ExData>,
-                        response: Response<ExData>
-                    ) {
-                        Log.d(ContentValues.TAG, "성공 : ${response.raw()}")
-                    }
+                // 운동
+                val jsonRequest = DiaryWriteRequest(
+                    exerciseAdapter.getExerciseList(),
+                    binding.edtMemo.text.toString(),
+                    diaryDate
+                )
+                val gson = GsonBuilder().serializeNulls().create()
+                val datjson=gson.toJson(jsonRequest)
+                val jsonObject = JSONObject()
+                   .put("writeDiaryDto", gson.toJson(jsonRequest))
+                Log.d("sdfdsfdsfdsfdsfsdfsdfe", gson.toJson(jsonRequest).toString())
 
-                    override fun onFailure(call: retrofit2.Call<ExData>, t: Throwable) {
-                        Log.d(ContentValues.TAG, "실패 : $t")
-                    }
-                })*/
-            data.put("exerciseInfo",exdata)
-            data.put("review", binding.edtMemo.text.toString())
-            data.put("date",date)
-            val requestBody: RequestBody =
-                RequestBody.create("application/json; charset=utf-8".toMediaType(), data.toString())
-            Log.d("signUpActivity",data.toString())
-            val url = API_URL + "diary/write"
+                val requestBody = MultipartBody.Builder()
+                    .addPart(datjson.toString().toRequestBody("application/json".toMediaType()))
+                Log.d("diaryActivity", requestBody.toString())
+                val rBody=MultipartBody.Builder().addFormDataPart("writeDiaryDto",requestBody.toString())
 
-            val request = Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build()
-
-
-            okHttpClient.newCall(request).enqueue(object : okhttp3.Callback {
-
-                override fun onResponse(call: Call, response: okhttp3.Response) {
-                    if (response.body != null) {
-                        val body = response.body?.string()
-                        val gson = GsonBuilder().create()
-                        val data = gson.fromJson(body, ExResponse::class.java)
-
-                        Log.d("signUpActivity",data.toString())
-
-                        if(data.status == 500){
-                            runOnUiThread {
-                                Toast.makeText(this@DiaryActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
-                            }
-                        }else if(data.status == 201){
-
-                            runOnUiThread {
-                                Toast.makeText(this@DiaryActivity, "성공", Toast.LENGTH_SHORT).show()
-                            }
-                            finish()
-                        } else if(data.status == 415){
-                            runOnUiThread {
-                                Toast.makeText(this@DiaryActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
-                            }
-                        }else if(data.status == 401){
-                            runOnUiThread {
-                                Toast.makeText(this@DiaryActivity, data.error.toString(), Toast.LENGTH_SHORT).show()
-                            }
-                        }
-
-
-                    } else {
-                        Log.d("DiaryActivity","response body is null")
-                    }
+                // 미디어
+                for (element in mediaAdapter.getMediaList()) {
+                    val file = File(element)
+                    val requestFile = RequestBody.create("image/*".toMediaType(), file)
+                    requestBody.addFormDataPart("files", file.name, requestFile)
+                    Log.d("diaryActivity", element)
                 }
-                override fun onFailure(call: Call, e: IOException) {
+                DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
 
-                    Log.d("DiaryActivity", e.message.toString())
-                }
-            })
+
+            }else{
+                Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
+            }
         }
+
+        // 뒤로 가기
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
     }
-
-
-
 
 
     override fun onResume() {
@@ -272,6 +218,26 @@ class DiaryActivity : AppCompatActivity() {
         params?.height = (size.y * height).toInt()
         dialog.window?.attributes = params as WindowManager.LayoutParams
 
+    }
+
+    override fun onPostLoginSuccess(response: DiaryWriteResponse) {
+        runOnUiThread {
+            Toast.makeText(this, response.status.toString() + " " + response.error.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+
+        if(response.status == 200){
+            //응답 성공
+            setReadView()
+        }
+    }
+
+    override fun onPostLoginFailure(message: String) {
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+        }
+        Log.d("diaryActivity", message)
     }
 
 }

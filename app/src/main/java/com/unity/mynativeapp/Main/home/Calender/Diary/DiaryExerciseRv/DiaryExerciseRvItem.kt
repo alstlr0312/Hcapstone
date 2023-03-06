@@ -1,14 +1,15 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv
 
+import com.google.gson.annotations.SerializedName
+
 data class DiaryExerciseRvItem(
     var exerciseName: String,
-    var reps: Int ?= 0,
-    var exSetCount: Int ?= 0,
+    @SerializedName("reps") val reps: Int? = null,
+    var exSetCount: Int ?= null,
     var cardio: Boolean ?= true,
-    var cardioTime: Int ?= 0,
+    var cardioTime: Int ?= null,
     var bodyPart: String,
     var finished: Boolean = false,
 
-    var isClickable: Boolean ?= true,
 
     )

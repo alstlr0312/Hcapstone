@@ -1,29 +1,23 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
 import com.unity.mynativeapp.Main.home.Calender.Diary.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
-import org.json.JSONArray
-import org.json.JSONObject
 
 class AddExerciseActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddExerciseBinding
     lateinit var date: String   // 다이어리 날짜
     var cbList = arrayListOf<CheckBox>()    // 운동 부위 체크박스 리스트
     var isCardio = false    // 유산소 or 무산소 여부
-    val exdata = JSONObject()
-    val Aexdata = JSONArray()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddExerciseBinding.inflate(layoutInflater)
@@ -32,8 +26,6 @@ class AddExerciseActivity : AppCompatActivity() {
 
         setView()
         setListener()
-
-
     }
 
     private fun setView(){
@@ -79,27 +71,13 @@ class AddExerciseActivity : AppCompatActivity() {
                         Toast.makeText(this, getString(R.string.please_set_cardio_time), Toast.LENGTH_SHORT).show()
                     }else{
                         val exerciseName = binding.edtDetailCardioName.text.toString()
-                        val reps = 0
-                        val exSetCount = 0
+                        val reps = null
+                        val exSetCount = null
                         val bodyPart = selectedItem.text.toString()
 
                         diaryActivity.exerciseAdapter.addItem(
                             DiaryExerciseRvItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
                         )
-
-                        exdata.put("exerciseName", exerciseName)
-                        exdata.put("reps", reps)
-                        exdata.put("exSetCount", exSetCount)
-                        exdata.put("isCardio", isCardio)
-                        exdata.put("cardioTime", cardioTime)
-                        exdata.put("bodyPart", bodyPart)
-                        Aexdata.put(exdata)
-                        val intent = Intent(this,DiaryActivity::class.java)
-                        intent.putExtra("exerciseInfo", Aexdata.toString())
-                        setResult(RESULT_OK, intent)
-                       // val returnIntent:Intent = intent
-                       // intent.putExtra("exerciseInfo", Aexdata.toString())
-
                         finish()
                     }
 
@@ -114,18 +92,8 @@ class AddExerciseActivity : AppCompatActivity() {
                         Toast.makeText(this, getString(R.string.please_input_exercise_count), Toast.LENGTH_SHORT).show()
                     }else{
                         diaryActivity.exerciseAdapter.addItem(
-                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, 0, bodyPart, false)
+                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
                         )
-                        exdata.put("exerciseName", exerciseName)
-                        exdata.put("reps", reps)
-                        exdata.put("exSetCount", exSetCount)
-                        exdata.put("isCardio", isCardio)
-                        exdata.put("cardioTime", 0)
-                        exdata.put("bodyPart", bodyPart)
-                        Aexdata.put(exdata)
-                        Log.d("post data",Aexdata.toString())
-                        val intent = Intent(this, DiaryActivity::class.java)
-                        intent.putExtra("Data", Aexdata.toString())
                         finish()
                     }
                 }
