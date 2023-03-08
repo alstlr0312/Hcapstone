@@ -6,11 +6,12 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
+import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.exerciseInfo
 import com.unity.mynativeapp.Main.home.Calender.Diary.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.util.hideKeyboard
+import org.json.JSONObject
 
 class AddExerciseActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddExerciseBinding
@@ -76,8 +77,9 @@ class AddExerciseActivity : AppCompatActivity() {
                         val bodyPart = selectedItem.text.toString()
 
                         diaryActivity.exerciseAdapter.addItem(
-                            DiaryExerciseRvItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
+                            exerciseInfo(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
                         )
+
                         finish()
                     }
 
@@ -92,7 +94,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         Toast.makeText(this, getString(R.string.please_input_exercise_count), Toast.LENGTH_SHORT).show()
                     }else{
                         diaryActivity.exerciseAdapter.addItem(
-                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
+                            exerciseInfo(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
                         )
                         finish()
                     }

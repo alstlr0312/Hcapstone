@@ -8,6 +8,8 @@ import com.unity.mynativeapp.Splash.LoginResponse
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -31,7 +33,7 @@ class ApplicationClass: Application() {
         val FORM_DATA: MediaType = "application/octet-stream".toMediaType()
 
         val API_URL = "http://175.114.240.162:8080/"
-
+        var TOKEN =""
 
     }
 
@@ -60,7 +62,7 @@ class ApplicationClass: Application() {
                 builder.addHeader(AUTHORIZATION, "$GRANT_TYPE $token")
             }
             Log.d("applicationClass", "token $token")
-
+            TOKEN=token.toString()
             request = builder.build()
             val response = chain.proceed(request)
 
@@ -83,6 +85,7 @@ class ApplicationClass: Application() {
                     if(newToken != null) { // 재발급한 토큰으로 재요청하기
                         builder.header(AUTHORIZATION, "$GRANT_TYPE $newToken")
                         request = builder.build()
+                        TOKEN=newToken.toString()
                         return chain.proceed(request)
                     }
                 }
@@ -138,6 +141,7 @@ class ApplicationClass: Application() {
             while(returnCode == 0){}
             return returnCode
         }
+
         private fun logout() {
             sSharedPreferences.edit().remove(X_ACCESS_TOKEN).remove(X_REFRESH_TOKEN).commit()
         }

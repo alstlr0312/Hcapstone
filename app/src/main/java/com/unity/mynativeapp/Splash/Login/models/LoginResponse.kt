@@ -2,7 +2,10 @@ package com.unity.mynativeapp.Splash
 
 
 import com.google.gson.annotations.SerializedName
-
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 data class LoginResponse(
     @SerializedName("status") val status: Int,
     @SerializedName("error") val error: String? = null,

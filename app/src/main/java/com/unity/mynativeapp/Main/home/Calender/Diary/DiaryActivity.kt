@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -13,39 +12,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.ApplicationClass.Companion.API_URL
-import com.unity.mynativeapp.ApplicationClass.Companion.okHttpClient
+import com.unity.mynativeapp.ApplicationClass
+import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
-import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteRequest
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteResponse
-
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
-import okhttp3.Call
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.File
-import java.io.IOException
 
 
 lateinit var diaryActivity: DiaryActivity
+
 class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
     val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
     lateinit var diaryDate: String   // 다이어리 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
+
     var firstStart = true
     var status = 0 // 0(read), 1(write)
 
@@ -89,6 +82,8 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
     }
 
+
+
     private fun setView(){
 
         // 일지 상세 정보 조회 요청
@@ -122,7 +117,7 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
             binding.edtMemo.hint = getString(R.string.please_input)
     }
 
-    private fun setClickListener(){
+    private fun setClickListener() {
 
         // 운동 추가
         binding.btnAddExercise.setOnClickListener {
@@ -133,9 +128,13 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
         // 미디어 추가
         binding.btnAddMedia.setOnClickListener {
-            if(mediaAdapter.itemCount == 4){
-                Toast.makeText(this, getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
-            }else{
+            if (mediaAdapter.itemCount == 4) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.you_can_register_four_medias),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 imageResult.launch(intent)
@@ -150,10 +149,8 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
         // 저장 아이콘 클릭
         binding.ivSave.setOnClickListener {
-
-            if(exerciseAdapter.itemCount != 0) {
+            if (exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
-
                 // 운동
                 val jsonRequest = DiaryWriteRequest(
                     exerciseAdapter.getExerciseList(),
@@ -161,40 +158,45 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                     diaryDate
                 )
                 val gson = GsonBuilder().serializeNulls().create()
-                val datjson=gson.toJson(jsonRequest)
-                val jsonObject = JSONObject()
-                   .put("writeDiaryDto", gson.toJson(jsonRequest))
-                Log.d("sdfdsfdsfdsfdsfsdfsdfe", gson.toJson(jsonRequest).toString())
+                val datjson = gson.toJson(jsonRequest)
+                val body = datjson.toString().toRequestBody("application/json".toMediaType())
+                val requestBody = MultipartBody.Builder().addPart(body)
+                val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", body.toString())
+                Log.d("sdfsdfsdfsdffffsd", datjson.toString())
 
-                val requestBody = MultipartBody.Builder()
-                    .addPart(datjson.toString().toRequestBody("application/json".toMediaType()))
-                Log.d("diaryActivity", requestBody.toString())
-                val rBody=MultipartBody.Builder().addFormDataPart("writeDiaryDto",requestBody.toString())
+               StoryService(this).writeStory(rBody)
+
+
+                Log.d("tlrtlrtlr", rBody.toString())
 
                 // 미디어
+
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
                     val requestFile = RequestBody.create("image/*".toMediaType(), file)
                     requestBody.addFormDataPart("files", file.name, requestFile)
                     Log.d("diaryActivity", element)
                 }
-                DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
 
 
-            }else{
+               //   DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
+
+
+            } else {
                 Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }
-        }
 
-        // 뒤로 가기
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
 
+            // 뒤로 가기
+            binding.btnBack.setOnClickListener {
+                finish()
+            }
+
+        }
     }
 
 
-    override fun onResume() {
+   override fun onResume() {
         super.onResume()
         if(firstStart){
             overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
@@ -241,3 +243,4 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
     }
 
 }
+

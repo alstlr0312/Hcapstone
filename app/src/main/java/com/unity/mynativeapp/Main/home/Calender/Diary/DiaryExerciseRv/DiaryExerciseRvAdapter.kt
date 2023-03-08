@@ -18,7 +18,7 @@ import com.unity.mynativeapp.util.DeleteDialog
 class DiaryExerciseRvAdapter(var context: Context)
     : RecyclerView.Adapter<DiaryExerciseRvAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<DiaryExerciseRvItem>()
+    private var itemList = mutableListOf<exerciseInfo>()
     private var bindingList = mutableListOf<ItemRvDiaryExerciseBinding>()
     inner class ViewHolder(val binding: ItemRvDiaryExerciseBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -44,7 +44,7 @@ class DiaryExerciseRvAdapter(var context: Context)
                 return@OnLongClickListener true
             }
         }
-        fun bind(item: DiaryExerciseRvItem){
+        fun bind(item: exerciseInfo){
 
             binding.checkbox.isChecked = item.finished
 
@@ -96,11 +96,11 @@ class DiaryExerciseRvAdapter(var context: Context)
         return itemList.size
     }
 
-    fun getListFormView(nList: MutableList<DiaryExerciseRvItem>){
+    fun getListFormView(nList: MutableList<exerciseInfo>){
         itemList = nList
     }
 
-    fun addItem(item: DiaryExerciseRvItem){
+    fun addItem(item: exerciseInfo){
         itemList.add(item)
         notifyDataSetChanged()
     }
@@ -114,8 +114,7 @@ class DiaryExerciseRvAdapter(var context: Context)
         }
     }
 
-    fun getExerciseList(): List<DiaryExerciseRvItem> {
-
+    fun getExerciseList(): List<exerciseInfo> {
         return itemList
     }
 
