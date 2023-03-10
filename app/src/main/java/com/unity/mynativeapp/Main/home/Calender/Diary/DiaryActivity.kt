@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
@@ -27,9 +26,9 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-
 
 lateinit var diaryActivity: DiaryActivity
 
@@ -152,6 +151,7 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
             if (exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
                 // 운동
+
                 val jsonRequest = DiaryWriteRequest(
                     exerciseAdapter.getExerciseList(),
                     binding.edtMemo.text.toString(),
@@ -160,25 +160,29 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 val gson = GsonBuilder().serializeNulls().create()
                 val datjson = gson.toJson(jsonRequest)
                 val body = datjson.toString().toRequestBody("application/json".toMediaType())
+
+
                 val requestBody = MultipartBody.Builder().addPart(body)
                 val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", body.toString())
+
                 Log.d("sdfsdfsdfsdffffsd", datjson.toString())
-
-               StoryService(this).writeStory(rBody)
-
-
                 Log.d("tlrtlrtlr", rBody.toString())
-
                 // 미디어
-
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
                     val requestFile = RequestBody.create("image/*".toMediaType(), file)
-                    requestBody.addFormDataPart("files", file.name, requestFile)
+                    val uploadFile = MultipartBody.Part.createFormData("files", file.name,  requestFile)
                     Log.d("diaryActivity", element)
                 }
-
-
+                //
+                var requestName: RequestBody =
+                    datjson.toRequestBody("text/plain".toMediaTypeOrNull())
+                val partMap : HashMap<String, RequestBody> = hashMapOf()
+                partMap.put("writeDiaryDto", requestName)
+                System.out.println(partMap.get("writeDiaryDto"))
+                StoryService(this).writeStory2(partMap)
+                //
+                //StoryService(this).writeStory(rBody)
                //   DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
 
 
@@ -194,7 +198,8 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
         }
     }
-
+//
+    //
 
    override fun onResume() {
         super.onResume()

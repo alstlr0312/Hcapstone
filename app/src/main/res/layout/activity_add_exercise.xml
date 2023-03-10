@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_todays_exercise">
 
         <CheckBox
-            android:id="@+id/cb_back"
+            android:id="@+id/BACK"
             android:layout_width="68dp"
             android:layout_height="46dp"
             android:background="@drawable/sel_checkbox_box"
@@ -81,14 +81,14 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_back"
+            android:text="등"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
-            android:id="@+id/cb_chest"
+            android:id="@+id/CHEST"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginStart="10dp"
@@ -97,14 +97,14 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_chest"
+            android:text="가슴"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/cb_back"
+            app:layout_constraintStart_toEndOf="@id/BACK"
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
-            android:id="@+id/cb_shoulder"
+            android:id="@+id/SHOULDER"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginStart="10dp"
@@ -113,14 +113,14 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_shoulder"
+            android:text="어깨"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/cb_chest"
+            app:layout_constraintStart_toEndOf="@id/CHEST"
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
-            android:id="@+id/cb_legs"
+            android:id="@+id/LEGS"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginTop="10dp"
@@ -129,14 +129,14 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_legs"
+            android:text="하체"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cb_shoulder" />
+            app:layout_constraintTop_toBottomOf="@id/SHOULDER" />
 
         <CheckBox
-            android:id="@+id/cb_abs"
+            android:id="@+id/ABS"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginStart="10dp"
@@ -145,14 +145,14 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_abs"
+            android:text="복근"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/cb_legs"
-            app:layout_constraintTop_toTopOf="@id/cb_legs" />
+            app:layout_constraintStart_toEndOf="@id/LEGS"
+            app:layout_constraintTop_toTopOf="@id/LEGS" />
 
         <CheckBox
-            android:id="@+id/cb_biceps"
+            android:id="@+id/BICEP"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginStart="10dp"
@@ -161,15 +161,15 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_biceps"
+            android:text="이두근"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/cb_abs"
-            app:layout_constraintTop_toTopOf="@id/cb_abs" />
+            app:layout_constraintStart_toEndOf="@id/ABS"
+            app:layout_constraintTop_toTopOf="@id/ABS" />
 
 
         <CheckBox
-            android:id="@+id/cb_triceps"
+            android:id="@+id/TRICEP"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginTop="10dp"
@@ -178,11 +178,11 @@
             android:gravity="center"
             android:onClick="onCheckboxClicked"
             android:paddingHorizontal="25dp"
-            android:text="@string/exercise_triceps"
+            android:text="삼두근"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cb_biceps" />
+            app:layout_constraintTop_toBottomOf="@id/BICEP" />
 
         <CheckBox
             android:id="@+id/cb_cardio"
@@ -197,8 +197,8 @@
             android:text="@string/aerobic"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/cb_triceps"
-            app:layout_constraintTop_toTopOf="@id/cb_triceps" />
+            app:layout_constraintStart_toEndOf="@id/TRICEP"
+            app:layout_constraintTop_toTopOf="@id/TRICEP" />
 
         <CheckBox
             android:id="@+id/cb_etc"

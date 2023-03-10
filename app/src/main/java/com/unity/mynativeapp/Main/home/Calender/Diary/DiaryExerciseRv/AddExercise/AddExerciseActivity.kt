@@ -116,13 +116,13 @@ class AddExerciseActivity : AppCompatActivity() {
     }
 
     private fun setCbList(){
-        cbList.add(binding.cbBack)
-        cbList.add(binding.cbChest)
-        cbList.add(binding.cbShoulder)
-        cbList.add(binding.cbLegs)
-        cbList.add(binding.cbAbs)
-        cbList.add(binding.cbBiceps)
-        cbList.add(binding.cbTriceps)
+        cbList.add(binding.BACK)
+        cbList.add(binding.CHEST)
+        cbList.add(binding.SHOULDER)
+        cbList.add(binding.LEGS)
+        cbList.add(binding.ABS)
+        cbList.add(binding.BICEP)
+        cbList.add(binding.TRICEP)
         cbList.add(binding.cbCardio)
         cbList.add(binding.cbEtc)
 
