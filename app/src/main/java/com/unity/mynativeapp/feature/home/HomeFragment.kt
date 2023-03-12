@@ -13,11 +13,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.unity.mynativeapp.model.DayItem
 import com.unity.mynativeapp.model.HomePageResponse
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
-import com.unity.mynativeapp.feature.daily_challenge.DailyChallengeActivity
-import com.unity.mynativeapp.feature.home.CalenderRvAdapter
 import com.unity.mynativeapp.util.LoadingDialog
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 lateinit var testList: MutableList<DayItem>
 
@@ -28,6 +27,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
     lateinit var selectedDate: LocalDate
     lateinit var calenderRvAdapter: CalenderRvAdapter
     lateinit var loadingDialog: LoadingDialog
+    lateinit var requestData: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,14 +79,6 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         }
 
 
-        // 일일챌린지 설정하기 버튼 이벤트
-        binding.btnSetDailyChallenge.setOnClickListener {
-            val intent = Intent(requireContext(), DailyChallengeActivity::class.java)
-            intent.putExtra("year", selectedDate.year)
-            intent.putExtra("month", selectedDate.monthValue)
-            intent.putExtra("dayOfMonth", selectedDate.dayOfMonth)
-            startActivity(intent)
-        }
 
 
         return binding.root
@@ -100,6 +92,8 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         binding.recyclerViewCalendar.layoutManager = GridLayoutManager(context, 7)
         binding.recyclerViewCalendar.adapter = calenderRvAdapter
 
+
+        requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
         // 더미데이터 (서버 연결 시 삭제)
         calenderRvAdapter.getListFormView(setDayList(testList))
         calenderRvAdapter.notifyDataSetChanged()

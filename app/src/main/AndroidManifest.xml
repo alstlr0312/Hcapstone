@@ -19,9 +19,8 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize" >
         <activity
-            android:name=".AddExerciseActivity"
+            android:name=".feature.adddiary.AddExerciseActivity"
             android:exported="false"
-            android:label="@string/title_activity_add_exercise"
             android:theme="@style/NoActionBar" />
         <activity
             android:name=".feature.daily_challenge.DailyChallengeActivity"
@@ -54,7 +53,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Main.BaseActivity"
+            android:name=".feature.BaseActivity"
             android:exported="true" >
             <meta-data
                 android:name="android.app.lib_name"

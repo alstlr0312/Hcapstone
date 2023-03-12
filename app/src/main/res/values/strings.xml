@@ -52,6 +52,8 @@
     <string name="sunday">일요일</string>
 
     <string name="diary">일지</string>
+    <string name="additional_exercise">추가 운동</string>
+    <string name="register_daily_challenge">일일 챌린지 등록하기</string>
     <string name="exercise">운동</string>
     <string name="todays_exercise">오늘의 운동</string>
     <string name="memo">메모</string>

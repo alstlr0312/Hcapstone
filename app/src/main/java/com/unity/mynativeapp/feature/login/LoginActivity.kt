@@ -29,6 +29,9 @@ class LoginActivity : AppCompatActivity() {
 
 		// UI Event를 정리한 함수
 		setUiEvent()
+
+		//로그인 성공시
+		startbaseActivity()
 	}
 
 	private fun setUiEvent() {
@@ -63,5 +66,15 @@ class LoginActivity : AppCompatActivity() {
 			startActivity(Intent(this, BaseActivity::class.java))
 			finish()
 		}
+	}
+
+	private fun startbaseActivity(){
+		viewModel.shouldStartActivity.observe(
+			this,
+			{
+				val intent = Intent(this, BaseActivity::class.java)
+				startActivity(intent)
+			}
+		)
 	}
 }

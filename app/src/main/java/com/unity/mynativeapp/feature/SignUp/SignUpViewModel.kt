@@ -26,8 +26,8 @@ class SignUpViewModel : ViewModel() {
 	private val emailPattern = android.util.Patterns.EMAIL_ADDRESS
 	private val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
 
-	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String) {
-		if (id.isEmpty()) {
+	fun signup(loginId: String, password: String, passwordCheck: String, email: String, username: String) {
+		if (loginId.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return
 		}
@@ -47,12 +47,12 @@ class SignUpViewModel : ViewModel() {
 			return
 		}
 
-		if (nickname.isEmpty()) {
+		if (username.isEmpty()) {
 			_toastMessage.postValue(NICKNAME_EMPTY_ERROR)
 			return
 		}
 
-		RetrofitClient.getApiService().signup(SignUpRequest(id, password, email, nickname)).enqueue(object : Callback<MyResponse<String>> {
+		RetrofitClient.getApiService().signup(SignUpRequest(loginId, password, email, username)).enqueue(object : Callback<MyResponse<String>> {
 			override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
 				_loading.postValue(false)
 
@@ -61,9 +61,9 @@ class SignUpViewModel : ViewModel() {
 
 				if (code == 201) {
 					if (data == null) return
-
 					MyApplication.prefUtil.setString("username", data)
 					_toastMessage.postValue(SIGNUP_SUCCESS)
+
 				}
 			}
 

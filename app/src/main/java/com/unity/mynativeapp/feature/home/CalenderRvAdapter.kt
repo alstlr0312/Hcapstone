@@ -17,7 +17,6 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
 import com.unity.mynativeapp.feature.diary.DiaryActivity
 
-@RequiresApi(Build.VERSION_CODES.O)
 
 class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAdapter.ViewHolder>(),
     HomeFragmentInterface {

@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.unity.mynativeapp.Main.community.posting.PostingRvAdapter
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
+import com.unity.mynativeapp.model.PostingRvItem
 
 
 class CommunityFragment : Fragment() {

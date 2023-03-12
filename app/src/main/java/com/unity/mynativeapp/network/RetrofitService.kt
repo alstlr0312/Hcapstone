@@ -1,9 +1,6 @@
 package com.unity.mynativeapp.network
 
-import com.unity.mynativeapp.model.HomePageResponse
-import com.unity.mynativeapp.model.LoginData
-import com.unity.mynativeapp.model.LoginRequest
-import com.unity.mynativeapp.model.SignUpRequest
+import com.unity.mynativeapp.model.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,6 +15,8 @@ interface RetrofitService {
 	@POST("signup")
 	fun signup(@Body signUpRequest: SignUpRequest) : Call<MyResponse<String>>
 
+	@GET("diary?date=")
+	fun datePage( @Query("date") date: String) : Call<diarydateResponse>
 	// 홈 화면
 	@GET("/home")
 	fun getHomePage( @Query("userIdx") userIdx: Int) : Call<HomePageResponse>

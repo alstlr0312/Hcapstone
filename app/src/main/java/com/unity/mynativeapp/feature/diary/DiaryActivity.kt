@@ -158,8 +158,6 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 val gson = GsonBuilder().serializeNulls().create()
                 val datjson = gson.toJson(jsonRequest)
                 val body = datjson.toString().toRequestBody("application/json".toMediaType())
-
-
                 val requestBody = MultipartBody.Builder().addPart(body)
                 val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", body.toString())
 
