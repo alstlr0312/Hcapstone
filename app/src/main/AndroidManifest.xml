@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
-        android:name=".ApplicationClass"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,25 +19,25 @@
         >
 
         <activity
-            android:name=".Main.home.DailyChallenge.DailyChallengeActivity"
+            android:name=".feature.daily_challenge.DailyChallengeActivity"
             android:exported="false" />
         <activity
-            android:name=".Main.home.Calender.Diary.DiaryActivity"
+            android:name=".feature.diary.DiaryActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUp.SignUpActivity"
+            android:name=".feature.SignUp.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".Splash.Login.LoginActivity"
+            android:name=".feature.login.LoginActivity"
             android:exported="false" />
 
         <activity
-            android:name=".Main.ar.MainActivity"
+            android:name=".feature.ar.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="false" />
         <activity
-            android:name=".Splash.SplashActivity"
+            android:name=".feature.login.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,7 +58,7 @@
         </activity>
         <activity
             android:label="@string/app_name"
-            android:name=".Main.ar.MainUnityActivity"
+            android:name=".feature.ar.MainUnityActivity"
             android:screenOrientation="fullSensor"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
             android:hardwareAccelerated="false"
