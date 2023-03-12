@@ -12,8 +12,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.unity.mynativeapp.model.DayItem
 import com.unity.mynativeapp.model.HomePageResponse
-import com.unity.mynativeapp.Main.home.DailyChallenge.DailyChallengeActivity
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
+import com.unity.mynativeapp.feature.daily_challenge.DailyChallengeActivity
 import com.unity.mynativeapp.feature.home.CalenderRvAdapter
 import com.unity.mynativeapp.util.LoadingDialog
 import java.time.LocalDate

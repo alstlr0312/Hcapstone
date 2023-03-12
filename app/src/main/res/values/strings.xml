@@ -7,6 +7,9 @@
         com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior
     </string>
 
+    <string name="action_settings">Settings</string>
+    <string name="game_view_content_description">Game view</string>
+
 
     <string name="id">아이디</string>
     <string name="password">비밀번호</string>
@@ -28,10 +31,7 @@
     <string name="email_invalied_format">이메일 형식이 옳바르지 않습니다.</string>
     <string name="password_not_same">비밀번호가 일치하지 않습니다.</string>
     <string name="complete_sign_up">회원가입을 완료하였습니다.</string>
-    <string name="action_settings">Settings</string>
-    <string name="game_view_content_description">Game view</string>
-    <string name="daily_challenge">일일 챌린지</string>
-    <string name="register_daily_challenge">일일 챌린지 등록하기</string>
+    <string name="success_sign_in">로그인 성공</string>
     <string name="health_dairy">운동 일지</string>
     <string name="aerobic">유산소</string>
     <string name="anaerobic">무산소</string>
@@ -53,24 +53,41 @@
 
     <string name="diary">일지</string>
     <string name="exercise">운동</string>
-    <string name="additional_exercise">추가 운동</string>
+    <string name="todays_exercise">오늘의 운동</string>
     <string name="memo">메모</string>
     <string name="photo">사진</string>
     <string name="video">동영상</string>
+    <string name="gallery">갤러리</string>
     <string name="add">추가</string>
     <string name="please_input">입력해주세요...</string>
 
     <string name="todays_challenge">오늘의 도전</string>
     <string name="hour">시간</string>
     <string name="register">등록하기</string>
-    <string name="exercise_back">등</string>
-    <string name="exercise_chest">가슴</string>
-    <string name="exercise_shoulder">어깨</string>
-    <string name="exercise_lower_body">하체</string>
-    <string name="exercise_biceps">이두근</string>
-    <string name="exercise_triceps">삼두근</string>
-    <string name="exercise_abdominal_muscle">복근</string>
+    <string name="exercise_back">BACK</string>
+    <string name="exercise_chest">CHEST</string>
+    <string name="exercise_shoulder">SHOULDER</string>
+    <string name="exercise_legs">LEGS</string>
+    <string name="exercise_biceps">BICEP</string>
+    <string name="exercise_triceps">TRICEP</string>
+    <string name="exercise_abs">ABS</string>
     <string name="exercise_etc">기타</string>
-    <string name="exercise_detail_anaerobic">상세 입력 (ex.스쿼드)</string>
-    <string name="exercise_detail_aerobic">상세 입력 (ex.런닝)</string>
+    <string name="exercise_detail_weight_training">상세 입력 (ex.스쿼드)</string>
+    <string name="exercise_detail_cardio">상세 입력 (ex.런닝)</string>
+    <string name="time">시간</string>
+    <string name="minute">분</string>
+    <string name="reps">회/1세트</string>
+    <string name="sets">세트</string>
+
+    <string name="read_more">더보기</string>
+    <string name="read_less">닫기</string>
+
+    <string name="please_select_exercise_you_want_register">등록할 운동을 선택해 주세요.</string>
+    <string name="please_set_cardio_time">유산소 시간을 설정해 주세요.</string>
+    <string name="please_input_exercise_count">운동 횟수를 입력해 주세요.</string>
+    <string name="cancel">취소</string>
+    <string name="confirm">확인</string>
+    <string name="you_can_register_four_medias">최대 4개까지만 등록할 수 있습니다.</string>
+    <string name="delete_diary">일지를 삭제하시겠습니까?</string>
+    <string name="delete_exercise">운동을 삭제하시겠습니까?</string>
 </resources>

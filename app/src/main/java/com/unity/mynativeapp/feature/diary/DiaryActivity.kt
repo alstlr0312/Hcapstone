@@ -2,111 +2,239 @@ package com.unity.mynativeapp.feature.diary
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
+import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
-import android.view.Window
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryPhotoRv.DiaryPhotoRvItem
+import com.google.gson.GsonBuilder
+
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
+import com.unity.mynativeapp.feature.adddiary.AddExerciseActivity
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
+import com.unity.mynativeapp.model.DiaryWriteRequest
+import com.unity.mynativeapp.model.DiaryWriteResponse
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
-class DiaryActivity : AppCompatActivity() {
+lateinit var diaryActivity: DiaryActivity
+class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
+    val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
+    lateinit var diaryDate: String   // 다이어리 날짜
+    lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
+    lateinit var mediaAdapter: DiaryMediaRvAdapter      // 사진 Rv 어댑터
 
-    private val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
+    var firstStart = true
+    var status = 0 // 0(read), 1(write)
 
-    private lateinit var dailyChallengeAdapter: DiaryExerciseRvAdapter
-    private lateinit var additionalExerciseAdapter: DiaryExerciseRvAdapter
-    private lateinit var photoAdapter: DiaryPhotoRvAdapter
-    private lateinit var videoAdapter: DiaryPhotoRvAdapter
-    private lateinit var addExerciseDialog: AddExerciseDialog
+    var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        if(result.resultCode == RESULT_OK){
+            val imageUri = result.data?.data
+            imageUri?.let{
+                mediaAdapter.addItem(it)
+            }
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        diaryActivity = this
 
-        with(binding.rvDailyChallenge) {
-            setHasFixedSize(true)
-            adapter = DiaryExerciseRvAdapter(mutableListOf(), this@DiaryActivity)
-            layoutManager = LinearLayoutManager(this@DiaryActivity)
-        }
+        // 다이어리 날짜 설정
+        val formatDate = intent.getStringExtra("formatDate").toString()
+        binding.tvDate.text = formatDate
+        diaryDate = intent.getStringExtra("diaryDate").toString()
 
-        additionalExerciseAdapter = DiaryExerciseRvAdapter(mutableListOf(), this)
-        binding.recyclerViewAdditionalExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewAdditionalExercise.adapter = additionalExerciseAdapter
+        // 화면 모드
+        status = intent.getIntExtra("mode", -1)
 
-        photoAdapter = DiaryPhotoRvAdapter(getPhotoList(), this)
-        binding.recyclerViewPhotos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewPhotos.adapter = photoAdapter
+        exerciseAdapter = DiaryExerciseRvAdapter(this)
+        binding.recyclerViewTodaysExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewTodaysExercise.adapter = exerciseAdapter
 
-        videoAdapter = DiaryPhotoRvAdapter(getPhotoList(), this)
-        binding.recyclerViewVideos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewVideos.adapter = videoAdapter
-
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
-
-        binding.tvDate.text = intent.getStringExtra("date")
+        mediaAdapter = DiaryMediaRvAdapter(this)
+        binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerViewMedia.adapter = mediaAdapter
 
 
-        // 추가 운동 설정
+        setView()
+
+        setClickListener()
+
+
+    }
+
+
+
+    private fun setView(){
+
+        // 일지 상세 정보 조회 요청
+
+        if(status == 0) setReadView()
+        else setWriteView()
+
+
+    }
+
+    private fun setReadView(){ // 일지 정보가 있을 경우 -> 일지 조회 화면 (read)
+        binding.ivEdit.visibility = View.VISIBLE            // 수정 아이콘 보이기
+        binding.ivSave.visibility = View.INVISIBLE          // 저장 아이콘 숨기기
+        binding.btnAddExercise.visibility = View.INVISIBLE  // 추가 버튼 숨기기
+        binding.btnAddMedia.visibility = View.INVISIBLE     //
+        binding.edtMemo.hint = ""
+        binding.edtMemo.isEnabled = false                   // 메모 수정 불가능
+        exerciseAdapter.checkBoxIsClickable(false)       // 체크박스 수정 불가능
+
+    }
+
+    private fun setWriteView(){ // 일지 정보가 없거나 수정 버튼을 클릭한 경우 (Write)
+        binding.ivSave.visibility = View.VISIBLE                // 저장 아이콘 보이기
+        binding.ivEdit.visibility = View.GONE                   // 수정 아이콘 숨기기
+        binding.btnAddExercise.visibility = View.VISIBLE        // 추가 버튼 보이기
+        binding.btnAddMedia.visibility = View.VISIBLE           //
+        binding.edtMemo.isEnabled = true                        // 메모 수정 가능
+        exerciseAdapter.checkBoxIsClickable(true)            // 체크박스 수정 가능
+
+        if(binding.edtMemo.text.toString() == "")
+            binding.edtMemo.hint = getString(R.string.please_input)
+    }
+
+    private fun setClickListener() {
+
+        // 운동 추가
         binding.btnAddExercise.setOnClickListener {
-            addExerciseDialog = AddExerciseDialog(this)
-            addExerciseDialog.show()
+            var intent = Intent(this, AddExerciseActivity::class.java)
+            intent.putExtra("diaryDate", diaryDate)
+            startActivity(intent)
         }
 
-        var challengeList = mutableListOf<DiaryExerciseRvItem>()
-        if(challengeList.size == 0){
-            binding.btnSetDailyChallenge.visibility = View.VISIBLE
-        }else{
-            binding.btnSetDailyChallenge.visibility = View.GONE
+        // 미디어 추가
+        binding.btnAddMedia.setOnClickListener {
+            if (mediaAdapter.itemCount == 4) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.you_can_register_four_medias),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                imageResult.launch(intent)
+            }
+        }
+
+
+        // 수정 아이콘 클릭
+        binding.ivEdit.setOnClickListener {
+            setWriteView()
+        }
+
+        // 저장 아이콘 클릭
+        binding.ivSave.setOnClickListener {
+            if (exerciseAdapter.itemCount != 0) {
+                // 운동일지 작성 or 수정 요청
+                // 운동
+
+                val jsonRequest = DiaryWriteRequest(
+                    exerciseAdapter.getExerciseList(),
+                    binding.edtMemo.text.toString(),
+                    diaryDate
+                )
+                val gson = GsonBuilder().serializeNulls().create()
+                val datjson = gson.toJson(jsonRequest)
+                val body = datjson.toString().toRequestBody("application/json".toMediaType())
+
+
+                val requestBody = MultipartBody.Builder().addPart(body)
+                val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", body.toString())
+
+                Log.d("sdfsdfsdfsdffffsd", datjson.toString())
+                Log.d("tlrtlrtlr", rBody.toString())
+                // 미디어
+                for (element in mediaAdapter.getMediaList()) {
+                    val file = File(element)
+                    val requestFile = RequestBody.create("image/*".toMediaType(), file)
+                    val uploadFile = MultipartBody.Part.createFormData("files", file.name,  requestFile)
+                    Log.d("diaryActivity", element)
+                }
+
+
+
+            } else {
+                Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+
+            // 뒤로 가기
+            binding.btnBack.setOnClickListener {
+                finish()
+            }
+
         }
     }
+//
+    //
 
     override fun onResume() {
         super.onResume()
-        overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
-    }
-
-    fun getExerciseList(): MutableList<DiaryExerciseRvItem>{
-
-        var list = mutableListOf<DiaryExerciseRvItem>()
-        list.add(DiaryExerciseRvItem(true, "스쿼트-하체", 10, 5))
-        list.add(DiaryExerciseRvItem(false, "유산소-런닝", null, null, 30))
-        return list
-    }
-
-    fun getPhotoList(): MutableList<DiaryPhotoRvItem>{
-        var list = mutableListOf<DiaryPhotoRvItem>()
-        list.add(DiaryPhotoRvItem(R.drawable.photo01))
-        list.add(DiaryPhotoRvItem(R.drawable.photo01))
-        list.add(DiaryPhotoRvItem(R.drawable.photo01))
-        list.add(DiaryPhotoRvItem(R.drawable.photo01))
-        list.add(DiaryPhotoRvItem(R.drawable.photo01))
-        return list
-    }
-
-    inner class AddExerciseDialog(context: Context): Dialog(context){
-
-        override fun create() {
-            super.create()
-
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setContentView(R.layout.dialog_add_exercise)
-            window!!.setBackgroundDrawable(ColorDrawable())
-            window!!.setDimAmount(0.0f)
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
         }
 
-        override fun show() {
-            if(!this.isShowing) super.show()
+        exerciseAdapter.notifyDataSetChanged()
+
+    }
+
+    fun resizeDialog(dialog: Dialog, width: Double, height: Double){
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
+        val display = windowManager.defaultDisplay
+        val size = Point()
+
+        display.getSize(size)
+
+        val params: ViewGroup.LayoutParams? = dialog.window?.attributes
+        params?.width = (size.x * width).toInt()
+        params?.height = (size.y * height).toInt()
+        dialog.window?.attributes = params as WindowManager.LayoutParams
+
+    }
+
+    override fun onPostLoginSuccess(response: DiaryWriteResponse) {
+        runOnUiThread {
+            Toast.makeText(this, response.status.toString() + " " + response.error.toString(), Toast.LENGTH_SHORT).show()
         }
 
-        override fun dismiss() {
-            if(this.isShowing) super.dismiss()
+
+        if(response.status == 200){
+            //응답 성공
+            setReadView()
         }
+    }
+
+    override fun onPostLoginFailure(message: String) {
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+        }
+        Log.d("diaryActivity", message)
     }
 
 }
+
