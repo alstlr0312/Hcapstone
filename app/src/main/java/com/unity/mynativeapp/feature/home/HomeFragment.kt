@@ -3,6 +3,7 @@ package com.unity.mynativeapp.feature.home
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
+import com.unity.mynativeapp.feature.BaseActivity
+import com.unity.mynativeapp.feature.login.LoginActivity
 import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.model.HomePageResponse
 import com.unity.mynativeapp.util.LoadingDialog
+import com.unity.mynativeapp.util.X_ACCESS_TOKEN
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -37,10 +42,10 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         todayDate = LocalDate.now()
         selectedDate = todayDate
-
         // 서버 통신
-        //loadingDialog.show()
-        //HomeFragmentService(this).tryGetHomePage(userId = 0)
+        loadingDialog.show()
+        requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
+        HomeFragmentService(this).tryGetHomePage(requestData)
 
 
         setCalenderView()
@@ -78,7 +83,7 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
 
         // 홈화면 요청
         requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
-        HomeFragmentService(this).tryGetHomePage(requestData)
+        //HomeFragmentService(this).tryGetHomePage(requestData)
     }
 
     fun setListener(){
