@@ -22,9 +22,7 @@
             android:name=".feature.adddiary.AddExerciseActivity"
             android:exported="false"
             android:theme="@style/NoActionBar" />
-        <activity
-            android:name=".feature.daily_challenge.DailyChallengeActivity"
-            android:exported="false" />
+
         <activity
             android:name=".feature.diary.DiaryActivity"
             android:exported="false" />

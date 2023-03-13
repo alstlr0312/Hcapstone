@@ -1,5 +1,8 @@
 package com.unity.mynativeapp.network
 
+import android.content.SharedPreferences
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,9 +21,7 @@ import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.feature.adddiary.AddExerciseActivity
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.DiaryWriteRequest
-import com.unity.mynativeapp.model.DiaryWriteResponse
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -30,7 +29,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 lateinit var diaryActivity: DiaryActivity
-class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
+class DiaryActivity : AppCompatActivity(){
     val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
     lateinit var diaryDate: String   // 다이어리 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
@@ -38,7 +37,7 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
     var firstStart = true
     var status = 0 // 0(read), 1(write)
-
+    private val viewModel by viewModels<DiaryViewModel>()
     var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         if(result.resultCode == RESULT_OK){
@@ -172,12 +171,13 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 }
 
 
-
             } else {
                 Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }
 
-
+                viewModel.addex(exerciseAdapter.getExerciseList(),
+                    binding.edtMemo.text.toString(),
+                    diaryDate)
             // 뒤로 가기
             binding.btnBack.setOnClickListener {
                 finish()
@@ -214,7 +214,7 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
     }
 
-    override fun onPostLoginSuccess(response: DiaryWriteResponse) {
+   /* override fun onPostLoginSuccess(response: DiaryWriteResponse) {
         runOnUiThread {
             Toast.makeText(this, response.status.toString() + " " + response.error.toString(), Toast.LENGTH_SHORT).show()
         }
@@ -232,7 +232,7 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
 
         }
         Log.d("diaryActivity", message)
-    }
+    }*/
 
 }
 

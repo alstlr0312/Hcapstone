@@ -12,10 +12,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.model.DayItem
-import com.unity.mynativeapp.model.HomePageResponse
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
 import com.unity.mynativeapp.feature.diary.DiaryActivity
+import com.unity.mynativeapp.model.diarydateResponse
 
 
 class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAdapter.ViewHolder>(),
@@ -113,7 +113,7 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
         list = nList
     }
 
-    override fun onGetHomePageSuccess(response: HomePageResponse) {
+    override fun onGetHomePageSuccess(response: diarydateResponse) {
         TODO("Not yet implemented")
     }
 
