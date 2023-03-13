@@ -171,7 +171,8 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 val formBody = FormBody.Builder()
                     .add("writeDiaryDto", requestBody.toString())
                     .build()
-
+                val requestBody2: RequestBody =
+                    RequestBody.create("application/json; charset=utf-8".toMediaType(), datjson.toString())
                 val ddd= gson.toJson(formBody)
                 val body2 = ddd.toString().toRequestBody("application/json".toMediaType())
                 // 미디어
@@ -191,7 +192,7 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 //
                 StoryService(this).writeStory(requestBody)
 
-                  DiaryActivityService(this).tryPostDiaryWrite(formBody)
+                  DiaryActivityService(this).tryPostDiaryWrite(requestBody2)
 
 
             } else {

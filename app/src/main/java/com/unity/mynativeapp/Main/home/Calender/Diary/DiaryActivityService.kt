@@ -18,7 +18,7 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
     }
 
 
-    fun tryPostDiaryWrite(requestBody: FormBody){
+    fun tryPostDiaryWrite(requestBody: RequestBody){
 
         val postRequest = Request.Builder()
             .url(ApplicationClass.API_URL + DAIRY_WRTIE)
