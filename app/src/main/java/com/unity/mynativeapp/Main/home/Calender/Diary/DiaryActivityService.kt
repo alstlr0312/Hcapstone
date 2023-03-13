@@ -1,17 +1,10 @@
 package com.unity.mynativeapp.Main.home.Calender.Diary
 
 import android.util.Log
-import android.widget.Toast
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteResponse
 import okhttp3.*
-import okhttp3.CacheControl.Companion.parse
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import org.json.JSONObject
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 
@@ -25,7 +18,7 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
     }
 
 
-    fun tryPostDiaryWrite(requestBody: MultipartBody){
+    fun tryPostDiaryWrite(requestBody: FormBody){
 
         val postRequest = Request.Builder()
             .url(ApplicationClass.API_URL + DAIRY_WRTIE)

@@ -157,16 +157,23 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                     binding.edtMemo.text.toString(),
                     diaryDate
                 )
+
+
+
                 val gson = GsonBuilder().serializeNulls().create()
                 val datjson = gson.toJson(jsonRequest)
                 val body = datjson.toString().toRequestBody("application/json".toMediaType())
-
-
                 val requestBody = MultipartBody.Builder().addPart(body)
-                val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", body.toString())
-
+                val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("exerciseInfo", exerciseAdapter.getExerciseList().toString()).addFormDataPart("review",binding.edtMemo.toString()).addFormDataPart("exerciseDate",diaryDate)
                 Log.d("sdfsdfsdfsdffffsd", datjson.toString())
-                Log.d("tlrtlrtlr", rBody.toString())
+                val bBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto",rBody.toString())
+                Log.d("tlrtlrtlr", bBody.toString())
+                val formBody = FormBody.Builder()
+                    .add("writeDiaryDto", requestBody.toString())
+                    .build()
+
+                val ddd= gson.toJson(formBody)
+                val body2 = ddd.toString().toRequestBody("application/json".toMediaType())
                 // 미디어
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
@@ -182,9 +189,9 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 System.out.println(partMap.get("writeDiaryDto"))
                 StoryService(this).writeStory2(partMap)
                 //
-                StoryService(this).writeStory(body)
+                StoryService(this).writeStory(requestBody)
 
-                  DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
+                  DiaryActivityService(this).tryPostDiaryWrite(formBody)
 
 
             } else {

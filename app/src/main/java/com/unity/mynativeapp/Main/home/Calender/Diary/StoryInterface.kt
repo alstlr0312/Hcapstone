@@ -11,14 +11,14 @@ interface StoryInterface {
 
     @Multipart
     @POST("diary/write")
-    @Headers("Authorization:Bearer[eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Nzg2ODQyNTB9.7pA2GO09bTzEeFJGTNUTRjWwJ6V_r3Kk_BQ5o-3sHtFBYfPDtegZn2af7xPfdCBk2h1gYa3oEFv2KJR6Ptsh5w]")
+    @Headers("Authorization:Bearer[eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Nzg2ODY3MTl9.cNFL280YXN0lNppPSarMBkjVoYpvApzUVQN_lhvL7JFYPM6M1ZOv4OAt51_5SG-vGTi8NCUrLq4Us7W8KJ41rw]")
     fun createDiary(
-        @Part("writeDiaryDto") writeDiaryDto : RequestBody
+        @Part("writeDiaryDto") writeDiaryDto: MultipartBody.Builder
     ): Call<DiaryWriteResponse>
 
     @Multipart
     @POST("diary/write")
-    @Headers("Authorization:Bearer[eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Nzg2ODQyNTB9.7pA2GO09bTzEeFJGTNUTRjWwJ6V_r3Kk_BQ5o-3sHtFBYfPDtegZn2af7xPfdCBk2h1gYa3oEFv2KJR6Ptsh5w]")
+    @Headers("Authorization:Bearer[eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Nzg2ODY3MTl9.cNFL280YXN0lNppPSarMBkjVoYpvApzUVQN_lhvL7JFYPM6M1ZOv4OAt51_5SG-vGTi8NCUrLq4Us7W8KJ41rw]")
     fun createDiary2(
         @Part("writeDiaryDto") writeDiaryDto: HashMap<String, RequestBody>,
     ): Call<DiaryWriteResponse>
