@@ -3,6 +3,7 @@ package com.unity.mynativeapp.feature.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.ActivitySplashBinding
@@ -30,7 +31,7 @@ class SplashActivity : AppCompatActivity() {
 	private fun checkLogin() {
 
 		val accessToken = MyApplication.prefUtil.getString(X_ACCESS_TOKEN, null)
-
+		Log.d("sdfsdfsdfsdffffsd", accessToken.toString())
 		/**
 		 * accessToken이 존재하면 [BaseActivity], 아니면 로그인하도록 [LoginActivity]로 이동동
 	 	 */

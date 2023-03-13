@@ -29,4 +29,6 @@ object RetrofitClient {
 	private val retrofitService = retrofit.create(RetrofitService::class.java)
 
 	fun getApiService(): RetrofitService = retrofitService
+
+
 }
