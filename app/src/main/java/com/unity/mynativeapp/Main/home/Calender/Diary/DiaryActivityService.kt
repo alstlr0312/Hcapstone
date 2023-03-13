@@ -24,6 +24,7 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
 
     }
 
+
     fun tryPostDiaryWrite(requestBody: MultipartBody){
 
         val postRequest = Request.Builder()
@@ -41,6 +42,7 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
                 val data = gson.fromJson(body, DiaryWriteResponse::class.java)
 
                 if (data != null) {
+                    Log.d("diaryActivityService", requestBody.toString())
                     Log.d("diaryActivityService", data.toString() + " " + response.code)
                     diaryActivityInterface.onPostLoginSuccess(data)
 

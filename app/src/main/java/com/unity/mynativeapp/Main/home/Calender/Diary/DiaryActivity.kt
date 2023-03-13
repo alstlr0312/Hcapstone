@@ -182,8 +182,9 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                 System.out.println(partMap.get("writeDiaryDto"))
                 StoryService(this).writeStory2(partMap)
                 //
-                //StoryService(this).writeStory(rBody)
-               //   DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
+                StoryService(this).writeStory(body)
+
+                  DiaryActivityService(this).tryPostDiaryWrite(rBody.build())
 
 
             } else {
