@@ -10,15 +10,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
-import com.unity.mynativeapp.model.DayItem
-import com.unity.mynativeapp.model.HomePageResponse
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
+import com.unity.mynativeapp.model.CalenderRvItem
+import com.unity.mynativeapp.model.HomePageResponse
 import com.unity.mynativeapp.util.LoadingDialog
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
-lateinit var testList: MutableList<DayItem>
 
 class HomeFragment : Fragment(), HomeFragmentInterface {
 
@@ -39,30 +38,14 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         todayDate = LocalDate.now()
         selectedDate = todayDate
 
-        testList = mutableListOf()
-
         // 서버 통신
         //loadingDialog.show()
         //HomeFragmentService(this).tryGetHomePage(userId = 0)
 
 
-
-        for(i in 1 until 29){
-            if(i == 5){
-                testList.add(
-                    DayItem(LocalDate.of(2023, 2, i), true, 50, true)
-                )
-            }else{
-                testList.add(
-                    DayItem(LocalDate.of(2023, 2, i), false, 50, true)
-                )
-            }
-
-        }
-
         setCalenderView()
 
-
+        setListener()
 
         binding.ivPreviousMonth.setOnClickListener {
             selectedDate = selectedDate.minusMonths(1)
@@ -93,66 +76,85 @@ class HomeFragment : Fragment(), HomeFragmentInterface {
         binding.recyclerViewCalendar.adapter = calenderRvAdapter
 
 
+        // 홈화면 요청
         requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
-        // 더미데이터 (서버 연결 시 삭제)
-        calenderRvAdapter.getListFormView(setDayList(testList))
-        calenderRvAdapter.notifyDataSetChanged()
+        HomeFragmentService(this).tryGetHomePage(requestData)
     }
 
-    fun setDayList(calender: MutableList<DayItem>): MutableList<DayItem>{
-        var dayList = mutableListOf<DayItem>()
+    fun setListener(){
+        binding.ivPreviousMonth.setOnClickListener {
+            selectedDate = selectedDate.minusMonths(1).withDayOfMonth(1)
 
-        var yearMonth = YearMonth.from(selectedDate) // 월
-        var length = yearMonth.lengthOfMonth() // 월 길이 (28.30.31)
+            if(selectedDate.year==todayDate.year && selectedDate.monthValue==todayDate.monthValue)
+                selectedDate = todayDate
+            setCalenderView()
+            calenderRvAdapter.notifyDataSetChanged()
+        }
+        binding.ivNextMonth.setOnClickListener {
+            selectedDate = selectedDate.plusMonths(1).withDayOfMonth(1)
+
+            if(selectedDate.year==todayDate.year && selectedDate.monthValue==todayDate.monthValue)
+                selectedDate = todayDate
+            setCalenderView()
+            calenderRvAdapter.notifyDataSetChanged()
+        }
+    }
+    override fun onGetHomePageSuccess(response: HomePageResponse) {
+        var dayList = mutableListOf<CalenderRvItem>()
 
         var firstDay = selectedDate.withDayOfMonth(1) // 첫번째 날
-        var firstDayOfWeek = firstDay.dayOfWeek.value // 첫번째 날 요일
+        var firstDayOfWeek = firstDay.dayOfWeek.value // 첫번째 날의 요일
 
-        /*var lastDay = selectedDate.withDayOfMonth(length) // 마지막 날
-        var lastDayOfWeek = lastDay.dayOfWeek.value // 마지막 날 요일
-
-
-        for(i in 1 until 43){
-            if(i <= firstDayOfWeek){
-                if(firstDayOfWeek != 7){
-                    dayList.add(CalenderRvItem())
-                }
-            }else if(i > firstDayOfWeek+length){
-                if(lastDayOfWeek != 6){
-                    dayList.add(CalenderRvItem())
-                    lastDayOfWeek++
-                }else {
-                    break
-                }
-            }else{
-                val date = DateItem(selectedDate.year, selectedDate.monthValue, i-firstDayOfWeek)
-                if(selectedDate.monthValue == yearMonth.monthValue
-                    && selectedDate.dayOfMonth == i-firstDayOfWeek){ // 선택된 날짜
-                    dayList.add(CalenderRvItem(date, true, 75, "memo"))
-                }else{
-                    dayList.add(CalenderRvItem(date))
-
-                }
-            }
-        }*/
-
-
-        if(firstDayOfWeek == 7){ // 일요일
-            dayList = calender
-
-        }else{
+        if(firstDayOfWeek != 7){ // 일요일
             for(i in 0 until firstDayOfWeek){
-                dayList.add(DayItem())
+                dayList.add(CalenderRvItem())
             }
-            dayList.addAll(firstDayOfWeek, calender)
         }
 
-        return dayList
-    }
+        var compareDate = selectedDate.withDayOfMonth(1)
 
-    override fun onGetHomePageSuccess(response: HomePageResponse) {
-        loadingDialog.dismiss()
-        calenderRvAdapter.getListFormView(setDayList(response.data.calender))
+        if(response.status == 400){ // 다이어리 목록 없음
+            for(i in 1 until selectedDate.lengthOfMonth()+1){
+                if(i == selectedDate.dayOfMonth)
+                    dayList.add(CalenderRvItem(compareDate, true))
+                else
+                    dayList.add(CalenderRvItem(compareDate, false))
+
+                compareDate = compareDate.plusDays(1)
+            }
+            // 월 평균 퍼센트
+            binding.progressBarMonthly.progress = 0
+        }
+        else{ // 다이어리 목록 있음
+            val result = response.data.calenders
+            var j = 0
+            for(i in 1 until selectedDate.lengthOfMonth()+1){
+                if(j < result!!.size && result[j].exerciseDate!! == compareDate){ // 다이어리 있음
+                    if(i == selectedDate.dayOfMonth){
+                        dayList.add(CalenderRvItem(compareDate, true, result[j].dailyPercentage))
+                    }else{
+                        dayList.add(CalenderRvItem(compareDate, false, result[j].dailyPercentage))
+                    }
+                    j++
+                }else{  // 다이어리 없음
+                    if(i == selectedDate.dayOfMonth){
+                        dayList.add(CalenderRvItem(compareDate, true))
+                    }else{
+                        dayList.add(CalenderRvItem(compareDate, false))
+                    }
+                }
+                compareDate = compareDate.plusDays(1)
+            }
+            // 월 평균 퍼센트
+            binding.progressBarMonthly.progress = response.data!!.monthlyPercentage
+        }
+        calenderRvAdapter.getListFormView(dayList)
+        requireActivity().runOnUiThread {
+            calenderRvAdapter.notifyDataSetChanged()
+        }
+
+
+
     }
 
     override fun onGetHomePageFailure(message: String) {

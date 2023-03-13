@@ -31,6 +31,7 @@ class HomeFragmentService(val homeFragmentInterface: HomeFragmentInterface) {
                         Log.d("HomeFragmentService", response.body()?.data.toString())
                         homeFragmentInterface.onGetHomePageSuccess(response.body() as HomePageResponse)
                     }else{
+                        Log.d("HomeFragmentService", response.body()?.data.toString())
                         Log.d("HomeFragmentService", "response is not successful")
                     }
                 }

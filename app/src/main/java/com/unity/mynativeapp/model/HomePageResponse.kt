@@ -1,6 +1,6 @@
 package com.unity.mynativeapp.model
 
-data class omePageResponse(
+data class HomePageResponse(
 	val status: Int,
 	val data: ResultHomePage,
 	val error: Error ?= null

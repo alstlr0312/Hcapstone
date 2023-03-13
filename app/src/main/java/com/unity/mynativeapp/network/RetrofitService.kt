@@ -12,7 +12,7 @@ interface RetrofitService {
 	@POST("signup")
 	fun signup(@Body signUpRequest: SignUpRequest) : Call<MyResponse<String>>
 
-	@GET("diary?date={date}")
+	@GET("diary/{date}")
 	fun datePage(@Query("date") date: String) : Call<diarydateResponse>
 	// 홈 화면
 	@GET("/home")
