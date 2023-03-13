@@ -4,7 +4,11 @@ import android.util.Log
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteResponse
+import com.unity.mynativeapp.Splash.Login.models.LoginActivityService
+import com.unity.mynativeapp.Splash.LoginResponse
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 
@@ -17,12 +21,14 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
 
     }
 
-
-    fun tryPostDiaryWrite(requestBody: RequestBody){
-
+    fun tryPostDiaryWrite(requestBody: String){
+        val re = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("writeDiaryDto", requestBody)
+            .build()
         val postRequest = Request.Builder()
             .url(ApplicationClass.API_URL + DAIRY_WRTIE)
-            .post(requestBody)
+            .post(requestBody.toRequestBody("application/json".toMediaType()))
             .build()
 
 
@@ -35,7 +41,7 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
                 val data = gson.fromJson(body, DiaryWriteResponse::class.java)
 
                 if (data != null) {
-                    Log.d("diaryActivityService", requestBody.toString())
+                    Log.d("diaryActivityService", requestBody)
                     Log.d("diaryActivityService", data.toString() + " " + response.code)
                     diaryActivityInterface.onPostLoginSuccess(data)
 
@@ -61,3 +67,4 @@ class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
 
 
 }
+

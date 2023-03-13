@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.Diary.DairyMediaRv.DiaryMediaRvAdapter
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvAdapter
@@ -26,8 +27,10 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.File
 
 lateinit var diaryActivity: DiaryActivity
@@ -73,7 +76,8 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
-
+        val accessToken = "Bearer["+ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null).toString()+"]"
+        Log.d("sdfsdfsdfsdffffsd", accessToken)
         setView()
 
         setClickListener()
@@ -157,24 +161,37 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                     binding.edtMemo.text.toString(),
                     diaryDate
                 )
-
-
-
+                val jArray = JSONArray()
+                try {
+                    for (i in 0 until exerciseAdapter.getExerciseList().size) {
+                        val sObject = JSONObject() //배열 내에 들어갈 json
+                        sObject.put("exerciseName", exerciseAdapter.getExerciseList().get(i).exerciseName)
+                        sObject.put("reps", exerciseAdapter.getExerciseList().get(i).reps)
+                        sObject.put("exSetCount", exerciseAdapter.getExerciseList().get(i).exSetCount)
+                        sObject.put("cardio", exerciseAdapter.getExerciseList().get(i).cardio)
+                        sObject.put("cardioTime", exerciseAdapter.getExerciseList().get(i).cardioTime)
+                        sObject.put("bodyPart", exerciseAdapter.getExerciseList().get(i).bodyPart)
+                        sObject.put("finished", exerciseAdapter.getExerciseList().get(i).finished)
+                        jArray.put(sObject)
+                    }
+                    Log.d("JSON Test", jArray.toString())
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+                val jobj = JSONObject()
+                jobj.put("exerciseInfo",jArray)
+                jobj.put("review", binding.edtMemo.text.toString())
+                jobj.put("exerciseDate",diaryDate)
+                val jobj2 = JSONObject()
+                jobj2.put("writeDiaryDto",jobj)
+                Log.d("JSON Test", jobj2.toString())
                 val gson = GsonBuilder().serializeNulls().create()
                 val datjson = gson.toJson(jsonRequest)
-                val body = datjson.toString().toRequestBody("application/json".toMediaType())
+                val Json = JSONObject()
+                Json.put("writeDiaryDto",datjson)
+                val body = jobj.toString().toRequestBody("application/json".toMediaType())
                 val requestBody = MultipartBody.Builder().addPart(body)
-                val rBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("exerciseInfo", exerciseAdapter.getExerciseList().toString()).addFormDataPart("review",binding.edtMemo.toString()).addFormDataPart("exerciseDate",diaryDate)
-                Log.d("sdfsdfsdfsdffffsd", datjson.toString())
-                val bBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto",rBody.toString())
-                Log.d("tlrtlrtlr", bBody.toString())
-                val formBody = FormBody.Builder()
-                    .add("writeDiaryDto", requestBody.toString())
-                    .build()
-                val requestBody2: RequestBody =
-                    RequestBody.create("application/json; charset=utf-8".toMediaType(), datjson.toString())
-                val ddd= gson.toJson(formBody)
-                val body2 = ddd.toString().toRequestBody("application/json".toMediaType())
+                Log.d("sdfsdfsdfsdffffsd", Json.toString())
                 // 미디어
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
@@ -183,16 +200,9 @@ class DiaryActivity : AppCompatActivity(), DiaryActivityInterface {
                     Log.d("diaryActivity", element)
                 }
                 //
-                var requestName: RequestBody =
-                    datjson.toRequestBody("text/plain".toMediaTypeOrNull())
-                val partMap : HashMap<String, RequestBody> = hashMapOf()
-                partMap.put("writeDiaryDto", requestName)
-                System.out.println(partMap.get("writeDiaryDto"))
-                StoryService(this).writeStory2(partMap)
                 //
-                StoryService(this).writeStory(requestBody)
-
-                  DiaryActivityService(this).tryPostDiaryWrite(requestBody2)
+               // StoryService(this).writeStory(Json.toString())
+                DiaryActivityService(this).tryPostDiaryWrite(jobj.toString())
 
 
             } else {

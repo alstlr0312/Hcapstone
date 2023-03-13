@@ -3,7 +3,6 @@ package com.unity.mynativeapp.Main.home.Calender.Diary
 import android.util.Log
 import com.unity.mynativeapp.ApplicationClass
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteResponse
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class StoryService(diaryActivity: DiaryActivity) {
 
-    fun writeStory(rBody: MultipartBody.Builder) {
+    fun writeStory(rBody: String) {
         val retrofit =
             Retrofit.Builder()
                 .baseUrl(ApplicationClass.API_URL)
@@ -22,8 +21,8 @@ class StoryService(diaryActivity: DiaryActivity) {
                 .build()
         val storyService = retrofit.create(StoryInterface::class.java)
 
-
-        storyService.createDiary(rBody).enqueue(object :
+        val accessToken = "Bearer["+ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null).toString()+"]"
+        storyService.createDiary(accessToken,rBody).enqueue(object :
             Callback<DiaryWriteResponse> {
                 override fun onResponse(call: Call<DiaryWriteResponse>, response: Response<DiaryWriteResponse>)
                 {

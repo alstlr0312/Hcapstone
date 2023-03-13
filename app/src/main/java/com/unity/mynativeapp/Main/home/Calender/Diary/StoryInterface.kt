@@ -2,18 +2,18 @@ package com.unity.mynativeapp.Main.home.Calender.Diary
 
 
 import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryWrite.DiaryWriteResponse
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 interface StoryInterface {
 
+    @FormUrlEncoded
     @Multipart
     @POST("diary/write")
-    @Headers("Authorization:Bearer[eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzZCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Nzg2ODY3MTl9.cNFL280YXN0lNppPSarMBkjVoYpvApzUVQN_lhvL7JFYPM6M1ZOv4OAt51_5SG-vGTi8NCUrLq4Us7W8KJ41rw]")
     fun createDiary(
-        @Part("writeDiaryDto") writeDiaryDto: MultipartBody.Builder
+        @Header("Authorization") auth: String,
+        @Part("writeDiaryDto") writeDiaryDto: String
     ): Call<DiaryWriteResponse>
 
     @Multipart
