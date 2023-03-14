@@ -1,20 +1,27 @@
 package com.unity.mynativeapp.Main.community
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.unity.mynativeapp.Main.BaseActivity
+import com.unity.mynativeapp.Main.community.postWrite.PostWriteActivity
 import com.unity.mynativeapp.Main.community.posting.PostingRvAdapter
+import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
+import com.unity.mynativeapp.util.DeleteDialog
 import java.time.LocalDateTime
 
 
 class CommunityFragment : Fragment() {
     val binding by lazy { FragmentCommunityBinding.inflate(layoutInflater) }
-
 
     private lateinit var postingRvAdapter: PostingRvAdapter
 
@@ -37,7 +44,19 @@ class CommunityFragment : Fragment() {
             rvPosting.adapter = postingRvAdapter
             postingRvAdapter.getListFromView(getPostingList())
 
+
+            // 게시물 필터 설정
+            layoutFilter.setOnClickListener {
+                var dialog = PostSortDialog(requireContext())
+                dialog.show()
+            }
         }
+
+        // 게시물 작성
+        this.requireActivity().findViewById<FloatingActionButton>(R.id.btn_write_post).setOnClickListener {
+            startActivity(Intent(requireContext(), PostWriteActivity::class.java))
+        }
+
 
     }
 
@@ -56,5 +75,7 @@ class CommunityFragment : Fragment() {
         list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 1))
         return list
     }
+
+
 
 }

@@ -19,7 +19,7 @@
     </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/iv_add_post"
+        android:id="@+id/btn_write_post"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:src="@drawable/ic_add"

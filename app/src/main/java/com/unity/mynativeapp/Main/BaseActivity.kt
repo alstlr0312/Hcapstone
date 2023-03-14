@@ -17,11 +17,10 @@ lateinit var arFragment: ArFragment
 lateinit var mypageFragment: MypageFragment
 
 class BaseActivity : AppCompatActivity() {
-    lateinit var binding: ActivityBaseBinding
+    val binding by lazy {ActivityBaseBinding.inflate(layoutInflater)}
     var firstStart = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
@@ -31,25 +30,25 @@ class BaseActivity : AppCompatActivity() {
                 R.id.menuHome -> {
                     homeFragment = HomeFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss()
-                    binding.ivAddPost.visibility = View.INVISIBLE
+                    binding.btnWritePost.visibility = View.INVISIBLE
                     true
                 }
                 R.id.menuCommunity -> {
                     communityFragment = CommunityFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, communityFragment).commitAllowingStateLoss()
-                    binding.ivAddPost.visibility = View.VISIBLE
+                    binding.btnWritePost.visibility = View.VISIBLE
                     true
                 }
                 R.id.menuAr -> {
                     arFragment = ArFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, arFragment).commitAllowingStateLoss()
-                    binding.ivAddPost.visibility = View.INVISIBLE
+                    binding.btnWritePost.visibility = View.INVISIBLE
                     true
                 }
                 R.id.menuMypage -> {
                     mypageFragment = MypageFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mypageFragment).commitAllowingStateLoss()
-                    binding.ivAddPost.visibility = View.INVISIBLE
+                    binding.btnWritePost.visibility = View.INVISIBLE
                     true
                 }
                 else -> false

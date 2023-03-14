@@ -71,7 +71,7 @@
     <string name="exercise_biceps">이두근</string>
     <string name="exercise_triceps">삼두근</string>
     <string name="exercise_abs">복근</string>
-    <string name="exercise_etc">기타</string>
+    <string name="etc">기타</string>
     <string name="exercise_detail_weight_training">상세 입력 (ex.스쿼드)</string>
     <string name="exercise_detail_cardio">상세 입력 (ex.런닝)</string>
     <string name="time">시간</string>
@@ -90,7 +90,20 @@
     <string name="you_can_register_four_medias">최대 4개까지만 등록할 수 있습니다.</string>
     <string name="delete_diary">일지를 삭제하시겠습니까?</string>
     <string name="delete_exercise">운동을 삭제하시겠습니까?</string>
+    <string name="delete_media">미디어를 삭제하시겠습니까?</string>
 
     <string name="now">방금</string>
     <string name="total">전체</string>
+    <string name="apply">적용</string>
+
+    <string name="sort">정렬</string>
+    <string name="category">카테고리</string>
+    <string name="q_and_a">질의응답</string>
+    <string name="knowledge_sharing">지식공유</string>
+    <string name="show_off">운동자랑</string>
+    <string name="assess">평가</string>
+    <string name="health">헬스</string>
+    <string name="pilates">필라테스</string>
+    <string name="yoga">요가</string>
+    <string name="jogging">조깅</string>
 </resources>

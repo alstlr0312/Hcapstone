@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.Main.home.Calender.diaryActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryMediaBinding
+import com.unity.mynativeapp.util.DeleteDialog
 
 
 class DiaryMediaRvAdapter(val context: Context)
@@ -27,11 +28,9 @@ class DiaryMediaRvAdapter(val context: Context)
 
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = Dialog(context)
-                dialog.setContentView(R.layout.dialog_delete)
+                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
                 dialog.show()
 
-                diaryActivity.resizeDialog(dialog, 0.85, 0.28)
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
                 var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
 
