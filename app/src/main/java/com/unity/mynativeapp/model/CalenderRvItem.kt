@@ -1,11 +1,11 @@
 package com.unity.mynativeapp.model
 
 import com.unity.mynativeapp.model.DateItem
+import java.time.LocalDate
 
 
 data class CalenderRvItem(
-	val date: DateItem?= null,
-	var selectedDay: Boolean ?= false,
-	var challenge: Int ? = null,
-	var memo: String ?= null
+	val exerciseDate: LocalDate? = null,
+	var isSelectedDay: Boolean ?= false,
+	var dailyPercentage: Int = -1,
 )

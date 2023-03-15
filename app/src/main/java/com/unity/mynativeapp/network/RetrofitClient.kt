@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-	private const val baseUrl = "http://15.164.98.240:8080/"
+	private const val baseUrl = "http://you-have-to.duckdns.org/"
 
 	private val okHttpClient = OkHttpClient.Builder()
 		.readTimeout(5000, TimeUnit.MILLISECONDS)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+
 import androidx.appcompat.app.AppCompatActivity
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
 import com.unity.mynativeapp.feature.BaseActivity

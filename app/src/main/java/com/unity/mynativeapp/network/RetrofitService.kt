@@ -19,6 +19,6 @@ interface RetrofitService {
 	fun signup(@Body signUpRequest: SignUpRequest) : Call<MyResponse<String>>
 
 	// 홈 화면
-	@GET("/home")
-	fun getHomePage( @Query("userIdx") userIdx: Int) : Call<HomePageResponse>
+	@GET("/diary")
+	fun getHomePage( @Query("date") userIdx: String) : Call<HomePageResponse>
 }
