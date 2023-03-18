@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_black"
-    tools:context=".Main.community.postWrite.PostWriteActivity">
+    tools:context=".features.community.PostWriteActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_appbar"

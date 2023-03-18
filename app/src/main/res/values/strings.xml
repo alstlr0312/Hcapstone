@@ -26,6 +26,8 @@
     <string name="please_input_password">비밀번호를 입력해주세요.</string>
     <string name="please_input_nickname">닉네임을 입력해주세요.</string>
     <string name="please_input_email">이메일을 입력해주세요.</string>
+    <string name="email_authenticate">이메일 인증</string>
+    <string name="please_input_email_code">입력된 이메일로 인증코드를 발송하였습니다. 인증코드를 입력해주세요.</string>
     <string name="id_length">아이디는 5~20자 입니다.</string>
     <string name="password_format">비밀번호는 영문 대 소문자, 숫자, 특수문자를 사용하세요.</string>
     <string name="email_invalied_format">이메일 형식이 옳바르지 않습니다.</string>

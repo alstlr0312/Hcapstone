@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_black"
-    tools:context=".Main.home.Calender.Diary.DiaryExerciseRv.AddExercise.AddExerciseActivity">
+    tools:context=".features.diary.AddExerciseActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_appbar"
