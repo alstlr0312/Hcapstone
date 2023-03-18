@@ -73,7 +73,8 @@
     <string name="exercise_etc">기타</string>
     <string name="exercise_detail_anaerobic">상세 입력 (ex.스쿼드)</string>
     <string name="exercise_detail_aerobic">상세 입력 (ex.런닝)</string>
-
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
     <string name="delete_diary">일지를 삭제하시겠습니까?</string>
     <string name="delete_exercise">운동을 삭제하시겠습니까?</string>
 </resources>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.unity.mynativeapp">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -13,14 +15,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat"
         android:usesCleartextTraffic="true"
-        android:windowSoftInputMode="adjustResize"
-        android:theme="@style/Theme.AppCompat">
-        >
-
+        android:windowSoftInputMode="adjustResize">
         <activity
-            android:name=".feature.daily_challenge.DailyChallengeActivity"
+            android:name=".feature.checkemail.CheckEmailActivity"
             android:exported="false" />
+
         <activity
             android:name=".feature.diary.DiaryActivity"
             android:exported="false" />
@@ -30,12 +31,11 @@
         <activity
             android:name=".feature.login.LoginActivity"
             android:exported="false" />
-
         <activity
             android:name=".feature.ar.MainActivity"
+            android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".feature.login.SplashActivity"
             android:exported="true">
@@ -57,12 +57,12 @@
                 android:value="" />
         </activity>
         <activity
-            android:label="@string/app_name"
             android:name=".feature.ar.MainUnityActivity"
-            android:screenOrientation="fullSensor"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
             android:hardwareAccelerated="false"
-            android:process=":Unity" />
+            android:label="@string/app_name"
+            android:process=":Unity"
+            android:screenOrientation="fullSensor" />
     </application>
 
 </manifest>

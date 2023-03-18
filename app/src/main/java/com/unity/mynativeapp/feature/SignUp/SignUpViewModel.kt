@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.feature.login.LoginViewModel
 import com.unity.mynativeapp.network.MyResponse
-import com.unity.mynativeapp.model.SignUpRequest
 import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.util.*
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,8 +28,8 @@ class SignUpViewModel : ViewModel() {
 
 	private val emailPattern = android.util.Patterns.EMAIL_ADDRESS
 	private val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
-
-	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String) {
+	val JSON: MediaType = "application/json; charset=utf-8".toMediaType()
+	fun signup(code: String, id: String, password: String, passwordCheck: String, email: String, nickname: String) {
 		if (id.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return
@@ -51,8 +54,15 @@ class SignUpViewModel : ViewModel() {
 			_toastMessage.postValue(NICKNAME_EMPTY_ERROR)
 			return
 		}
+		val data = JSONObject()
+		data.put("loginId", id)
+		data.put("password", password)
+		data.put("username", nickname)
+		data.put("email", email)
+		Log.d("check",data.toString())
+		val Signdata = data.toString().toRequestBody(JSON)
 
-		RetrofitClient.getApiService().signup(SignUpRequest(id, password, email, nickname)).enqueue(object : Callback<MyResponse<String>> {
+		RetrofitClient.getApiService().signup(code,Signdata).enqueue(object : Callback<MyResponse<String>> {
 			override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
 				_loading.postValue(false)
 

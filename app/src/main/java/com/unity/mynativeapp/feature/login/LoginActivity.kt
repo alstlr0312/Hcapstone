@@ -2,6 +2,7 @@ package com.unity.mynativeapp.feature.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 
@@ -9,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
 import com.unity.mynativeapp.feature.BaseActivity
 import com.unity.mynativeapp.feature.SignUp.SignUpActivity
+import com.unity.mynativeapp.feature.checkemail.CheckEmailActivity
 import com.unity.mynativeapp.util.LoadingDialog
 import com.unity.mynativeapp.util.hideKeyboard
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
 
@@ -34,14 +37,14 @@ class LoginActivity : AppCompatActivity() {
 
 	private fun setUiEvent() {
 		binding.btnLogin.setOnClickListener {
-			val email = binding.edtId.toString()
-			val password = binding.edtPassword.toString()
+			val id = binding.edtId.text.toString()
+			val password = binding.edtPassword.text.toString()
 
-			viewModel.login(email, password)
+			viewModel.login(id, password)
 		}
 
 		binding.tvSignUp.setOnClickListener {
-			startActivity(Intent(this, SignUpActivity::class.java))
+			startActivity(Intent(this, CheckEmailActivity::class.java))
 		}
 
 		binding.layoutMain.setOnClickListener {

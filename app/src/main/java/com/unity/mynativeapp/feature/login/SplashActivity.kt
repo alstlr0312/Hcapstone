@@ -4,7 +4,6 @@ package com.unity.mynativeapp.feature.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.unity.mynativeapp.Main.BaseActivity
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.ActivitySplashBinding
 import com.unity.mynativeapp.feature.BaseActivity

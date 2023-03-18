@@ -3,6 +3,7 @@ package com.unity.mynativeapp.feature.SignUp
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -10,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
 import com.unity.mynativeapp.util.LoadingDialog
 import com.unity.mynativeapp.util.hideKeyboard
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.util.regex.Pattern
 
 
@@ -43,8 +48,9 @@ class SignUpActivity : AppCompatActivity() {
 			val pwCheck = binding.edtPasswordConfirm.text.toString()
 			val name = binding.edtUsername.text.toString()
 			val email = binding.edtEmail.text.toString()
+			val code = intent.getStringExtra("code").toString()
 
-			viewModel.signup(id, pw, pwCheck, email, name)
+			viewModel.signup(code, id, pw, pwCheck, email, name)
 		}
 
 		binding.btnBack.setOnClickListener {

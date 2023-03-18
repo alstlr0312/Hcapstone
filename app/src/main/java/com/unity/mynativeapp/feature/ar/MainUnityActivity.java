@@ -7,15 +7,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.company.product.OverrideUnityActivity;
-import com.unity.mynativeapp.feature.ar.MainActivity;
-import com.unity3d.player.UnityPlayerForActivityOrService;
+
 
 public class MainUnityActivity extends OverrideUnityActivity {
     // Setup activity layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addControlsToUnityFrame();
+       // addControlsToUnityFrame();
         Intent intent = getIntent();
         handleIntent(intent);
     }
@@ -48,7 +47,7 @@ public class MainUnityActivity extends OverrideUnityActivity {
         showMainActivity("");
     }
 
-    public void addControlsToUnityFrame() {
+    /*public void addControlsToUnityFrame() {
         UnityPlayerForActivityOrService layout = mUnityPlayer;
         {
             Button myButton = new Button(this);
@@ -103,7 +102,7 @@ public class MainUnityActivity extends OverrideUnityActivity {
                 }
             });
         }
-    }
+    }*/
 
 
 }

@@ -8,10 +8,10 @@ import android.view.View
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryExerciseRv.DiaryExerciseRvItem
-import com.unity.mynativeapp.Main.home.Calender.Diary.DiaryPhotoRv.DiaryPhotoRvItem
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
+import com.unity.mynativeapp.model.DiaryPhotoRvItem
 
 class DiaryActivity : AppCompatActivity() {
 
