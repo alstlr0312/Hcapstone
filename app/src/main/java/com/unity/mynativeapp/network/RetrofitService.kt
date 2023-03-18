@@ -7,11 +7,17 @@ import retrofit2.http.*
 
 interface RetrofitService {
 
+	@POST("email")
+	fun email(@Body CheckRequest: CheckRequest): Call<MyResponse<CheckData>>
+
 	@POST("signin")
 	fun login(@Body loginRequest: LoginRequest): Call<MyResponse<LoginData>>
 
 	@POST("signup")
-	fun signup(@Body signUpRequest: SignUpRequest) : Call<MyResponse<String>>
+	fun signup(
+		@Query("code") code: String,
+		@Body signUpRequest: SignUpRequest
+	) : Call<MyResponse<String>>
 
 	// 홈 화면 조회 (다이어리 목록 조회)
 	@GET("/diary")

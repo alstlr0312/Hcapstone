@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.signup
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -46,14 +47,19 @@ class SignUpActivity : AppCompatActivity(){
 
     private fun setUiEvent() {
 
+        binding.btnEmailAuthenticate.setOnClickListener {
+            viewModel.check(binding.edtEmail.text.toString())
+        }
+
         binding.btnSignUp.setOnClickListener {
             val id = binding.edtId.text.toString()
             val pw = binding.edtPassword.text.toString()
             val pwCheck = binding.edtPasswordConfirm.text.toString()
             val name = binding.edtUsername.text.toString()
             val email = binding.edtEmail.text.toString()
+            val code = binding.edtAuthenticateCode.text.toString()
 
-            viewModel.signup(id, pw, pwCheck, email, name)
+            viewModel.signup(id, pw, pwCheck, email, name, code)
         }
 
         binding.btnBack.setOnClickListener {
@@ -138,16 +144,22 @@ class SignUpActivity : AppCompatActivity(){
 
             override fun afterTextChanged(p0: Editable?) {
                 var email = binding.edtEmail.text.toString()
-                if (p0 != null && !email.equals("")) {
-                    if (emailPattern.matcher(email).matches()) {
+                if (p0 != null && !email.equals("")) { // 공백이 아니라면
+                    if (emailPattern.matcher(email).matches()) { // 이메일 형식이 맞다면
                         binding.tvEmail.visibility = View.GONE
                         checkArr[3] = true
-                    } else {
+                        binding.btnEmailAuthenticate.visibility = View.VISIBLE
+
+                    } else { // 이메일 형식이 아니라면
                         binding.tvEmail.visibility = View.VISIBLE
                         checkArr[3] = false
+                        binding.btnEmailAuthenticate.visibility = View.GONE
+
                     }
-                } else {
+                } else { // 공백 이라면
                     binding.tvEmail.visibility = View.GONE
+                    binding.btnEmailAuthenticate.visibility = View.GONE
+
                 }
             }
         })
@@ -158,15 +170,35 @@ class SignUpActivity : AppCompatActivity(){
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
+
         viewModel.loading.observe(this) { isLoading ->
             if (isLoading) dialog.show() else dialog.dismiss()
         }
-        viewModel.signupSuccess.observe(this) { isSuccess ->
-            if (!isSuccess) return@observe
 
-            finish()
+        viewModel.checkSuccess.observe(this){ isSuccess ->
+            if(!isSuccess) return@observe
+            binding.edtEmail.isEnabled = false
+            binding.tvEmail.text = getString(R.string.please_input_email_code)
+            binding.tvEmail.visibility = View.VISIBLE
+            binding.edtAuthenticateCode.visibility = View.VISIBLE
+            binding.btnEmailAuthenticate.visibility = View.GONE
         }
+
+        viewModel.signupSuccess.observe(this) { isSuccess ->
+            if(!isSuccess) { // 이메일 중복
+                binding.edtEmail.isEnabled = true
+                binding.edtEmail.setText("")
+                binding.tvEmail.text = getString(R.string.email_invalied_format)
+                binding.edtAuthenticateCode.setText("")
+                return@observe
+            }
+            finish()
+
+        }
+
     }
+
+
 
 
 }
