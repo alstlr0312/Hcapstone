@@ -9,9 +9,9 @@ data class DiaryWriteJson(
 data class ExerciseInfo(
     val bodyPart: String,
     val cardio: Boolean,
-    val cardioTime: Int,
-    val exSetCount: Int,
+    val cardioTime: Int? = null,
+    val exSetCount: Int? = null,
     val exerciseName: String,
     val finished: Boolean,
-    val reps: Int
+    val reps: Int? = null
 )
