@@ -10,6 +10,7 @@ import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.util.ID_EMPTY_ERROR
 import com.unity.mynativeapp.util.PW_EMPTY_ERROR
+import com.unity.mynativeapp.util.SIGNUP_SUCCESS
 import com.unity.mynativeapp.util.X_ACCESS_TOKEN
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -62,11 +63,14 @@ class LoginViewModel : ViewModel() {
 		RetrofitClient.getApiService().login(logindata).enqueue(object : Callback<MyResponse<LoginData>> {
 			override fun onResponse(call: Call<MyResponse<LoginData>>, response: Response<MyResponse<LoginData>>) {
 				_loading.postValue(false)
-
+				val code = response.code()
 				val data = response.body()?.data
-				data?.let {
-					if (data.accessToken.isEmpty()) {
-						MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
+				if (code == 201) {
+					data?.let {
+						if (data.accessToken.isEmpty()) {
+							MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
+						}
+						_loginSuccess.postValue(true)
 					}
 				}
 			}

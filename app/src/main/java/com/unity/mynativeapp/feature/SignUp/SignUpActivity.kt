@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.feature.SignUp
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,7 +10,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
+import com.unity.mynativeapp.feature.checkemail.CheckEmailActivity
+import com.unity.mynativeapp.feature.login.LoginActivity
 import com.unity.mynativeapp.util.LoadingDialog
+import com.unity.mynativeapp.util.SIGNUP_SUCCESS
 import com.unity.mynativeapp.util.hideKeyboard
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -153,6 +157,10 @@ class SignUpActivity : AppCompatActivity() {
 	private fun subscribeUI() {
 		viewModel.toastMessage.observe(this) { message ->
 			Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+			if (message == SIGNUP_SUCCESS){
+				startActivity(Intent(this, LoginActivity::class.java))
+				finish()
+			}
 		}
 
 		viewModel.loading.observe(this) { isLoading ->

@@ -63,9 +63,10 @@ class LoginActivity : AppCompatActivity() {
 
 		viewModel.loginSuccess.observe(this) { isSuccess ->
 			if (!isSuccess) return@observe
-
-			startActivity(Intent(this, BaseActivity::class.java))
-			finish()
+			if(isSuccess == true) {
+				startActivity(Intent(this, BaseActivity::class.java))
+				finish()
+			}
 		}
 	}
 }
