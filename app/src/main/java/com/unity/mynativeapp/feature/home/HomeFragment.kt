@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
                 val code = response.code()
                 val data = response.body()?.data
 
-                if (code == 200) {
+              /*  if (code == 200) {
                     if (data == null) return
                         var dayList = mutableListOf<CalenderRvItem>()
 
@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
                         requireActivity().runOnUiThread {
                             calenderRvAdapter.notifyDataSetChanged()
                         }
-                }
+                }*/
                 if (code == 400) {
                     if (data == null) return
 

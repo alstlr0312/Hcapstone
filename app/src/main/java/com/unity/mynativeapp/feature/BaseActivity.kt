@@ -26,14 +26,15 @@ class BaseActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragment()).commitAllowingStateLoss()
         binding.btmNavView.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.menuHome -> {
-                    homeFragment = HomeFragment()
-                    supportFragmentManager.beginTransaction().replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss()
-                    true
-                }
+
                 R.id.menuCommunity -> {
                     communityFragment = CommunityFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, communityFragment).commitAllowingStateLoss()
+                    true
+                }
+                R.id.menuHome -> {
+                    homeFragment = HomeFragment()
+                    supportFragmentManager.beginTransaction().replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss()
                     true
                 }
                 R.id.menuAr -> {
