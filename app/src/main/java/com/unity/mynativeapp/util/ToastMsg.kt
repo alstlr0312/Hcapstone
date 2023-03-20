@@ -12,4 +12,8 @@ const val PW_NOT_SAME_ERROR = "비밀번호가 일치하지 않습니다."
 
 const val EMAIL_FOTMAT_ERROR = "이메일 형식이 옳바르지 않습니다."
 
+const val LOGIN_SUCCESS = "로그인을 완료하였습니다."
 const val SIGNUP_SUCCESS = "회원가입을 완료하였습니다."
+const val EMAIL_CODE_SEND_SUCCESS = "입력된 이메일로 인증코드를 발송하였습니다."
+const val EMAIL_CODE_SAME_ERROR = "잘못된 인증코드 입니다."
+const val EMAIL_DUPLICATE_ERROR = "이미 존재하는 이메일입니다."

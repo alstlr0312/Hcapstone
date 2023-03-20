@@ -1,23 +1,35 @@
 package com.unity.mynativeapp.network
 
 import com.unity.mynativeapp.model.*
-import okhttp3.RequestBody
+import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface RetrofitService {
+
 	@POST("email")
 	fun email(@Body CheckRequest: CheckRequest): Call<MyResponse<CheckData>>
-	@POST("signin")
-	fun login(
-		@Body loginRequest: RequestBody): Call<MyResponse<LoginData>>
-	@POST("signup")
-	fun signup(@Query("code") code: String?, @Body signUpRequest: RequestBody) : Call<MyResponse<String>>
 
-	// 홈 화면
+	@POST("signin")
+	fun login(@Body loginRequest: LoginRequest): Call<MyResponse<LoginData>>
+
+	@POST("signup")
+	fun signup(
+		@Query("code") code: String,
+		@Body signUpRequest: SignUpRequest
+	) : Call<MyResponse<String>>
+
+	// 홈 화면 조회 (다이어리 목록 조회)
 	@GET("/diary")
-	fun getHomePage( @Query("date") userIdx: String) : Call<HomePageResponse>
+	fun getHomePage(
+		@Part("date") date: String
+	) : Call<HomePageResponse>
+
+	// 다이어리 작성
+	@Multipart
+	@POST("/diary/write")
+	fun diaryWrite(
+		@Part("writeDiaryDto") writeDiaryDto: String,
+		@Part imageFile : MultipartBody.Part
+	): Call<String>
 }

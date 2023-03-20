@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.feature.ar;
+package com.unity.mynativeapp.Main.ar;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
-
 import com.unity.mynativeapp.R;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,22 +1,20 @@
-package com.unity.mynativeapp.feature.mypage
+package com.example.capstone.Main.home.homeModels
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.unity.mynativeapp.databinding.FragmentMypageBinding
+import java.time.LocalDate
 
+data class HomePageResponse(
+    val status: Int,
+    val error: String? = null,
+    val data: ResultHome? = null,
+)
 
-class MyPageFragment : Fragment() {
+data class ResultHome(
+    val calenders: List<CalenderItem>,
+    val monthlyPercentage: Int,
+    val today: LocalDate
+)
 
-    lateinit var binding: FragmentMypageBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMypageBinding.inflate(layoutInflater)
-        return binding.root
-    }
-}
+data class CalenderItem(
+    val exerciseDate: LocalDate? = null,
+    val dailyPercentage: Int = -1,
+)

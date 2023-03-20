@@ -4,7 +4,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorAccent">#D12727</color>
+    <color name="colorAccent">#AE2828</color>
 
     <color name="main_black">#272727</color>
     <color name="main_black_dark">#202020</color>
@@ -13,6 +13,8 @@
     <color name="red_btn_pressed">#7A1D1D</color>
     <color name="main_gray_dark">#424242</color>
     <color name="main_gray">#7C7C7C</color>
+    <color name="main_gray_light">#D5D5D5</color>
+    <color name="main_gray_light2">#B3B3B3</color>
     <color name="blue">#0099FF</color>
 
     <color name="line_red">#871616</color>
@@ -20,6 +22,9 @@
     <color name="calender_note_color">#7E0000</color>
     <color name="memo_bg">#D1D1D1</color>
 
+    <color name="posting_bg">#191919</color>
+
+    <color name="tab_unselecdted"></color>
     <color name="posting_bg">#191919</color>
 
 </resources>

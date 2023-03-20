@@ -1,18 +1,20 @@
-package com.unity.mynativeapp.feature
+package com.unity.mynativeapp.Main
 
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.View
+import com.unity.mynativeapp.Main.ar.ArFragment
+import com.unity.mynativeapp.Main.community.CommunityFragment
+import com.unity.mynativeapp.Main.home.HomeFragment
+import com.unity.mynativeapp.Main.mypage.MypageFragment
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityBaseBinding
-import com.unity.mynativeapp.feature.community.CommunityFragment
-import com.unity.mynativeapp.feature.home.HomeFragment
-import com.unity.mynativeapp.feature.mypage.MyPageFragment
 
 lateinit var homeFragment: HomeFragment
 lateinit var communityFragment: CommunityFragment
-lateinit var arFragment: com.unity.mynativeapp.feature.ar.ArFragment
-lateinit var mypageFragment: MyPageFragment
+lateinit var arFragment: ArFragment
+lateinit var mypageFragment: MypageFragment
 
 class BaseActivity : AppCompatActivity() {
     lateinit var binding: ActivityBaseBinding
@@ -26,30 +28,36 @@ class BaseActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragment()).commitAllowingStateLoss()
         binding.btmNavView.setOnNavigationItemSelectedListener {
             when(it.itemId){
-
-                R.id.menuCommunity -> {
-                    communityFragment = CommunityFragment()
-                    supportFragmentManager.beginTransaction().replace(R.id.frameLayout, communityFragment).commitAllowingStateLoss()
-                    true
-                }
                 R.id.menuHome -> {
                     homeFragment = HomeFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.INVISIBLE
+                    true
+                }
+                R.id.menuCommunity -> {
+                    communityFragment = CommunityFragment()
+                    supportFragmentManager.beginTransaction().replace(R.id.frameLayout, communityFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.VISIBLE
                     true
                 }
                 R.id.menuAr -> {
-                    arFragment = com.unity.mynativeapp.feature.ar.ArFragment()
+                    arFragment = ArFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, arFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.INVISIBLE
                     true
                 }
                 R.id.menuMypage -> {
-                    mypageFragment = MyPageFragment()
+                    mypageFragment = MypageFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mypageFragment).commitAllowingStateLoss()
+                    binding.ivAddPost.visibility = View.INVISIBLE
                     true
                 }
                 else -> false
             }
         }
+
+
+
     }
 
     override fun onResume() {

@@ -1,5 +1,7 @@
 package com.unity.mynativeapp.network
 
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,6 +11,8 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
 
 	private const val baseUrl = "http://you-have-to.duckdns.org/"
+
+	//val JSON: MediaType = "application/json; charset=utf-8".toMediaType()
 
 	private val okHttpClient = OkHttpClient.Builder()
 		.readTimeout(5000, TimeUnit.MILLISECONDS)

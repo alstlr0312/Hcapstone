@@ -1,11 +1,7 @@
-package com.unity.mynativeapp.feature.ar;
+package com.unity.mynativeapp.Main.ar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-
 import com.company.product.OverrideUnityActivity;
 
 
@@ -14,7 +10,7 @@ public class MainUnityActivity extends OverrideUnityActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // addControlsToUnityFrame();
+        //  addControlsToUnityFrame();
         Intent intent = getIntent();
         handleIntent(intent);
     }
@@ -37,7 +33,7 @@ public class MainUnityActivity extends OverrideUnityActivity {
 
     @Override
     protected void showMainActivity(String setToColor) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, com.unity.mynativeapp.Main.ar.MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("setColor", setToColor);
         startActivity(intent);

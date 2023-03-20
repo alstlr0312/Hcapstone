@@ -3,19 +3,19 @@ package com.unity.mynativeapp.model
 import java.time.LocalDate
 
 data class HomePageResponse(
-	val status: Int,
-	val data: ResultHome,
-	val error: Error ?= null
+    val status: Int,
+    val error: String? = null,
+    val data: ResultHome? = null,
 )
 
 data class ResultHome(
-	val calenders: List<CalenderItem>,
-	val monthlyPercentage: Int,
-	val today: LocalDate
+    val calenders: List<CalenderItem>,
+    val monthlyPercentage: Int,
+    val today: LocalDate
 )
 
 data class CalenderItem(
-	val exerciseDate: LocalDate? = null,
-	val dailyPercentage: Int = -1,
-)
+    val exerciseDate: LocalDate? = null,
+    val dailyPercentage: Int = -1,
 
+    )
