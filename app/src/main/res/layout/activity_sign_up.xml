@@ -270,6 +270,30 @@
                 app:layout_constraintEnd_toEndOf="@id/edt_password_confirm"/>
 
 
+            <EditText
+                android:id="@+id/edt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_edge_red_rounded"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="22dp"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:hint="주소 입력 - 미완성(입력x)"
+                android:inputType="text"
+                android:enabled="false"
+                android:textColorHint="@color/main_gray"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="12dp"
+                android:drawableStart="@drawable/ic_map"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/main_red"
+                app:layout_constraintTop_toBottomOf="@id/edt_username"
+                app:layout_constraintStart_toStartOf="@id/edt_username"
+                app:layout_constraintEnd_toEndOf="@id/edt_username"/>
+
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_sign_up"
@@ -283,7 +307,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="40dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edt_username"
+                app:layout_constraintTop_toBottomOf="@id/edt_address"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

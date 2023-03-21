@@ -19,6 +19,7 @@
     <string name="input_password">비밀번호 입력</string>
     <string name="input_password_confirm">비밀번호 확인</string>
     <string name="input_nickname">닉네임 입력</string>
+    <string name="input_address">주소 입력</string>
     <string name="input_email">이메일 입력</string>
     <string name="find_id">아이디 찾기</string>
     <string name="find_password">비밀번호 찾기</string>

@@ -9,6 +9,7 @@ class PreferenceUtil(context: Context) {
 
 	fun getString(key: String, defValue: String?): String? = prefs.getString(key, defValue)
 	fun setString(key: String, value: String) = prefs.edit().putString(key, value).apply()
+	fun removeString(key: String) = prefs.edit().remove(key).apply()
 
 
 }

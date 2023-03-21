@@ -10,9 +10,8 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-	private const val baseUrl = "http://you-have-to.duckdns.org/"
+	private const val baseUrl = "https://you-have-to.duckdns.org/"
 
-	//val JSON: MediaType = "application/json; charset=utf-8".toMediaType()
 
 	private val okHttpClient = OkHttpClient.Builder()
 		.readTimeout(5000, TimeUnit.MILLISECONDS)

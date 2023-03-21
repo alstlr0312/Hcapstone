@@ -21,15 +21,15 @@ interface RetrofitService {
 
 	// 홈 화면 조회 (다이어리 목록 조회)
 	@GET("/diary")
-	fun getHomePage(
-		@Part("date") date: String
-	) : Call<HomePageResponse>
+	fun getHome(
+		@Query("date") date: String
+	) : Call<MyResponse<HomeResponse>>
 
 	// 다이어리 작성
 	@Multipart
 	@POST("/diary/write")
-	fun diaryWrite(
-		@Part("writeDiaryDto") writeDiaryDto: String,
-		@Part imageFile : MultipartBody.Part
-	): Call<String>
+	fun postDiaryWrite(
+		//@Part("writeDiaryDto") writeDiaryDto: String,
+		//@Part imageFile : MultipartBody.Part
+	): Call<MyResponse<DiaryWriteResponse>>
 }

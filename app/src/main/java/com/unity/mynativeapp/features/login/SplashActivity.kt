@@ -10,6 +10,7 @@ import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.features.BaseActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.util.X_ACCESS_TOKEN
+import com.unity.mynativeapp.util.X_REFRESH_TOKEN
 
 
 class SplashActivity : AppCompatActivity() {
@@ -24,8 +25,9 @@ class SplashActivity : AppCompatActivity() {
 
     fun checkLogin(){
 
-        val accessToken = MyApplication.prefUtil.getString(X_ACCESS_TOKEN, null)
+        MyApplication.prefUtil.removeString(X_ACCESS_TOKEN)
 
+        val accessToken = MyApplication.prefUtil.getString(X_ACCESS_TOKEN, null)
         /**
          * accessToken이 존재하면 [BaseActivity], 아니면 로그인하도록 [LoginActivity]로 이동동
          */
