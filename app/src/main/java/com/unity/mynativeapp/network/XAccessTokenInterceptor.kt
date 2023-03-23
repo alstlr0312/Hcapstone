@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.network
 
+import android.util.Log
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.util.X_ACCESS_TOKEN
 import okhttp3.Interceptor
@@ -15,7 +16,7 @@ class XAccessTokenInterceptor : Interceptor {
 
 		val jwtToken: String? = MyApplication.prefUtil.getString(X_ACCESS_TOKEN, null)
 		if (jwtToken != null) {
-			builder.addHeader(X_ACCESS_TOKEN, jwtToken)
+			builder.addHeader("Authorization", "Bearer $jwtToken")
 		}
 		return chain.proceed(builder.build())
 	}

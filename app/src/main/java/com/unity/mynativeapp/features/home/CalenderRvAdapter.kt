@@ -66,10 +66,8 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
 
                         var formatDate = item.exerciseDate.format(DateTimeFormatter.ofPattern("YYYY.MM.dd"))
                         intent.putExtra("formatDate", formatDate)
-                        intent.putExtra("diaryDate", item.exerciseDate.toString())
-                        var status: Int = if(item.dailyPercentage != -1){
-                            0
-                        }else 1
+                        intent.putExtra("exerciseDate", item.exerciseDate.toString())
+                        var status: Int = if(item.dailyPercentage != -1) 0 else 1
                         intent.putExtra("mode", status)
 
                         context.startActivity(intent)
