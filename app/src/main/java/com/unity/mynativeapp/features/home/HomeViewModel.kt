@@ -23,6 +23,9 @@ class HomeViewModel: ViewModel() {
     private val _homeData = MutableLiveData<HomeResponse?>()
     val homeData: LiveData<HomeResponse?> = _homeData
 
+    private val _logout = MutableLiveData<Boolean>(false)
+    val logout: LiveData<Boolean> = _logout
+
     fun home(date: String) {
 
         _loading.postValue(true)
@@ -47,8 +50,8 @@ class HomeViewModel: ViewModel() {
                             _homeData.postValue(data)
                         }
                     }
-                    400 -> {// 다이어리 목록 없음
-                        _homeData.postValue(null)
+                    401 -> {// refresh 토큰 만료
+                        _logout.postValue(true)
                     }
                     else -> {
                         Log.d(TAG, "$code")

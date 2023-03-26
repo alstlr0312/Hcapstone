@@ -77,6 +77,7 @@
     <string name="exercise_biceps">이두근</string>
     <string name="exercise_triceps">삼두근</string>
     <string name="exercise_abs">복근</string>
+    <string name="exercise_cardio">유산소</string>
     <string name="etc">기타</string>
     <string name="exercise_detail_weight_training">상세 입력 (ex.스쿼드)</string>
     <string name="exercise_detail_cardio">상세 입력 (ex.런닝)</string>

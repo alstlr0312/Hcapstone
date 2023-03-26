@@ -29,7 +29,6 @@
         android:textSize="14sp"
         android:textStyle="bold"
         android:paddingHorizontal="2dp"
-        android:layout_marginHorizontal="5dp"
         android:ellipsize="end"
         android:visibility="visible"
         android:gravity="center"

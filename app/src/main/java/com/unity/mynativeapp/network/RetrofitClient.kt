@@ -8,10 +8,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitClient {
+private const val baseUrl = "https://you-have-to.duckdns.org/"
 
-	private const val baseUrl = "https://you-have-to.duckdns.org/"
-
+object RetrofitClient{
 
 	private val okHttpClient = OkHttpClient.Builder()
 		.readTimeout(5000, TimeUnit.MILLISECONDS)
@@ -29,4 +28,7 @@ object RetrofitClient {
 	private val retrofitService = retrofit.create(RetrofitService::class.java)
 
 	fun getApiService(): RetrofitService = retrofitService
+
+	fun getBaseUrl(): String = baseUrl
 }
+

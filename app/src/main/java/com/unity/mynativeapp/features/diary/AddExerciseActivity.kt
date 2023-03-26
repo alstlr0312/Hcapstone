@@ -23,6 +23,7 @@ class AddExerciseActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+
         setView()
         setListener()
     }
@@ -72,7 +73,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         val exerciseName = binding.edtDetailCardioName.text.toString()
                         val reps = null
                         val exSetCount = null
-                        val bodyPart = selectedItem.text.toString()
+                        val bodyPart = getString(R.string.exercise_cardio)
 
                         diaryActivity.exerciseAdapter.addItem(
                             DiaryExerciseRvItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
@@ -85,7 +86,8 @@ class AddExerciseActivity : AppCompatActivity() {
                     val exerciseName = binding.edtDetailWeightTrainingName.text.toString()
                     val reps = binding.edtReps.text.toString()
                     val exSetCount = binding.edtSets.text.toString()
-                    val bodyPart = selectedItem.text.toString()
+                    var bodyPart = selectedItem.text.toString()
+                    if(bodyPart == null) bodyPart = getString(R.string.exercise_abs)
 
                     if(reps == "" || exSetCount == "" || reps.toInt() == 0 || exSetCount.toInt() == 0){
                         Toast.makeText(this, getString(R.string.please_input_exercise_count), Toast.LENGTH_SHORT).show()

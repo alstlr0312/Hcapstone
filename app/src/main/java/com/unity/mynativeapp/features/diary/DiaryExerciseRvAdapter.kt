@@ -2,14 +2,17 @@ package com.unity.mynativeapp.features.diary
 
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.unity.mynativeapp.MyApplication.Companion.bodyPartHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
+import com.unity.mynativeapp.model.DiaryWriteJson
 import com.unity.mynativeapp.util.DeleteDialog
 
 
@@ -18,6 +21,7 @@ class DiaryExerciseRvAdapter(var context: Context)
 
     private var itemList = mutableListOf<DiaryExerciseRvItem>()
     private var bindingList = mutableListOf<ItemRvDiaryExerciseBinding>()
+
     inner class ViewHolder(val binding: ItemRvDiaryExerciseBinding): RecyclerView.ViewHolder(binding.root){
 
         init{
@@ -113,8 +117,14 @@ class DiaryExerciseRvAdapter(var context: Context)
     }
 
     fun getExerciseList(): List<DiaryExerciseRvItem> {
-
-        return itemList
+        var dataList = mutableListOf<DiaryExerciseRvItem>()
+        for(i in itemList){
+            var item = i
+            item.bodyPart = bodyPartHashMap[i.bodyPart].toString()
+            dataList.add(item)
+        }
+        Log.d("dataList", dataList.toString())
+        return dataList
     }
 
 }

@@ -1,12 +1,6 @@
 package com.unity.mynativeapp.features.diary
 
-import android.util.Log
-import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.model.DiaryWriteResponse
-import okhttp3.Call
 import okhttp3.MultipartBody
-import okhttp3.Request
-import java.io.IOException
 
 class DiaryActivityService(val diaryActivityInterface: DiaryActivityInterface) {
 
