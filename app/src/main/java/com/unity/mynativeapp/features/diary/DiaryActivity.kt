@@ -1,31 +1,23 @@
 package com.unity.mynativeapp.features.diary
 
-import android.app.Dialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.model.DiaryWriteRequest
-import com.unity.mynativeapp.model.DiaryWriteResponse
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
-import com.unity.mynativeapp.features.home.HomeViewModel
-import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.util.LoadingDialog
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -155,26 +147,27 @@ class DiaryActivity : AppCompatActivity() {
                 )
 
 
+
                 val gson = GsonBuilder().serializeNulls().create()
                 val jsonObject = JSONObject()
                     .put("writeDiaryDto", gson.toJson(jsonRequest))
                 Log.d("diaryActivity", jsonObject.toString())
                 val requestBody = MultipartBody.Builder()
                     .addPart(jsonObject.toString().toRequestBody("application/json".toMediaType()))
+                val requestBody1 = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
 
                 // 미디어
+                val listPart = mutableListOf<MultipartBody.Part>()
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
                     val requestFile = RequestBody.create("image/*".toMediaType(), file)
-                    requestBody.addFormDataPart("files", file.name, requestFile)
+                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                    listPart.add(body)
                     Log.d("diaryActivity", element)
                 }
 
-                //val hashMap<String, RequestBody>
-
-
-                //DiaryActivityService(this).tryPostDiaryWrite(requestBody.build())
-
+                viewModel.diaryWrite(requestBody1,listPart)
             }else{
                 Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }

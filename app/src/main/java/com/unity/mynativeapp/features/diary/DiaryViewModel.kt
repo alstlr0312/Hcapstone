@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.unity.mynativeapp.model.DiaryWriteResponse
-import com.unity.mynativeapp.model.HomeResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,31 +24,30 @@ class DiaryViewModel: ViewModel() {
     private val _diaryWriteSuccess = MutableLiveData<Boolean>()
     val diaryWriteSuccess: LiveData<Boolean> = _diaryWriteSuccess
 
-    fun diaryWrite(body: RequestBody) {
+    fun diaryWrite(body: RequestBody, body1: List<MultipartBody.Part?>) {
 
         _loading.postValue(true)
 
-        postDiaryWrite(body)
+        postDiaryWrite(body,body1)
     }
 
-    private fun postDiaryWrite(body: RequestBody) {
-        RetrofitClient.getApiService().postDiaryWrite().enqueue(object :
+    private fun postDiaryWrite(body: RequestBody, body1:  List<MultipartBody.Part?>) {
+        RetrofitClient.getApiService().postDiaryWrite(body,body1).enqueue(object :
             Callback<MyResponse<DiaryWriteResponse>> {
             override fun onResponse(call: Call<MyResponse<DiaryWriteResponse>>, response: Response<MyResponse<DiaryWriteResponse>>) {
                 _loading.postValue(false)
 
-
                 val code = response.code()
-
                 if(code == 201){ // 다이어리 작성 성공
                     val data = response.body()?.data
-
                     _diaryWriteSuccess.postValue(true)
 
-                }else if(code == 401){ // 존재하지 않는 유저
+                }else if(code == 401) { // 존재하지 않는 유저
                     // 재로그인
                     Log.d(TAG, "$code 존재하지 않는 유저")
-
+                }
+                else if(code == 400){
+                    Log.d(TAG, "$code   ")
                 }else if(code == 415){
                     Log.d(TAG, "$code 잘못된 Content-Type")
                 }else if(code == 500){
