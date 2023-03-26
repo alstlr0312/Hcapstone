@@ -16,6 +16,7 @@ import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.util.LoadingDialog
+import okhttp3.CacheControl.Companion.parse
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -26,6 +27,7 @@ import java.io.File
 
 
 lateinit var diaryActivity: DiaryActivity
+
 class DiaryActivity : AppCompatActivity() {
     private val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<DiaryViewModel>()
@@ -145,15 +147,15 @@ class DiaryActivity : AppCompatActivity() {
                     binding.edtMemo.text.toString(),
                     exerciseDate
                 )
-
+            //    val jsonBody = RequestBody.create(parse("application/json"),jsonObject2)
 
 
                 val gson = GsonBuilder().serializeNulls().create()
-                val jsonObject = JSONObject()
-                    .put("writeDiaryDto", gson.toJson(jsonRequest))
+                val jsonObject = JSONObject().put("writeDiaryDto", gson.toJson(jsonRequest))
                 Log.d("diaryActivity", jsonObject.toString())
-                val requestBody = MultipartBody.Builder()
-                    .addPart(jsonObject.toString().toRequestBody("application/json".toMediaType()))
+
+                val requestBody = MultipartBody.Builder().addPart(gson.toJson(jsonRequest).toRequestBody("application/json".toMediaType()))
+                val requestBody2  =  MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", jsonObject.toString())
                 val requestBody1 = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
 
@@ -167,7 +169,7 @@ class DiaryActivity : AppCompatActivity() {
                     Log.d("diaryActivity", element)
                 }
 
-                viewModel.diaryWrite(requestBody1,listPart)
+                viewModel.diaryWrite(requestBody2,listPart)
             }else{
                 Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }
