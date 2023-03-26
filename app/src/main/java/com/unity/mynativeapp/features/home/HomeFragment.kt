@@ -13,6 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
+import com.unity.mynativeapp.features.BaseActivity
+import com.unity.mynativeapp.features.diary.DiaryActivity
+import com.unity.mynativeapp.features.login.LoginActivity
 import com.unity.mynativeapp.util.LoadingDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -83,6 +86,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun subscribeUI() {
+        viewModel.login.observe(viewLifecycleOwner){ login->
+            if(login == false){
+                var intent = Intent(activity,LoginActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }

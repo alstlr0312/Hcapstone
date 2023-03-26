@@ -60,6 +60,7 @@ class LoginViewModel : ViewModel() {
 
 					data?.let{
 						if(data.accessToken.isNotEmpty()){
+
 							MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
 							MyApplication.prefUtil.setString(X_REFRESH_TOKEN, data.refreshToken)
 							_toastMessage.postValue(LOGIN_SUCCESS)

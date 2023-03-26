@@ -2,6 +2,7 @@ package com.unity.mynativeapp.network
 
 import com.unity.mynativeapp.model.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -29,7 +30,7 @@ interface RetrofitService {
 	@Multipart
 	@POST("/diary/write")
 	fun postDiaryWrite(
-		@Part("writeDiaryDto") writeDiaryDto: MultipartBody.Builder,
+		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
 		@Part imageFile: List<MultipartBody.Part?>
 	): Call<MyResponse<DiaryWriteResponse>>
 }

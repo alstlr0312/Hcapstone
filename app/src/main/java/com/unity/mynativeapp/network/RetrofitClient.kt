@@ -1,7 +1,6 @@
 package com.unity.mynativeapp.network
 
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
+
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,4 +28,5 @@ object RetrofitClient {
 	private val retrofitService = retrofit.create(RetrofitService::class.java)
 
 	fun getApiService(): RetrofitService = retrofitService
+
 }

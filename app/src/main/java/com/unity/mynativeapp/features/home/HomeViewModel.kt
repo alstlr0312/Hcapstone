@@ -23,6 +23,9 @@ class HomeViewModel: ViewModel() {
     private val _homeData = MutableLiveData<HomeResponse?>()
     val homeData: LiveData<HomeResponse?> = _homeData
 
+    private val _login = MutableLiveData<Boolean>()
+    val login: LiveData<Boolean> = _login
+
     fun home(date: String) {
 
         _loading.postValue(true)
@@ -50,9 +53,13 @@ class HomeViewModel: ViewModel() {
                     400 -> {// 다이어리 목록 없음
                         _homeData.postValue(null)
                     }
+                    401 -> {
+                        _login.postValue(false)
+                    }
                     else -> {
                         Log.d(TAG, "$code")
                     }
+
                 }
             }
 

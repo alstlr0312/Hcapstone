@@ -16,7 +16,6 @@ import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.util.LoadingDialog
-import okhttp3.CacheControl.Companion.parse
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -153,10 +152,13 @@ class DiaryActivity : AppCompatActivity() {
                 val gson = GsonBuilder().serializeNulls().create()
                 val jsonObject = JSONObject().put("writeDiaryDto", gson.toJson(jsonRequest))
                 Log.d("diaryActivity", jsonObject.toString())
+               val jsonObject11 = JSONObject(jsonObject.toString())
+                val data = createPartFromString(jsonObject.toString())
 
-                val requestBody = MultipartBody.Builder().addPart(gson.toJson(jsonRequest).toRequestBody("application/json".toMediaType()))
-                val requestBody2  =  MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("writeDiaryDto", jsonObject.toString())
-                val requestBody1 = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+                val requestBodyString = gson.toJson(jsonRequest).toString()
+                val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
+                val exdata = createPartFromString(requestBodyWithoutBackslashes)
 
 
                 // 미디어
@@ -168,8 +170,8 @@ class DiaryActivity : AppCompatActivity() {
                     listPart.add(body)
                     Log.d("diaryActivity", element)
                 }
-
-                viewModel.diaryWrite(requestBody2,listPart)
+                Log.d("diaryActivity111111", jsonObject11.toString())
+                viewModel.diaryWrite(exdata,listPart)
             }else{
                 Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }
@@ -181,7 +183,9 @@ class DiaryActivity : AppCompatActivity() {
         }
 
     }
-
+    fun createPartFromString(stringData: String): RequestBody {
+        return stringData.toRequestBody("application/json".toMediaTypeOrNull())
+    }
 
     override fun onResume() {
         super.onResume()
