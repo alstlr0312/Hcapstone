@@ -24,14 +24,14 @@ class DiaryViewModel: ViewModel() {
     private val _diaryWriteSuccess = MutableLiveData<Boolean>()
     val diaryWriteSuccess: LiveData<Boolean> = _diaryWriteSuccess
 
-    fun diaryWrite(body: RequestBody, body1: List<MultipartBody.Part?>) {
+    fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
 
         _loading.postValue(true)
 
         postDiaryWrite(body,body1)
     }
 
-    private fun postDiaryWrite(body: RequestBody, body1:  List<MultipartBody.Part?>) {
+    private fun postDiaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
         RetrofitClient.getApiService().postDiaryWrite(body,body1).enqueue(object :
             Callback<MyResponse<DiaryWriteResponse>> {
             override fun onResponse(call: Call<MyResponse<DiaryWriteResponse>>, response: Response<MyResponse<DiaryWriteResponse>>) {

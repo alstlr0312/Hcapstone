@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.diary
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore

@@ -1,6 +1,9 @@
 package com.unity.mynativeapp.features.diary
 
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -16,6 +19,7 @@ import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.util.LoadingDialog
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -108,7 +112,7 @@ class DiaryActivity : AppCompatActivity() {
             binding.edtMemo.hint = getString(R.string.please_input)
     }
 
-    private fun setUiEvent(){
+    private fun setUiEvent() {
 
         // 운동 추가
         binding.btnAddExercise.setOnClickListener {
@@ -119,9 +123,13 @@ class DiaryActivity : AppCompatActivity() {
 
         // 미디어 추가
         binding.btnAddMedia.setOnClickListener {
-            if(mediaAdapter.itemCount == 4){
-                Toast.makeText(this, getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
-            }else{
+            if (mediaAdapter.itemCount == 4) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.you_can_register_four_medias),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 imageResult.launch(intent)
@@ -137,7 +145,7 @@ class DiaryActivity : AppCompatActivity() {
         // 저장 아이콘 클릭
         binding.ivSave.setOnClickListener {
 
-            if(exerciseAdapter.itemCount != 0) {
+            if (exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
 
                 // 운동
@@ -146,13 +154,13 @@ class DiaryActivity : AppCompatActivity() {
                     binding.edtMemo.text.toString(),
                     exerciseDate
                 )
-            //    val jsonBody = RequestBody.create(parse("application/json"),jsonObject2)
+                //    val jsonBody = RequestBody.create(parse("application/json"),jsonObject2)
 
 
                 val gson = GsonBuilder().serializeNulls().create()
                 val jsonObject = JSONObject().put("writeDiaryDto", gson.toJson(jsonRequest))
                 Log.d("diaryActivity", jsonObject.toString())
-               val jsonObject11 = JSONObject(jsonObject.toString())
+                val jsonObject11 = JSONObject(jsonObject.toString())
                 val data = createPartFromString(jsonObject.toString())
 
 
@@ -162,30 +170,39 @@ class DiaryActivity : AppCompatActivity() {
 
 
                 // 미디어
-                val listPart = mutableListOf<MultipartBody.Part>()
+                val imageList: ArrayList<MultipartBody.Part> = ArrayList()
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
-                    val requestFile = RequestBody.create("image/*".toMediaType(), file)
-                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                    listPart.add(body)
-                    Log.d("diaryActivity", element)
+                   // val requestFile = RequestBody.create("image/*".toMediaType(), file)
+                   // val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                   // listPart.add(body)
+                    val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+                    val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
+                    imageList.add(uploadFile)
+
+                    Log.d("234234234234", element)
                 }
-                Log.d("diaryActivity111111", jsonObject11.toString())
-                viewModel.diaryWrite(exdata,listPart)
-            }else{
-                Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
+
+
+                        viewModel.diaryWrite(exdata, imageList)
+                        Log.d("diaryActivity111111", jsonObject11.toString())
+                    }else{
+                    Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
-        // 뒤로 가기
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
+            // 뒤로 가기
+            binding.btnBack.setOnClickListener {
+                finish()
+            }
 
-    }
+        }
     fun createPartFromString(stringData: String): RequestBody {
         return stringData.toRequestBody("application/json".toMediaTypeOrNull())
     }
+
+
+
 
     override fun onResume() {
         super.onResume()
