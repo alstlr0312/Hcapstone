@@ -25,6 +25,10 @@ interface RetrofitService {
 	fun getHome(
 		@Query("date") date: String
 	) : Call<MyResponse<HomeResponse>>
+	@GET("/diary/detail")
+	fun getDiary(
+		@Query("date") date: String
+	) : Call<MyResponse<HomeResponse>>
 
 	// 다이어리 작성
 	@Multipart

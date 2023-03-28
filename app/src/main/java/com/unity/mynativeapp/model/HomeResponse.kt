@@ -12,5 +12,4 @@ data class HomeResponse(
 data class CalenderItem(
     @SerializedName("exerciseDate") val exerciseDate: LocalDate? = null,
     @SerializedName("dailyPercentage") val dailyPercentage: Int = -1,
-
     )
