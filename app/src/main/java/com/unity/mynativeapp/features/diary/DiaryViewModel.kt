@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.unity.mynativeapp.model.DiaryResponse
 import com.unity.mynativeapp.model.DiaryWriteResponse
+import com.unity.mynativeapp.model.HomeResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import okhttp3.MultipartBody
@@ -23,6 +25,9 @@ class DiaryViewModel: ViewModel() {
 
     private val _diaryWriteSuccess = MutableLiveData<Boolean>()
     val diaryWriteSuccess: LiveData<Boolean> = _diaryWriteSuccess
+
+    private val _diaryData = MutableLiveData<DiaryResponse?>()
+    val diaryData: LiveData<DiaryResponse?> = _diaryData
 
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
 
@@ -63,6 +68,49 @@ class DiaryViewModel: ViewModel() {
                 Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
 
+            }
+        })
+    }
+
+    fun home(date: String) {
+
+        _loading.postValue(true)
+
+        getDiaryAPI(date)
+    }
+
+    private fun getDiaryAPI(date: String) {
+        RetrofitClient.getApiService().getDiary(date).enqueue(object :
+            Callback<MyResponse<DiaryResponse>> {
+            override fun onResponse(call: Call<MyResponse<DiaryResponse>>, response: Response<MyResponse<DiaryResponse>>) {
+                _loading.postValue(false)
+
+                val code = response.code()
+                Log.d(TAG, code.toString())
+
+                when(code) {
+                    200 -> { // 다이어리 목록 있음
+                        val data = response.body()?.data
+                        Log.d(TAG, data.toString())
+                        data?.let {
+                            _diaryData.postValue(data)
+                        }
+                    }
+                    400 -> {// 다이어리 목록 없음
+                         _diaryData.postValue(null)
+                    }
+
+                    else -> {
+                        Log.d(TAG, "$code")
+                    }
+
+                }
+            }
+
+
+            override fun onFailure(call: Call<MyResponse<DiaryResponse>>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
             }
         })
     }

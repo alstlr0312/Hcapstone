@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 import java.time.LocalDate
 
 data class DiaryResponse(
-    @SerializedName("review") val monthlyPercentage: Int,
-    @SerializedName("exerciseDate") val today: String,
-    @SerializedName("exerciseInfo") val calenders: List<ExerciseItem>,
+    @SerializedName("review") val review: Int,
+    @SerializedName("exerciseDate") val exerciseDate: String,
+    @SerializedName("exerciseInfo") val exerciseInfo: List<ExerciseItem>,
     @SerializedName("dateTime") val dateTime: List<DateItem>,
     @SerializedName("mediaList") val mediaList: List<Uri>
 )

@@ -18,6 +18,9 @@ import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
+import com.unity.mynativeapp.features.login.LoginActivity
+import com.unity.mynativeapp.model.CalenderRvItem
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.util.LoadingDialog
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -39,7 +42,7 @@ class DiaryActivity : AppCompatActivity() {
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 미디어 Rv 어댑터
     private var firstStart = true
-    private var status = 0 // 0(read), 1(write)
+    private var status = 1 // 0(read), 1(write)
 
     var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->
@@ -74,19 +77,20 @@ class DiaryActivity : AppCompatActivity() {
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
-        setView()
+        viewModel.home(exerciseDate)
+        subscribeUI()
+       // setView()
 
         setUiEvent()
 
-        subscribeUI()
+
     }
+
 
     private fun setView(){
 
         if(status == 0) setReadView()
         else setWriteView()
-
-
     }
 
     private fun setReadView(){ // 일지 정보가 있을 경우 -> 일지 조회 화면 (read)
@@ -124,11 +128,8 @@ class DiaryActivity : AppCompatActivity() {
         // 미디어 추가
         binding.btnAddMedia.setOnClickListener {
             if (mediaAdapter.itemCount == 4) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.you_can_register_four_medias),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this,
+                    getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
@@ -173,16 +174,11 @@ class DiaryActivity : AppCompatActivity() {
                 val imageList: ArrayList<MultipartBody.Part> = ArrayList()
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
-                   // val requestFile = RequestBody.create("image/*".toMediaType(), file)
-                   // val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                   // listPart.add(body)
                     val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
                     val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
                     imageList.add(uploadFile)
-
                     Log.d("234234234234", element)
                 }
-
 
                         viewModel.diaryWrite(exdata, imageList)
                         Log.d("diaryActivity111111", jsonObject11.toString())
@@ -216,6 +212,40 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     private fun subscribeUI() {
+
+        viewModel.diaryData.observe(this) { data ->
+
+            if (data == null){  // 다이어리 목록 없음
+                setWriteView()
+            }else{
+                setReadView()
+                val getReview = data.review
+                val getexInfo = data.exerciseInfo
+                for(x in getexInfo){
+                    val exerciseName = x.exerciseName
+                    val reps = x.reps
+                    val exSetCount = x.exSetCount
+                    val isCardio = x.cardio
+                    val cardioTime = x.cardioTime
+                    val bodyPart = x.bodyPart
+                    Log.d("exerciseName", exerciseName.toString())
+                    Log.d("reps", reps.toString())
+                    Log.d("exSetCount", exSetCount.toString())
+                    Log.d("isCardio", isCardio.toString())
+                    Log.d("cardioTime", cardioTime.toString())
+                    Log.d("bodyPart", bodyPart)
+                    exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName.toString(), reps, exSetCount, isCardio, cardioTime, bodyPart, false))
+                }
+                val getMedia = data.mediaList
+                binding.edtMemo.setText(getReview.toString())
+
+                for(x in getMedia){
+
+                }
+
+            }
+        }
+
         viewModel.toastMessage.observe(this) { message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
@@ -231,6 +261,7 @@ class DiaryActivity : AppCompatActivity() {
             setReadView()
         }
     }
+
 
 
 
