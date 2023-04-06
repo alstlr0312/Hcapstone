@@ -23,7 +23,6 @@ class DiaryMediaRvAdapter(val context: Context)
     : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){
 
     private var itemList = mutableListOf<Uri>()
-    private var itemList2 = mutableListOf<MultipartBody>()
     private var pathList = mutableListOf<String>()
     inner class ViewHolder(val binding: ItemRvDiaryMediaBinding): RecyclerView.ViewHolder(binding.root){
 

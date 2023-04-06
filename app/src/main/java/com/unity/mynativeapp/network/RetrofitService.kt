@@ -3,6 +3,7 @@ package com.unity.mynativeapp.network
 import com.unity.mynativeapp.model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -37,7 +38,7 @@ interface RetrofitService {
 	@GET("/media/{num}")
 	fun getMedia(
 		@Path("num") num: Int
-	) : Call<MyResponse<MediaResponse>>
+	) : Call<ResponseBody>
 
 	// 다이어리 작성
 	@Multipart

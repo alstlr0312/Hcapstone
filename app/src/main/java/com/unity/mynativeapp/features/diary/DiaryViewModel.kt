@@ -1,18 +1,17 @@
 package com.unity.mynativeapp.features.diary
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.unity.mynativeapp.model.DiaryResponse
 import com.unity.mynativeapp.model.DiaryWriteResponse
-import com.unity.mynativeapp.model.HomeResponse
 import com.unity.mynativeapp.model.MediaResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,8 +31,8 @@ class DiaryViewModel: ViewModel() {
     val diaryData: LiveData<DiaryResponse?> = _diaryData
 
 
-    private val _mediaData = MutableLiveData<MediaResponse?>()
-    val mediaData: LiveData<MediaResponse?> = _mediaData
+    private val _mediaData = MutableLiveData<ResponseBody?>()
+    val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
 
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
@@ -122,7 +121,34 @@ class DiaryViewModel: ViewModel() {
             }
         })
     }
+    fun media(num: Int) {
 
+        _loading.postValue(true)
+
+        getmediaAPI(num)
+    }
+
+    private fun getmediaAPI(num: Int) {
+        RetrofitClient.getApiService2().getMedia(num).enqueue(object :
+            Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                _loading.postValue(false)
+                if (response.isSuccessful) {
+                    val imageBytes = response.body()
+                        _mediaData.postValue(imageBytes)
+                } else {
+                    // 응답이 실패한 경우 처리하는 코드 작성
+                }
+
+            }
+
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+            }
+        })
+    }
 
     companion object {
         const val TAG = "DiaryViewModel"

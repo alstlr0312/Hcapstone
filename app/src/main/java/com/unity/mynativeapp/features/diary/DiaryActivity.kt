@@ -1,10 +1,6 @@
 package com.unity.mynativeapp.features.diary
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -16,30 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.util.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.IOException
-import java.net.URI
-import java.net.URL
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 lateinit var diaryActivity: DiaryActivity
 
@@ -52,6 +34,7 @@ class DiaryActivity : AppCompatActivity() {
 
 
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 미디어 Rv 어댑터
+    private lateinit var mediaAdapter2: DiaryMediaRvAdapter2      // 미디어 Rv 어댑터
     private var firstStart = true
     private var status = 1 // 0(read), 1(write)
 
@@ -88,6 +71,10 @@ class DiaryActivity : AppCompatActivity() {
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
+
+        mediaAdapter2 = DiaryMediaRvAdapter2(this)
+        binding.exrv.layoutManager = GridLayoutManager(this, 2)
+        binding.exrv.adapter = mediaAdapter2
         viewModel.home(exerciseDate)
         subscribeUI()
         // setView()
@@ -253,8 +240,14 @@ class DiaryActivity : AppCompatActivity() {
                 Log.d("bodyPart", getMedia.toString())
                 binding.edtMemo.setText(getReview.toString())
                     for(x in getMedia){
-
-
+                        val lastSegment = x.substringAfterLast("/").toInt()
+                        viewModel.media(lastSegment)
+                        viewModel.mediaData.observe(this) { data2 ->
+                            if (data2 != null) {
+                                Log.d("bodyPartsdfasd",data2.toString())
+                                mediaAdapter2.addItem(data2.bytes())
+                            }
+                        }
                     }
 
 
