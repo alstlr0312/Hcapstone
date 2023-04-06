@@ -1,6 +1,10 @@
 package com.unity.mynativeapp.features.diary
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -12,17 +16,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
-import com.unity.mynativeapp.util.LoadingDialog
+import com.unity.mynativeapp.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
+import java.net.URI
+import java.net.URL
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 lateinit var diaryActivity: DiaryActivity
 
@@ -32,6 +49,8 @@ class DiaryActivity : AppCompatActivity() {
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var exerciseDate: String   // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
+
+
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 미디어 Rv 어댑터
     private var firstStart = true
     private var status = 1 // 0(read), 1(write)
@@ -231,14 +250,17 @@ class DiaryActivity : AppCompatActivity() {
                     exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName.toString(), reps, exSetCount, isCardio, cardioTime, bodyPart, false))
                 }
                 val getMedia = data.mediaList
+                Log.d("bodyPart", getMedia.toString())
                 binding.edtMemo.setText(getReview.toString())
+                    for(x in getMedia){
 
-                for(x in getMedia){
 
-                }
+                    }
+
 
             }
         }
+
 
         viewModel.toastMessage.observe(this) { message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -255,8 +277,6 @@ class DiaryActivity : AppCompatActivity() {
             setReadView()
         }
     }
-
-
 
 
 

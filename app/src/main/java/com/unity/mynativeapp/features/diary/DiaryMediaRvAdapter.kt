@@ -1,12 +1,14 @@
 package com.unity.mynativeapp.features.diary
 
 import android.content.Context
-import android.database.Cursor
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,12 +16,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryMediaBinding
 import com.unity.mynativeapp.util.DeleteDialog
+import okhttp3.MultipartBody
 
 
 class DiaryMediaRvAdapter(val context: Context)
     : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){
 
     private var itemList = mutableListOf<Uri>()
+    private var itemList2 = mutableListOf<MultipartBody>()
     private var pathList = mutableListOf<String>()
     inner class ViewHolder(val binding: ItemRvDiaryMediaBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -79,6 +83,7 @@ class DiaryMediaRvAdapter(val context: Context)
         notifyDataSetChanged()
     }
 
+
     fun getMediaList(): List<String>{
         return pathList
     }
@@ -98,4 +103,5 @@ class DiaryMediaRvAdapter(val context: Context)
         cursor.close()
         return result
     }
+
 }

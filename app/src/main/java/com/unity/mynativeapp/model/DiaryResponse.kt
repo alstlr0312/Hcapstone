@@ -9,9 +9,11 @@ data class DiaryResponse(
     @SerializedName("exerciseDate") val exerciseDate: String,
     @SerializedName("exerciseInfo") val exerciseInfo: List<ExerciseItem>,
     @SerializedName("dateTime") val dateTime: List<DateItem>,
-    @SerializedName("mediaList") val mediaList: List<Uri>
-)
-
+    @SerializedName("mediaList") val mediaList: List<String> // Uri 대신 String 타입으로 변경
+) {
+    val mediaUriList: List<Uri> // 변환된 Uri 리스트를 저장할 프로퍼티 추가
+        get() = mediaList.map { Uri.parse(it) } // 각 문자열을 Uri.parse() 메서드를 사용하여 Uri 객체로 변환하여 반환
+}
 data class ExerciseItem(
     @SerializedName("exerciseName") val exerciseName: String? = null,
     @SerializedName("reps") val reps: Int? = null,

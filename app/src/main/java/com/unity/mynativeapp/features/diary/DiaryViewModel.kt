@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.unity.mynativeapp.model.DiaryResponse
 import com.unity.mynativeapp.model.DiaryWriteResponse
 import com.unity.mynativeapp.model.HomeResponse
+import com.unity.mynativeapp.model.MediaResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import okhttp3.MultipartBody
@@ -31,8 +32,8 @@ class DiaryViewModel: ViewModel() {
     val diaryData: LiveData<DiaryResponse?> = _diaryData
 
 
-    private val _homeData = MutableLiveData<HomeResponse?>()
-    val homeData: LiveData<HomeResponse?> = _homeData
+    private val _mediaData = MutableLiveData<MediaResponse?>()
+    val mediaData: LiveData<MediaResponse?> = _mediaData
 
 
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
@@ -121,6 +122,7 @@ class DiaryViewModel: ViewModel() {
             }
         })
     }
+
 
     companion object {
         const val TAG = "DiaryViewModel"
