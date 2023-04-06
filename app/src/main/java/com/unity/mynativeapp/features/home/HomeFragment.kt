@@ -1,41 +1,71 @@
 package com.unity.mynativeapp.features.home
 
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.unity.mynativeapp.model.CalenderRvItem
+import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.R
+import com.unity.mynativeapp.config.BaseFragment
+
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
-import com.unity.mynativeapp.features.BaseActivity
-import com.unity.mynativeapp.features.diary.DiaryActivity
-import com.unity.mynativeapp.features.login.LoginActivity
+
+import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.util.LoadingDialog
+import com.unity.mynativeapp.util.SPFileName
+import com.unity.mynativeapp.util.X_ACCESS_TOKEN
+import com.unity.mynativeapp.util.X_REFRESH_TOKEN
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.system.exitProcess
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(
+    FragmentHomeBinding::bind, R.layout.fragment_home)  {
 
-    private val binding by lazy{FragmentHomeBinding.inflate(layoutInflater)}
+    //private val binding by lazy{FragmentHomeBinding.inflate(layoutInflater)}
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var todayDate: LocalDate
     private lateinit var selectedDate: LocalDate
     private lateinit var calenderRvAdapter: CalenderRvAdapter
-    private lateinit var loadingDialog: LoadingDialog
+    //private lateinit var loadingDialog: LoadingDialog
     private lateinit var requestData: String
+    private var firstStart = true
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        todayDate = LocalDate.now()
+        selectedDate = todayDate
+
+        calenderRvAdapter = CalenderRvAdapter(requireContext())
+        binding.recyclerViewCalendar.layoutManager = GridLayoutManager(context, 7)
+        binding.recyclerViewCalendar.adapter = calenderRvAdapter
+
+
+        setCalenderView()
+
+        //setListener()
+
+        // viewModel의 Data를 Observe하는 이벤트 모음 함수
+        subscribeUI()
+
+        // UI Event를 정리한 함수
+        setUiEvent()
+    }
+    /*
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        loadingDialog = LoadingDialog(requireContext())
+        //loadingDialog = LoadingDialog(requireContext())
 
         todayDate = LocalDate.now()
         selectedDate = todayDate
@@ -57,6 +87,8 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
+
+     */
 
     fun setCalenderView(){
         binding.tvMonth.text = selectedDate.monthValue.toString() // 월
@@ -86,19 +118,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun subscribeUI() {
-        viewModel.login.observe(viewLifecycleOwner){ login->
-            if(login == false){
-                var intent = Intent(activity,LoginActivity::class.java)
-                startActivity(intent)
-            }
-        }
-
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) loadingDialog.show() else loadingDialog.dismiss()
+            if (isLoading) showLoadingDialog(requireContext()) else dismissLoadingDialog()
+        }
+
+        viewModel.logout.observe(viewLifecycleOwner){
+            if(it) logout()
         }
 
         viewModel.homeData.observe(viewLifecycleOwner) { data ->
@@ -134,7 +163,7 @@ class HomeFragment : Fragment() {
                 val result = data.calenders
                 var j = 0
                 for(i in 1 until selectedDate.lengthOfMonth()+1){
-                    if(j < result!!.size && result[j].exerciseDate!! == compareDate){ // 다이어리 있음
+                    if(j < result!!.size && result[j].exerciseDate!! == compareDate.toString()){ // 다이어리 있음
                         if(i == selectedDate.dayOfMonth){
                             dayList.add(CalenderRvItem(compareDate, true, result[j].dailyPercentage))
                         }else{
@@ -160,7 +189,16 @@ class HomeFragment : Fragment() {
             }
         }
     }
+    override fun onResume() {
+        super.onResume()
+
+        if(!firstStart){
+            firstStart = true
+            setCalenderView()
+        }
+
+
+    }
 
 }
-
 

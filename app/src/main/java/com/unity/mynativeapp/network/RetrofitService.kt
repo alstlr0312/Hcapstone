@@ -22,13 +22,17 @@ interface RetrofitService {
 
 	// 홈 화면 조회 (다이어리 목록 조회)
 	@GET("/diary")
-	fun getHome(
+	fun getRefreshToken(
 		@Query("date") date: String
-	) : Call<MyResponse<HomeResponse>>
+	): Call<MyResponse<LoginData>>
 	@GET("/diary/detail")
 	fun getDiary(
 		@Query("date") date: String
 	) : Call<MyResponse<DiaryResponse>>
+	@GET("/diary")
+	fun getHome(
+		@Query("date") date: String
+	) : Call<MyResponse<HomeResponse>>
 
 	@GET("/media/{num}")
 	fun getMedia(

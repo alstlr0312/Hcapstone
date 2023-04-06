@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 import java.time.LocalDate
 
 data class HomeResponse(
-    @SerializedName("calenders") val calenders: List<CalenderItem>,
-    @SerializedName("monthlyPercentage") val monthlyPercentage: Int,
-    @SerializedName("today") val today: LocalDate
+    val calenders: List<Calender>,
+    val monthlyPercentage: Int,
+    val today: String
 )
 
-data class CalenderItem(
-    @SerializedName("exerciseDate") val exerciseDate: LocalDate? = null,
-    @SerializedName("dailyPercentage") val dailyPercentage: Int = -1,
-    )
+data class Calender(
+    val dailyPercentage: Int,
+    val exerciseDate: String
+)

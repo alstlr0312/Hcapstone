@@ -7,14 +7,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitClient {
+private const val baseUrl = "https://you-have-to.duckdns.org/"
 
-	private const val baseUrl = "https://you-have-to.duckdns.org/"
-
+object RetrofitClient{
 
 	private val okHttpClient = OkHttpClient.Builder()
-		.readTimeout(5000, TimeUnit.MILLISECONDS)
-		.connectTimeout(5000, TimeUnit.MILLISECONDS)
+		.readTimeout(61, TimeUnit.SECONDS)
+		.connectTimeout(61, TimeUnit.SECONDS)
 		.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 		.addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
 		.build()
@@ -29,4 +28,6 @@ object RetrofitClient {
 
 	fun getApiService(): RetrofitService = retrofitService
 
+	fun getBaseUrl(): String = baseUrl
 }
+

@@ -1,9 +1,6 @@
 package com.unity.mynativeapp.features.diary
 
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -18,19 +15,14 @@ import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
-import com.unity.mynativeapp.features.login.LoginActivity
-import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.util.LoadingDialog
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.File
-
 
 lateinit var diaryActivity: DiaryActivity
 
@@ -45,7 +37,7 @@ class DiaryActivity : AppCompatActivity() {
     private var status = 1 // 0(read), 1(write)
 
     var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        result ->
+            result ->
         if(result.resultCode == RESULT_OK){
             val imageUri = result.data?.data
             imageUri?.let{
@@ -79,7 +71,7 @@ class DiaryActivity : AppCompatActivity() {
 
         viewModel.home(exerciseDate)
         subscribeUI()
-       // setView()
+        // setView()
 
         setUiEvent()
 
@@ -180,19 +172,19 @@ class DiaryActivity : AppCompatActivity() {
                     Log.d("234234234234", element)
                 }
 
-                        viewModel.diaryWrite(exdata, imageList)
-                        Log.d("diaryActivity111111", jsonObject11.toString())
-                    }else{
-                    Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
-                }
+                viewModel.diaryWrite(exdata, imageList)
+                Log.d("diaryActivity111111", jsonObject11.toString())
+            }else{
+                Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
             }
-
-            // 뒤로 가기
-            binding.btnBack.setOnClickListener {
-                finish()
-            }
-
         }
+
+        // 뒤로 가기
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
+    }
     fun createPartFromString(stringData: String): RequestBody {
         return stringData.toRequestBody("application/json".toMediaTypeOrNull())
     }
@@ -219,8 +211,10 @@ class DiaryActivity : AppCompatActivity() {
                 setWriteView()
             }else{
                 setReadView()
-                val getReview = data.review
+                val getReview = data.review.toString()
+                Log.d("getReview", getReview)
                 val getexInfo = data.exerciseInfo
+                Log.d("getexInfo", getexInfo.toString())
                 for(x in getexInfo){
                     val exerciseName = x.exerciseName
                     val reps = x.reps
@@ -261,6 +255,7 @@ class DiaryActivity : AppCompatActivity() {
             setReadView()
         }
     }
+
 
 
 

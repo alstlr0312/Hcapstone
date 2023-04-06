@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.features.diary
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,6 +30,11 @@ class DiaryViewModel: ViewModel() {
     private val _diaryData = MutableLiveData<DiaryResponse?>()
     val diaryData: LiveData<DiaryResponse?> = _diaryData
 
+
+    private val _homeData = MutableLiveData<HomeResponse?>()
+    val homeData: LiveData<HomeResponse?> = _homeData
+
+
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
 
         _loading.postValue(true)
@@ -40,7 +46,7 @@ class DiaryViewModel: ViewModel() {
         RetrofitClient.getApiService().postDiaryWrite(body,body1).enqueue(object :
             Callback<MyResponse<DiaryWriteResponse>> {
             override fun onResponse(call: Call<MyResponse<DiaryWriteResponse>>, response: Response<MyResponse<DiaryWriteResponse>>) {
-                _loading.postValue(false)
+               // _loading.postValue(false)
 
                 val code = response.code()
                 if(code == 201){ // 다이어리 작성 성공
@@ -89,6 +95,8 @@ class DiaryViewModel: ViewModel() {
                 Log.d(TAG, code.toString())
 
                 when(code) {
+
+
                     200 -> { // 다이어리 목록 있음
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
@@ -97,13 +105,12 @@ class DiaryViewModel: ViewModel() {
                         }
                     }
                     400 -> {// 다이어리 목록 없음
-                         _diaryData.postValue(null)
+                        _diaryData.postValue(null)
                     }
 
                     else -> {
                         Log.d(TAG, "$code")
                     }
-
                 }
             }
 

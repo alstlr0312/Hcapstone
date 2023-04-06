@@ -7,9 +7,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.unity.mynativeapp.features.BaseActivity
 import com.unity.mynativeapp.features.signup.SignUpActivity
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
+import com.unity.mynativeapp.features.BaseActivity
 import com.unity.mynativeapp.util.LoadingDialog
 import com.unity.mynativeapp.util.hideKeyboard
 
