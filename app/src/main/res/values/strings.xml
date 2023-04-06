@@ -99,6 +99,7 @@
     <string name="delete_exercise">운동을 삭제하시겠습니까?</string>
     <string name="delete_media">미디어를 삭제하시겠습니까?</string>
 
+    <!-- 커뮤니티 -->
     <string name="now">방금</string>
     <string name="total">전체</string>
     <string name="apply">적용</string>
@@ -108,9 +109,21 @@
     <string name="q_and_a">질의응답</string>
     <string name="knowledge_sharing">지식공유</string>
     <string name="show_off">운동자랑</string>
+    <string name="freedom">자유</string>
     <string name="assess">평가</string>
     <string name="health">헬스</string>
     <string name="pilates">필라테스</string>
     <string name="yoga">요가</string>
     <string name="jogging">조깅</string>
+
+    <string name="post_write">게시글 쓰기</string>
+    <string name="please_select_post_style">-게시판을 선택해 주세요-</string>
+    <string name="please_select_post_category">-카테고리를 선택해 주세요-</string>
+    <string name="please_input_title">제목을 입력해 주세요.</string>
+    <string name="please_input_text">내용을 입력해 주세요.</string>
+    <string name="media">미디어</string>
+    <string name="complete">완료</string>
+    <string name="complete_posting">게시글 올리기</string>
+    <string name="upload_date">작성일</string>
+    <string name="see_more_comment">댓글 더보기</string>
 </resources>

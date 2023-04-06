@@ -21,8 +21,11 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
-            android:name=".features.community.PostWriteActivity"
+            android:name=".features.postdetail.PostDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".features.postwrite.PostWriteActivity"
+            android:exported="false"/>
         <activity
             android:name=".features.diary.DiaryActivity"
             android:exported="false" />

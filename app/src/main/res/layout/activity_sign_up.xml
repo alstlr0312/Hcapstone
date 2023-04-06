@@ -317,7 +317,7 @@
                 android:layout_height="@dimen/icon_size"
                 android:src="@drawable/ic_arrow_left"
                 android:layout_margin="15dp"
-                app:tint="@color/white"
+                app:tint="@color/main_gray_light"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 

@@ -46,7 +46,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_health_diary"
+            android:id="@+id/iv_exercise_community"
             android:layout_width="210dp"
             android:layout_height="40dp"
             android:layout_marginTop="@dimen/fab_margin"

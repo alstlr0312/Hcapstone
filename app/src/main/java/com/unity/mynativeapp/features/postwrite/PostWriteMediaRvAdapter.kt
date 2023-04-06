@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.features.diary
+package com.unity.mynativeapp.features.postwrite
 
 import android.content.Context
 import android.net.Uri
@@ -15,8 +15,8 @@ import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.util.DeleteDialog
 
 
-class DiaryMediaRvAdapter(val context: Context)
-    : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){
+class PostWriteMediaRvAdapter(val context: Context)
+    : RecyclerView.Adapter<PostWriteMediaRvAdapter.ViewHolder>(){
 
     private var itemList = mutableListOf<Uri>()
     private var pathList = mutableListOf<String>()
@@ -52,7 +52,7 @@ class DiaryMediaRvAdapter(val context: Context)
                 .placeholder(R.drawable.shape_bg_black_rounded)
                 .error(R.drawable.shape_bg_black_rounded)
                 .fallback(R.drawable.shape_bg_black_rounded)
-                .override(430, 430)
+                .override(280, 280)
                 .apply(RequestOptions.centerCropTransform())
                 .into(binding.photo)
         }

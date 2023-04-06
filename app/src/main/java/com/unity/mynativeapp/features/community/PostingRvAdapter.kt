@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.community
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.model.PostingRvItem
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
+import com.unity.mynativeapp.features.postdetail.PostDetailActivity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -18,6 +20,13 @@ class PostingRvAdapter(val context: Context): RecyclerView.Adapter<PostingRvAdap
     var itemList = mutableListOf<PostingRvItem>()
     var today = LocalDateTime.now()
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
+
+        init{
+            binding.root.setOnClickListener {
+                context.startActivity(Intent(context, PostDetailActivity::class.java))
+            }
+        }
+
         fun bind(item: PostingRvItem){
 
             //binding.ivProfileImg.setImageURI()
@@ -39,7 +48,6 @@ class PostingRvAdapter(val context: Context): RecyclerView.Adapter<PostingRvAdap
             binding.tvPostTitle.text = item.postTitle
 
             // 게시글 작성일
-
             var uploadDate = ""
             if(today.toLocalDate().equals(item.postDate.toLocalDate())){ // 오늘
                 if(today.hour == item.postDate.hour && today.minute == item.postDate.minute){ // 방금

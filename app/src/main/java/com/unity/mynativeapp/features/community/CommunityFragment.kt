@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
+import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.PostingRvItem
 import java.time.LocalDateTime
 

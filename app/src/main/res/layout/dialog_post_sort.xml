@@ -125,6 +125,22 @@
             app:layout_constraintTop_toTopOf="@id/cb_show_off"
             app:layout_constraintBottom_toBottomOf="@id/cb_show_off"/>
 
+        <CheckBox
+            android:id="@+id/cb_free"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:background="@drawable/sel_checkbox_box"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/freedom"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/cb_assess"
+            app:layout_constraintTop_toTopOf="@id/cb_assess"
+            app:layout_constraintBottom_toBottomOf="@id/cb_show_off"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

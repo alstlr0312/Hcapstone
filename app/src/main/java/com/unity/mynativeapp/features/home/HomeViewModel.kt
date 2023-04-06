@@ -50,6 +50,9 @@ class HomeViewModel: ViewModel() {
                             _homeData.postValue(data)
                         }
                     }
+                    400 -> { // 다이어리 목록 없음
+                        _homeData.postValue(null)
+                    }
                     401 -> {// refresh 토큰 만료
                         _logout.postValue(true)
                     }
