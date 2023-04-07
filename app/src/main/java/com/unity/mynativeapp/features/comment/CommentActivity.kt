@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.comment
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
@@ -21,6 +22,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
     }
 
     private fun setView(){
+
 
         // 게시물 댓글 리사이클러뷰 (댓글 3개)
         commentRvAdapter = ParentCommentRvAdapter(this)
@@ -51,6 +53,11 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
 
     private fun subscribeUI(){
 
+        // 댓글 없으면
+        //binding.tvNoComment.visibility = View.VISIBLE
+
+        // 댓글 있으면
+        //binding.tvNoComment.visibility = View.GONE
     }
 
     override fun onResume() {
