@@ -123,7 +123,15 @@
     <string name="please_input_text">내용을 입력해 주세요.</string>
     <string name="media">미디어</string>
     <string name="complete">완료</string>
-    <string name="complete_posting">게시글 올리기</string>
+    <string name="post_up">게시하기</string>
+    <string name="post">게시</string>
     <string name="upload_date">작성일</string>
     <string name="see_more_comment">댓글 더보기</string>
+    <string name="see_comment">댓글 보기</string>
+    <string name="write_comment">댓글 쓰기</string>
+    <string name="add_comment">댓글 추가...</string>
+    <string name="good">좋아요</string>
+    <string name="comment">댓글</string>
+    <string name="child_comment">답글</string>
+    <string name="close">닫기</string>
 </resources>

@@ -37,6 +37,7 @@ interface RetrofitService {
 	@POST("/diary/write")
 	fun postDiaryWrite(
 		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
-		@Part imageFile: List<MultipartBody.Part?>
+		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<DiaryWriteResponse>>
+
 }

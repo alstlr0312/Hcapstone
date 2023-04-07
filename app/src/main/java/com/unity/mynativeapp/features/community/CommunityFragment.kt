@@ -38,7 +38,7 @@ class CommunityFragment : Fragment() {
             postingRvAdapter = PostingRvAdapter(requireContext())
             rvPosting.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             rvPosting.adapter = postingRvAdapter
-            postingRvAdapter.getListFromView(getPostingList())
+            postingRvAdapter.getListFromView(postListSample())
 
 
             // 게시물 필터 설정
@@ -56,7 +56,9 @@ class CommunityFragment : Fragment() {
 
     }
 
-    fun getPostingList(): MutableList<PostingRvItem>{
+
+
+    fun postListSample(): MutableList<PostingRvItem>{
 
         val test = LocalDateTime.now()
 

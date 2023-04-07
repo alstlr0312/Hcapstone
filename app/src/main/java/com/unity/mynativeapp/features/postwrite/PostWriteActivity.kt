@@ -30,6 +30,13 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setView()
+        setUiEvent()
+        subscribeUI()
+    }
+
+    private fun setView(){
+
         postStyleArr = arrayListOf(getString(R.string.please_select_post_style),
             getString(R.string.q_and_a), getString(R.string.knowledge_sharing),
             getString(R.string.show_off), getString(R.string.assess), getString(R.string.freedom))
@@ -47,9 +54,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         mediaAdapter = PostWriteMediaRvAdapter(this)
         binding.rvPostMedia.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPostMedia.adapter = mediaAdapter
-
-
-        setUiEvent()
     }
 
     private fun setUiEvent(){
@@ -65,27 +69,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         }
     }
 
-    private fun setupSpinnerHandler() {
-        binding.spinnerPostStyle.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val item = binding.spinnerPostStyle.getItemAtPosition(position) as SpinnerModel
+    private fun subscribeUI(){
 
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
-
-        binding.spinnerPostCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val item = binding.spinnerPostCategory.getItemAtPosition(position) as SpinnerModel
-
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
     }
+
 }

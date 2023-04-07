@@ -52,6 +52,17 @@ class DiaryActivity : AppCompatActivity() {
         diaryActivity = this
         loadingDialog = LoadingDialog(this)
 
+
+
+        setView()
+
+        setUiEvent()
+
+        subscribeUI()
+    }
+
+    private fun setView(){
+
         // 다이어리 날짜 설정
         val formatDate = intent.getStringExtra("formatDate").toString()
         binding.tvDate.text = formatDate
@@ -68,18 +79,9 @@ class DiaryActivity : AppCompatActivity() {
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
-        setView()
-
-        setUiEvent()
-
-        subscribeUI()
-    }
-
-    private fun setView(){
 
         if(status == 0) setReadView()
         else setWriteView()
-
 
     }
 

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/fab_margin"
+    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/main_black">
 
@@ -15,15 +15,15 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:riv_corner_radius="15dp"/>
+        app:riv_corner_radius="10dp"/>
 
     <TextView
         android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="유저 닉네임"
+        android:text="닉네임"
         android:textColor="@color/main_gray_light"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:layout_marginStart="@dimen/fab_margin"
         app:layout_constraintStart_toEndOf="@id/iv_profile_img"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -42,9 +42,9 @@
         android:id="@+id/tv_post_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10일 전"
+        android:text="방금"
         android:textColor="@color/main_gray_light"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/iv_dot"
         app:layout_constraintTop_toTopOf="@id/tv_username"
         app:layout_constraintBottom_toBottomOf="@id/tv_username"/>
@@ -53,15 +53,13 @@
         android:id="@+id/tv_comment_context"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="댓글 내용..."
+        android:text="댓글 내용"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:layout_marginVertical="5dp"
         android:layout_marginHorizontal="@dimen/fab_margin"
         app:layout_constraintStart_toEndOf="@id/iv_profile_img"
         app:layout_constraintTop_toBottomOf="@id/tv_username"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
