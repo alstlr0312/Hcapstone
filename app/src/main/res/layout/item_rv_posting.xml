@@ -18,25 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_profile_img"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:cardBackgroundColor="@color/main_black_dark"
-                app:cardCornerRadius="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <ImageView
-                    android:id="@+id/iv_profile_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_profile_photo_base"/>
-
-            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tv_post_title"
@@ -45,10 +26,9 @@
                 android:text="게시물 제목..."
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:layout_marginHorizontal="@dimen/fab_margin"
                 android:maxLines="2"
                 android:ellipsize="end"
-                app:layout_constraintStart_toEndOf="@id/cv_profile_img"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_username"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -60,42 +40,59 @@
                 android:text="UserName"
                 android:textSize="11sp"
                 android:textColor="@color/main_gray_light2"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="3dp"
-                app:layout_constraintStart_toEndOf="@id/cv_profile_img"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_post_title"/>
-
 
 
             <TextView
                 android:id="@+id/tv_post_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="23.03.01"
+                android:text="2023.03.01"
                 android:textColor="@color/main_gray_light2"
                 android:textSize="11sp"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@id/tv_username"
                 app:layout_constraintBottom_toBottomOf="@id/tv_username"/>
 
+
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="end|center"
-                android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_post_date"
                 app:layout_constraintTop_toTopOf="@id/tv_username"
                 app:layout_constraintBottom_toBottomOf="@id/tv_username">
 
                 <ImageView
+                    android:id="@+id/iv_views"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_views"
+                    app:tint="@color/main_gray_light2"/>
+
+                <TextView
+                    android:id="@+id/tv_views_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="11sp"
+                    android:textColor="@color/main_gray_light2"
+                    android:layout_marginStart="5dp"/>
+
+
+                <ImageView
                     android:id="@+id/iv_media"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/ic_photo"
-                    app:tint="@color/main_gray_light2"/>
+                    app:tint="@color/main_gray_light"/>
 
                 <TextView
                     android:id="@+id/tv_media_num"
@@ -103,15 +100,15 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textSize="11sp"
-                    android:textColor="@color/main_gray_light2"
-                    android:layout_marginStart="4dp"/>
+                    android:textColor="@color/main_gray_light"
+                    android:layout_marginStart="5dp"/>
 
                 <ImageView
                     android:id="@+id/cb_heart"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     app:tint="@color/main_red"
-                    android:layout_marginStart="7dp"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/ic_heart"/>
 
                 <TextView
@@ -121,15 +118,15 @@
                     android:text="0"
                     android:textSize="11sp"
                     android:textColor="@color/main_red"
-                    android:layout_marginStart="4dp"/>
+                    android:layout_marginStart="5dp"/>
 
                 <ImageView
                     android:id="@+id/iv_comment"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:src="@drawable/ic_comment_2"
-                    android:layout_marginStart="7dp"
-                    app:tint="@color/main_gray_light"/>
+                    android:layout_marginStart="8dp"
+                    app:tint="@color/white"/>
 
                 <TextView
                     android:id="@+id/tv_comment_num"
@@ -137,8 +134,8 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textSize="11sp"
-                    android:textColor="@color/main_gray_light"
-                    android:layout_marginStart="4dp"/>
+                    android:textColor="@color/white"
+                    android:layout_marginStart="5dp"/>
 
             </LinearLayout>
 

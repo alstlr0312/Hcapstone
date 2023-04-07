@@ -135,4 +135,5 @@
     <string name="comment">댓글</string>
     <string name="child_comment">답글</string>
     <string name="close">닫기</string>
+    <string name="views">조회수</string>
 </resources>

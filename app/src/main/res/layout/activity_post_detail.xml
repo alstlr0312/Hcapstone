@@ -270,21 +270,53 @@
                 app:layout_constraintTop_toTopOf="@id/tv_comment"
                 app:layout_constraintBottom_toBottomOf="@id/tv_comment"/>
 
+            <ImageView
+                android:id="@+id/iv_comment_dot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/ic_dot"
+                app:tint="@color/main_gray_light2"
+                app:layout_constraintStart_toEndOf="@id/tv_comment_num"
+                app:layout_constraintTop_toTopOf="@id/tv_comment_num"
+                app:layout_constraintBottom_toBottomOf="@id/tv_comment_num"/>
 
+
+            <TextView
+                android:id="@+id/tv_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/views"
+                android:textColor="@color/main_gray_light2"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/iv_comment_dot"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_dot"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_dot"/>
+
+            <TextView
+                android:id="@+id/tv_views_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6"
+                android:textSize="14sp"
+                android:textColor="@color/main_gray_light2"
+                android:layout_marginStart="5dp"
+                app:layout_constraintStart_toEndOf="@id/tv_views"
+                app:layout_constraintTop_toTopOf="@id/tv_views"
+                app:layout_constraintBottom_toBottomOf="@id/tv_views"/>
 
 
             <TextView
                 android:id="@+id/tv_post_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2023년 4월 5일"
+                android:text="2023-03-28 16:33"
                 android:textColor="@color/main_gray_light2"
                 android:textSize="14sp"
                 android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintTop_toBottomOf="@id/tab_layout"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!--
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -330,21 +362,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
-            -->
 
-            <TextView
-                android:id="@+id/tv_write_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/see_comment"
-                android:textColor="@color/main_red"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginVertical="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_good"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

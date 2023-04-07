@@ -2,18 +2,20 @@ package com.unity.mynativeapp.features.postdetail
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostDetailBinding
 import com.unity.mynativeapp.features.comment.CommentActivity
+import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
 import com.unity.mynativeapp.model.CommentDto
 
 class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate) {
 
     private lateinit var mediaVpAdapter: MediaViewPagerAdapter // 게시물 미디어 어댑터
-    //private lateinit var commentRvAdapter: CommentRvAdapter // 댓글 어댑터
+    private lateinit var commentRvAdapter: ParentCommentRvAdapter // 댓글 어댑터
     var firstStart = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +39,13 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         }.attach()
 
 
-        /*
+
         // 게시물 댓글 리사이클러뷰
-        commentRvAdapter = CommentRvAdapter(this)
+        commentRvAdapter = ParentCommentRvAdapter(this)
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         binding.rvPostComment.adapter = commentRvAdapter
         commentRvAdapter.getListFromView(setCommentSample())
-        */
+
     }
 
     private fun setMediaSample(): MutableList<Int>{
@@ -67,7 +69,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     private fun setUiEvent(){
 
         // 댓글 조회 & 작성 액티비티로 이동
-        binding.tvWriteComment.setOnClickListener {
+        binding.tvSeeMoreComment.setOnClickListener {
             val intent = Intent(this, CommentActivity::class.java)
             intent.putExtra("postId", 0)
             startActivity(intent)
