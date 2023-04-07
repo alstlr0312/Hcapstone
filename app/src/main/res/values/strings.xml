@@ -130,6 +130,7 @@
     <string name="see_comment">댓글 보기</string>
     <string name="write_comment">댓글 쓰기</string>
     <string name="add_comment">댓글 추가...</string>
+    <string name="please_write_comment">댓글을 작성해 주세요!</string>
     <string name="good">좋아요</string>
     <string name="comment">댓글</string>
     <string name="child_comment">답글</string>

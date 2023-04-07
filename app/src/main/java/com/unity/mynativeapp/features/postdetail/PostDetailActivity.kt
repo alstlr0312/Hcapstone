@@ -49,7 +49,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     private fun setMediaSample(): MutableList<Int>{
         var list = mutableListOf<Int>()
         list.add(R.drawable.bugi)
-        list.add(R.drawable.bugi)
+        list.add(R.drawable.photo01)
         list.add(R.drawable.bugi)
         list.add(R.drawable.bugi)
         return list

@@ -77,6 +77,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
+            <TextView
+                android:id="@+id/tv_no_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/please_write_comment"
+                android:textColor="@color/main_red"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:layout_margin="@dimen/fab_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_post_comment"
                 android:layout_width="match_parent"
