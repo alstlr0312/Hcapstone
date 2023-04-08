@@ -52,6 +52,8 @@ class HomeViewModel: ViewModel() {
                     }
                     401 -> {// refresh 토큰 만료
                         _logout.postValue(true)
+                    400 -> { // 다이어리 목록 없음
+                        _homeData.postValue(null)
                     }
                     else -> {
                         Log.d(TAG, "$code")

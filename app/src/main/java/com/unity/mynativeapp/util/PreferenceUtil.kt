@@ -11,4 +11,5 @@ class PreferenceUtil(context: Context) {
 	fun setString(key: String, value: String) = prefs.edit().putString(key, value).apply()
 	fun removeString(key: String) = prefs.edit().remove(key).commit()
 
+
 }

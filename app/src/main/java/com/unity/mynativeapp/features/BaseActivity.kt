@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,6 +11,7 @@ import com.unity.mynativeapp.features.home.HomeFragment
 import com.unity.mynativeapp.features.mypage.MypageFragment
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityBaseBinding
+import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 
 lateinit var homeFragment: HomeFragment
 lateinit var communityFragment: CommunityFragment
@@ -55,6 +57,9 @@ class BaseActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnWritePost.setOnClickListener {
+            startActivity(Intent(this, PostWriteActivity::class.java))
+        }
 
 
     }

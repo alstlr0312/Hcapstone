@@ -13,8 +13,8 @@ private const val baseUrl = "https://you-have-to.duckdns.org/"
 object RetrofitClient{
 
 	private val okHttpClient = OkHttpClient.Builder()
-		.readTimeout(61, TimeUnit.SECONDS)
-		.connectTimeout(61, TimeUnit.SECONDS)
+		.readTimeout(5000, TimeUnit.MILLISECONDS)
+		.connectTimeout(5000, TimeUnit.MILLISECONDS)
 		.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 		.addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
 		.build()

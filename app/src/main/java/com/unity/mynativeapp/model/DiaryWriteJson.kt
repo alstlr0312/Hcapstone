@@ -1,17 +1,19 @@
 package com.unity.mynativeapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class DiaryWriteJson(
-    val exerciseDate: String,
-    val exerciseInfo: List<ExerciseInfo>,
-    val review: String
+    @SerializedName("exerciseInfo") val exerciseInfo: List<DiaryExerciseRvItem>,
+    @SerializedName("review") val review: String,
+    @SerializedName("exerciseDate") val exerciseDate: String
 )
 
-data class ExerciseInfo(
-    val bodyPart: String,
-    val cardio: Boolean,
-    val cardioTime: Int? = null,
-    val exSetCount: Int? = null,
-    val exerciseName: String,
-    val finished: Boolean,
-    val reps: Int? = null
+data class DiaryExerciseRvItem(
+    @SerializedName("exerciseName") val exerciseName: String,
+    @SerializedName("reps") val reps: Int? = null,
+    @SerializedName("exSetCount") var exSetCount: Int ?= null,
+    @SerializedName("cardio") var cardio: Boolean ?= true,
+    @SerializedName("cardioTime")var cardioTime: Int ?= null,
+    @SerializedName("bodyPart")var bodyPart: String,
+    @SerializedName("finished") var finished: Boolean = false
 )

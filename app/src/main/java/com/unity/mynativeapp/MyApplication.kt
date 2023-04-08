@@ -1,7 +1,11 @@
 package com.unity.mynativeapp
 
 import android.app.Application
+import android.content.Intent
+import android.util.Log
 import com.unity.mynativeapp.util.PreferenceUtil
+import java.lang.System.exit
+import kotlin.system.exitProcess
 
 class MyApplication: Application() {
 
@@ -26,5 +30,8 @@ class MyApplication: Application() {
 
         super.onCreate()
     }
+
+
+
 
 }

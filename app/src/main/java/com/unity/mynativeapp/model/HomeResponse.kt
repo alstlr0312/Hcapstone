@@ -1,7 +1,6 @@
 package com.unity.mynativeapp.model
 
-import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
+
 
 data class HomeResponse(
     val calenders: List<Calender>,

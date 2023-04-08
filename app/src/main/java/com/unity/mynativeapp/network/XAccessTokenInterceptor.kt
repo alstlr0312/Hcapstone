@@ -1,18 +1,26 @@
 package com.unity.mynativeapp.network
 
+import android.content.Intent
 import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.features.home.HomeViewModel
+import com.unity.mynativeapp.model.LoginData
+import com.unity.mynativeapp.model.LoginRequest
 import com.unity.mynativeapp.model.NewTokenResponse
 import com.unity.mynativeapp.util.*
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.system.exitProcess
+
 
 class XAccessTokenInterceptor : Interceptor {
 

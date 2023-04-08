@@ -12,6 +12,7 @@ import com.unity.mynativeapp.MyApplication.Companion.bodyPartHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
+import com.unity.mynativeapp.model.DiaryWriteJson
 import com.unity.mynativeapp.util.DeleteDialog
 
 

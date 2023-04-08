@@ -1,14 +1,11 @@
-package com.unity.mynativeapp.features.diary
+package com.unity.mynativeapp.features.postwrite
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,11 +13,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.util.DeleteDialog
-import okhttp3.MultipartBody
 
 
-class DiaryMediaRvAdapter(val context: Context)
-    : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){
+class PostWriteMediaRvAdapter(val context: Context)
+    : RecyclerView.Adapter<PostWriteMediaRvAdapter.ViewHolder>(){
 
     private var itemList = mutableListOf<Uri>()
     private var pathList = mutableListOf<String>()
@@ -56,7 +52,7 @@ class DiaryMediaRvAdapter(val context: Context)
                 .placeholder(R.drawable.shape_bg_black_rounded)
                 .error(R.drawable.shape_bg_black_rounded)
                 .fallback(R.drawable.shape_bg_black_rounded)
-                .override(430, 430)
+                .override(280, 280)
                 .apply(RequestOptions.centerCropTransform())
                 .into(binding.photo)
         }
@@ -82,7 +78,6 @@ class DiaryMediaRvAdapter(val context: Context)
         notifyDataSetChanged()
     }
 
-
     fun getMediaList(): List<String>{
         return pathList
     }
@@ -102,5 +97,4 @@ class DiaryMediaRvAdapter(val context: Context)
         cursor.close()
         return result
     }
-
 }

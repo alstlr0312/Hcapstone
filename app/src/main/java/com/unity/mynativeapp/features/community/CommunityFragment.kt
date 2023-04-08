@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
-import com.unity.mynativeapp.model.PostingRvItem
-import java.time.LocalDateTime
+import com.unity.mynativeapp.features.postwrite.PostWriteActivity
+import com.unity.mynativeapp.model.PostListDto
 
 
 class CommunityFragment : Fragment() {
     val binding by lazy { FragmentCommunityBinding.inflate(layoutInflater) }
 
-    private lateinit var postingRvAdapter: PostingRvAdapter
+    private lateinit var postingRvAdapter: PostListRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +34,10 @@ class CommunityFragment : Fragment() {
         with(binding){
 
             // 게시글 어댑터 설정
-            postingRvAdapter = PostingRvAdapter(requireContext())
+            postingRvAdapter = PostListRvAdapter(requireContext())
             rvPosting.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             rvPosting.adapter = postingRvAdapter
-            postingRvAdapter.getListFromView(getPostingList())
+            postingRvAdapter.getListFromView(postListSample())
 
 
             // 게시물 필터 설정
@@ -55,19 +55,25 @@ class CommunityFragment : Fragment() {
 
     }
 
-    fun getPostingList(): MutableList<PostingRvItem>{
 
-        val test = LocalDateTime.now()
 
-        var list = mutableListOf<PostingRvItem>()
-        list.add(PostingRvItem("userName", "게시물 제목...", LocalDateTime.now(), 5, 5))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusHours(1), 0, 5, 1))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusMinutes(5), 5, 5, 1))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusMonths(1), 0, 0))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 2))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 2, 5, 0))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 1))
-        list.add(PostingRvItem("userName", "게시물 제목...", test.minusDays(5), 5, 5, 1))
+    fun postListSample(): MutableList<PostListDto>{
+
+        var list = mutableListOf<PostListDto>()
+        list.add(PostListDto("userName", "유산소", "조깅", "방금",
+            "게시물 제목...", 5, 4, 3, 2))
+        list.add(PostListDto("userName", "유산소", "조깅", "방금",
+            "게시물 제목...", 5, 0, 0, 1))
+        list.add(PostListDto("userName", "유산소", "조깅", "10분 전",
+            "게시물 제목...", 3, 0, 0, 0))
+        list.add(PostListDto("userName", "유산소", "조깅", "1시간 전",
+            "게시물 제목...", 0, 0, 0, 0))
+        list.add(PostListDto("userName", "유산소", "조깅", "2023.04.05",
+            "게시물 제목...", 5, 4, 3, 2))
+        list.add(PostListDto("userName", "유산소", "조깅", "2023.04.05",
+            "게시물 제목...", 5, 4, 3, 2))
+        list.add(PostListDto("userName", "유산소", "조깅", "2023.04.05",
+            "게시물 제목...", 5, 4, 3, 2))
         return list
     }
 

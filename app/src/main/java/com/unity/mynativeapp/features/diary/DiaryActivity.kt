@@ -1,14 +1,20 @@
 package com.unity.mynativeapp.features.diary
 
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
@@ -181,7 +187,7 @@ class DiaryActivity : AppCompatActivity() {
                 viewModel.diaryWrite(exdata, imageList)
                 Log.d("diaryActivity111111", jsonObject11.toString())
             }else{
-                Toast.makeText(this, "오늘의 운동을 추가해주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -271,6 +277,8 @@ class DiaryActivity : AppCompatActivity() {
         }
     }
 
-
+    companion object{
+        const val TAG = "DiaryActivity"
+    }
 
 }
