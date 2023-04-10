@@ -79,23 +79,17 @@ class DiaryActivity : AppCompatActivity() {
 
 
         mediaAdapter2 = DiaryMediaRvAdapter2(this)
-        binding.exrv.layoutManager = GridLayoutManager(this, 2)
-        binding.exrv.adapter = mediaAdapter2
+        binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerViewMedia.adapter = mediaAdapter2
+
         viewModel.home(exerciseDate)
         subscribeUI()
-        // setView()
 
         setUiEvent()
 
 
     }
 
-
-    private fun setView(){
-
-        if(status == 0) setReadView()
-        else setWriteView()
-    }
 
     private fun setReadView(){ // 일지 정보가 있을 경우 -> 일지 조회 화면 (read)
         binding.ivEdit.visibility = View.VISIBLE            // 수정 아이콘 보이기

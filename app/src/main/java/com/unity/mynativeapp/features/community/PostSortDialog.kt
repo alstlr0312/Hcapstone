@@ -32,12 +32,6 @@ class PostSortDialog(context: Context): Dialog(context) {
 
     private fun setCbList() {
         with(binding) {
-            //sortCbList.add(cbSortTotal)
-            ///sortCbList.add(cbQAndA)
-            //sortCbList.add(cbKnowledgeSharing)
-            //sortCbList.add(cbShowOff)
-            //sortCbList.add(cbAssess)
-
             categoryCbList.add(cbCategoryTotal)
             categoryCbList.add(cbHealth)
             categoryCbList.add(cbPilates)

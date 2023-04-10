@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.features.home
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -52,6 +53,7 @@ class HomeViewModel: ViewModel() {
                     }
                     401 -> {// refresh 토큰 만료
                         _logout.postValue(true)
+                    }
                     400 -> { // 다이어리 목록 없음
                         _homeData.postValue(null)
                     }
