@@ -73,14 +73,14 @@ class DiaryActivity : AppCompatActivity() {
         binding.recyclerViewTodaysExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTodaysExercise.adapter = exerciseAdapter
 
-        mediaAdapter = DiaryMediaRvAdapter(this)
+       /* mediaAdapter = DiaryMediaRvAdapter(this)
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
 
         mediaAdapter2 = DiaryMediaRvAdapter2(this)
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
-        binding.recyclerViewMedia.adapter = mediaAdapter2
+        binding.recyclerViewMedia.adapter = mediaAdapter2*/
 
         viewModel.home(exerciseDate)
         subscribeUI()
@@ -214,8 +214,15 @@ class DiaryActivity : AppCompatActivity() {
         viewModel.diaryData.observe(this) { data ->
 
             if (data == null){  // 다이어리 목록 없음
+                mediaAdapter = DiaryMediaRvAdapter(this)
+                binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
+                binding.recyclerViewMedia.adapter = mediaAdapter
                 setWriteView()
             }else{
+                mediaAdapter2 = DiaryMediaRvAdapter2(this)
+                binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
+                binding.recyclerViewMedia.adapter = mediaAdapter2
+
                 setReadView()
                 val getReview = data.review.toString()
                 Log.d("getReview", getReview)
