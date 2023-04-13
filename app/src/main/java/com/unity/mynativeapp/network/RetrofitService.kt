@@ -47,4 +47,12 @@ interface RetrofitService {
 		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<DiaryWriteResponse>>
+
+	//게시글 작성
+	@Multipart
+	@POST("/post/write")
+	fun postPostWrite(
+		@Part("writePostDto") writePostDto: RequestBody,
+		@Part imageFile: MutableList<MultipartBody.Part>
+	): Call<MyResponse<PostWriteResponse>>
 }
