@@ -40,10 +40,10 @@ class PostViewModel: ViewModel() {
 
         _loading.postValue(true)
 
-        getDiaryAPI(data)
+        getPostAPI(data)
     }
 
-    private fun getDiaryAPI(date: Int) {
+    private fun getPostAPI(date: Int) {
         RetrofitClient.getApiService().getPost(date).enqueue(object :
             Callback<MyResponse<PostResponse>> {
             override fun onResponse(call: Call<MyResponse<PostResponse>>, response: Response<MyResponse<PostResponse>>) {
