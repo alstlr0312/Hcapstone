@@ -8,12 +8,15 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostWriteBinding
+import com.unity.mynativeapp.features.community.PostViewModel
 import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter
+import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.model.PostWriteRequest
 import okhttp3.MultipartBody
@@ -30,7 +33,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
     lateinit var postStyleArr: ArrayList<String>
     lateinit var postCategoryArr: ArrayList<String>
     lateinit var mediaAdapter: PostWriteMediaRvAdapter      // 미디어 Rv 어댑터
-
+    private val viewModel by viewModels<PostwriteViewModel>()
     var imageResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -92,9 +95,12 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         binding.btnPosting.setOnClickListener {//게시글 등록
             val sstyle = binding.spinnerPostStyle.selectedItem.toString()
             val scat = binding.spinnerPostCategory.selectedItem.toString()
-            val postitle = binding.edtPostTitle.toString()
-            val posttext = binding.edtPostText.toString()
-
+            val postitle = binding.edtPostTitle.text.toString()
+            val posttext = binding.edtPostText.text.toString()
+            Log.d("diaryActivity", sstyle)
+            Log.d("diaryActivity", scat)
+            Log.d("diaryActivity", postitle)
+            Log.d("diaryActivity", posttext)
             val jsonRequest = PostWriteRequest(
                 postitle,
                 posttext,
@@ -104,7 +110,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
             //    val jsonBody = RequestBody.create(parse("application/json"),jsonObject2)
 
             val gson = GsonBuilder().serializeNulls().create()
-            val jsonObject = JSONObject().put("writeDiaryDto", gson.toJson(jsonRequest))
+            val jsonObject = JSONObject().put("writePostDto", gson.toJson(jsonRequest))
             Log.d("diaryActivity", jsonObject.toString())
             val jsonObject11 = JSONObject(jsonObject.toString())
 
@@ -125,7 +131,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
                 Log.d("234234234234", element)
             }
 
-            //viewModel.diaryWrite(exdata, imageList)
+            viewModel.postWrite(exdata, imageList)
             Log.d("diaryActivity111111", jsonObject11.toString())
         }
 

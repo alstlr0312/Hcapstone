@@ -106,12 +106,12 @@
 
     <string name="sort">정렬</string>
     <string name="category">카테고리</string>
-    <string name="q_and_a">질의응답</string>
+    <string name="q_and_a">SHOW_OFF</string>
     <string name="knowledge_sharing">지식공유</string>
     <string name="show_off">운동자랑</string>
     <string name="freedom">자유</string>
     <string name="assess">평가</string>
-    <string name="health">헬스</string>
+    <string name="health">HEALTH</string>
     <string name="pilates">필라테스</string>
     <string name="yoga">요가</string>
     <string name="jogging">조깅</string>
