@@ -3,6 +3,7 @@ package com.unity.mynativeapp.network
 import com.unity.mynativeapp.model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -20,7 +21,7 @@ interface RetrofitService {
 		@Body signUpRequest: SignUpRequest
 	) : Call<MyResponse<String>>
 
-	// 토큰 재발금
+	// 토큰 재발급
 	@GET("/diary")
 	fun getRefreshToken(
 		@Query("date") date: String
@@ -32,6 +33,7 @@ interface RetrofitService {
 		@Query("date") date: String
 	) : Call<MyResponse<HomeResponse>>
 
+
 	// 다이어리 작성
 	@Multipart
 	@POST("/diary/write")
@@ -39,5 +41,23 @@ interface RetrofitService {
 		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<DiaryWriteResponse>>
+
+	// 다이어리 상세 조회
+	@GET("/diary/detail")
+	fun getDiary(
+		@Query("date") date: String
+	) : Call<MyResponse<DiaryResponse>>
+
+	// 미디어 조회
+	@GET("/media/{num}")
+	fun getMedia(
+		@Path("num") num: Int
+	) : Call<ResponseBody>
+
+	// 회원 정보(마이페이지) 조회
+	@GET("/member/info")
+	fun getMemberPage(
+		@Query("username") username: String
+	): Call<MyResponse<MemberPageResponse>>
 
 }

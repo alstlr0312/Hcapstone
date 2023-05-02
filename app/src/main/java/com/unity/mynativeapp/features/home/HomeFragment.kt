@@ -117,7 +117,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
 
     private fun subscribeUI() {
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            showCustomToast(message)
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->

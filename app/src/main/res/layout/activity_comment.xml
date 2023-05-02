@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/please_write_comment"
-                android:textColor="@color/main_red"
+                android:textColor="@color/main_red_light"
                 android:textSize="18sp"
                 android:visibility="gone"
                 android:layout_margin="@dimen/fab_margin"
@@ -131,7 +131,7 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_send"
-            app:tint="@color/main_red"
+            app:tint="@color/main_red_light"
             android:layout_gravity="bottom"
             android:layout_margin="@dimen/fab_margin"/>
 

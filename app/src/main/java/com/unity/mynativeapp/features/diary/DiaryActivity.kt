@@ -14,13 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.DiaryWriteJson
+import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.util.LoadingDialog
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.File
 
 
@@ -32,6 +35,7 @@ class DiaryActivity : AppCompatActivity() {
     private lateinit var exerciseDate: String   // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter      // 미디어 Rv 어댑터
+    lateinit var mediaAdapter2: DiaryMediaRvAdapter2      // 미디어 Rv 어댑터
     private var firstStart = true
     private var status = 0 // 0(read), 1(write)
 
@@ -59,6 +63,7 @@ class DiaryActivity : AppCompatActivity() {
         setUiEvent()
 
         subscribeUI()
+
     }
 
     private fun setView(){
@@ -80,7 +85,10 @@ class DiaryActivity : AppCompatActivity() {
         binding.recyclerViewMedia.adapter = mediaAdapter
 
 
-        if(status == 0) setReadView()
+        if(status == 0) {
+            setReadView()
+            viewModel.diaryDetail(exerciseDate)
+        }
         else setWriteView()
 
     }
@@ -140,32 +148,29 @@ class DiaryActivity : AppCompatActivity() {
             if(exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
 
+
                 // 운동
-                val jsonRequest = DiaryWriteJson(
+                val jsonRequest = DiaryWriteRequest(
                     exerciseAdapter.getExerciseList(),
                     binding.edtMemo.text.toString(),
                     exerciseDate
                 )
 
-
                 val gson = GsonBuilder().serializeNulls().create()
-
                 val requestBodyString = gson.toJson(jsonRequest).toString()
                 val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
                 val exdata = createPartFromString(requestBodyWithoutBackslashes)
 
                 // 미디어
-                val listPart = mutableListOf<MultipartBody.Part>()
+                val imageList: ArrayList<MultipartBody.Part> = ArrayList()
                 for (element in mediaAdapter.getMediaList()) {
                     val file = File(element)
-                    val requestFile = RequestBody.create("image/*".toMediaType(), file)
-                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                    listPart.add(body)
+                    val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+                    val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
+                    imageList.add(uploadFile)
                 }
 
-                Log.d(TAG, requestBodyWithoutBackslashes)
-
-                viewModel.diaryWrite(exdata, listPart)
+                viewModel.diaryWrite(exdata, imageList)
 
             }else{
                 Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
@@ -209,11 +214,52 @@ class DiaryActivity : AppCompatActivity() {
             if (isLoading) loadingDialog.show() else loadingDialog.dismiss()
         }
 
-        viewModel.diaryWriteSuccess.observe(this) { isSuccess ->
+        viewModel.diaryData.observe(this) { data ->
 
-            if(!isSuccess) return@observe
+            if (data == null){  // 다이어리 상세조회 실패
+                setReadView()
+                binding.edtMemo.visibility = View.GONE
+            }else{
+                mediaAdapter2 = DiaryMediaRvAdapter2(this)
+                binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
+                binding.recyclerViewMedia.adapter = mediaAdapter2
 
-            setReadView()
+                setReadView()
+                val getReview = data.review.toString()
+                Log.d("getReview", getReview)
+                val getexInfo = data.exerciseInfo
+                Log.d("getexInfo", getexInfo.toString())
+                for(x in getexInfo){
+                    val exerciseName = x.exerciseName
+                    val reps = x.reps
+                    val exSetCount = x.exSetCount
+                    val isCardio = x.cardio
+                    val cardioTime = x.cardioTime
+                    val bodyPart = x.bodyPart
+                    Log.d("exerciseName", exerciseName.toString())
+                    Log.d("reps", reps.toString())
+                    Log.d("exSetCount", exSetCount.toString())
+                    Log.d("isCardio", isCardio.toString())
+                    Log.d("cardioTime", cardioTime.toString())
+                    Log.d("bodyPart", bodyPart)
+                    exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName.toString(), reps, exSetCount, isCardio, cardioTime, bodyPart, false))
+                }
+                val getMedia = data.mediaList
+                Log.d("bodyPart", getMedia.toString())
+                binding.edtMemo.setText(getReview.toString())
+                for(x in getMedia){
+                    val lastSegment = x.substringAfterLast("/").toInt()
+                    viewModel.media(lastSegment)
+                    viewModel.mediaData.observe(this) { data2 ->
+                        if (data2 != null) {
+                            Log.d("bodyPartsdfasd",data2.toString())
+                            mediaAdapter2.addItem(data2.bytes())
+                        }
+                    }
+                }
+
+
+            }
         }
     }
 
