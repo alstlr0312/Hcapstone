@@ -48,6 +48,7 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
             //binding.tvCommentNum.text = item.commentCount.toString()
             binding.tvViewsNum.text = item.views.toString()
 
+
         }
     }
 
