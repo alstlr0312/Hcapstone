@@ -5,13 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.unity.mynativeapp.model.DiaryResponse
-import com.unity.mynativeapp.model.DiaryWriteResponse
 import com.unity.mynativeapp.model.PostResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,15 +32,15 @@ class PostViewModel: ViewModel() {
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
 
-    fun community(data: Int) {
+    fun community(data: String, s: String, i: Int, i1: Int) {
 
         _loading.postValue(true)
 
-        getPostAPI(data)
+        getPostAPI(data, s,i,i1)
     }
 
-    private fun getPostAPI(date: Int) {
-        RetrofitClient.getApiService().getPost(date).enqueue(object :
+    private fun getPostAPI(data: String, s: String, i: Int, i1: Int) {
+        RetrofitClient.getApiService().getPost(data,s,i,i1).enqueue(object :
             Callback<MyResponse<PostResponse>> {
             override fun onResponse(call: Call<MyResponse<PostResponse>>, response: Response<MyResponse<PostResponse>>) {
                 _loading.postValue(false)
@@ -79,7 +75,7 @@ class PostViewModel: ViewModel() {
             }
         })
     }
-   /* fun media(num: Int) {
+    /*fun media(num: Int) {
 
         _loading.postValue(true)
 

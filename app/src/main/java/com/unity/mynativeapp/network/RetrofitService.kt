@@ -26,16 +26,16 @@ interface RetrofitService {
 	fun getRefreshToken(
 		@Query("date") date: String
 	): Call<MyResponse<LoginData>>
-	@GET("/diary/detail")
+	@GET("/diary/detail") //다이어리 상세 확인
 	fun getDiary(
 		@Query("date") date: String
 	) : Call<MyResponse<DiaryResponse>>
-	@GET("/diary")
+	@GET("/diary") //다이어리 목록 확인
 	fun getHome(
 		@Query("date") date: String
 	) : Call<MyResponse<HomeResponse>>
 
-	@GET("/media/{num}")
+	@GET("/media/{num}")  //사진 가져오기
 	fun getMedia(
 		@Path("num") num: Int
 	) : Call<ResponseBody>
@@ -47,10 +47,14 @@ interface RetrofitService {
 		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<DiaryWriteResponse>>
+
 	//게시글 상세확인
-	@GET("/post/detail/{detail}")
+	@GET("/post")
 	fun getPost(
-		@Query("detail") date: Int
+		@Query("postType") postType: String,
+		@Query("woryOutCategory") woryOutCategory: String,
+		@Query("page") page: Int,
+		@Query("size") size: Int
 	) : Call<MyResponse<PostResponse>>
 	//게시글 작성
 	@Multipart

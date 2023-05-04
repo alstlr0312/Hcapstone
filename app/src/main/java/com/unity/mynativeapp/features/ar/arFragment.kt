@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.features.ar
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,8 +23,8 @@ class ArFragment : Fragment() {
         binding = FragmentArBinding.inflate(layoutInflater)
         binding.button3.setOnClickListener {
             isUnityLoaded = true
-            //val nextIntent = Intent(context, MainActivity::class.java)
-            //startActivity(nextIntent)
+            val nextIntent = Intent(context, MainActivity::class.java)
+            startActivity(nextIntent)
         }
         return binding.root
     }

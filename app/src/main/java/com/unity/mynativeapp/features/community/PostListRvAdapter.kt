@@ -3,17 +3,17 @@ package com.unity.mynativeapp.features.community
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
-import com.unity.mynativeapp.model.PostListDto
+import com.unity.mynativeapp.model.PostItem
+import com.unity.mynativeapp.model.PostResponse
 import java.time.LocalDateTime
 
 class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAdapter.ViewHolder>() {
 
-    var itemList = mutableListOf<PostListDto>()
+    var itemList = mutableListOf<PostItem>()
     var today = LocalDateTime.now()
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -23,7 +23,7 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
             }
         }
 
-        fun bind(item: PostListDto){
+        fun bind(item: PostItem){
 
 
             // 유저 이름
@@ -36,16 +36,16 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
             binding.tvPostDate.text = item.createdAt
 
             // 미디어, 좋아요, 댓글 개수, 조회수
-            if(item.mediaListCount != 0){
+            /*if(item.mediaListCount != 0){
                 binding.tvMediaNum.text = item.mediaListCount.toString()
-                binding.tvMediaNum.visibility = View.VISIBLE
+               binding.tvMediaNum.visibility = View.VISIBLE
                 binding.ivMedia.visibility = View.VISIBLE
             }else{
                 binding.tvMediaNum.visibility = View.GONE
                 binding.ivMedia.visibility = View.GONE
-            }
+            }*/
             binding.tvHeartNum.text = item.likeCount.toString()
-            binding.tvCommentNum.text = item.commentCount.toString()
+            //binding.tvCommentNum.text = item.commentCount.toString()
             binding.tvViewsNum.text = item.views.toString()
 
         }
@@ -64,12 +64,12 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<PostListDto>){
+    fun getListFromView(nList: MutableList<PostItem>){
         itemList = nList
         notifyDataSetChanged()
     }
 
-    fun addItem(item: PostListDto){
+    fun addItem(item: PostItem){
         itemList.add(item)
         notifyDataSetChanged()
     }

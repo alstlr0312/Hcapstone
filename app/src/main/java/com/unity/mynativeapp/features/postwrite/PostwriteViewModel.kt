@@ -32,7 +32,6 @@ class PostwriteViewModel: ViewModel() {
     val postData: LiveData<PostWriteResponse?> = _postData
 
 
-
     fun postWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
 
         _loading.postValue(true)
