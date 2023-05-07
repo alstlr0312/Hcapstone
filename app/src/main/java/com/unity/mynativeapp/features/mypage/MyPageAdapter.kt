@@ -13,14 +13,13 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
     inner class ViewHolder(val binding: ItemRvMypageBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: MyPageRvItem){
 
-            binding.layout.setBackgroundResource(item.bg)
 
             binding.ivImg.setImageResource(item.Img)
             binding.tvTitle.text = item.title
             binding.tvCount.text = item.count.toString()
 
             if(item.count == -1){
-                binding.tvCount.visibility = View.GONE
+                binding.tvCount.visibility = View.INVISIBLE
             }else{
                 binding.tvCount.visibility = View.VISIBLE
             }

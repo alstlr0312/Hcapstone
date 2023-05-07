@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp"
         app:contentPadding="@dimen/fab_margin"
-        app:cardBackgroundColor="@color/post_item_bg">
+        app:cardBackgroundColor="@color/list_item_bg">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

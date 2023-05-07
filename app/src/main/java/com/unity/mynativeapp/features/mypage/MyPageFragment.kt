@@ -27,7 +27,6 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
         super.onViewCreated(view, savedInstanceState)
 
         myPageAdapter = MyPageAdapter(requireContext(), getRvItemList())
-        binding.rvMypage.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvMypage.adapter = myPageAdapter
 
         setUiEvent()
@@ -45,15 +44,17 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
     private fun getRvItemList(): MutableList<MyPageRvItem>{
         var list = mutableListOf<MyPageRvItem>()
-        list.add(MyPageRvItem(R.drawable.shape_gradient_red_gray, R.drawable.ic_post, getString(R.string.posting), 0))
-        list.add(MyPageRvItem(R.drawable.shape_gradient_red_gray, R.drawable.ic_comments, getString(R.string.comment), 0))
-        list.add(MyPageRvItem(R.drawable.shape_gradient_gray, R.drawable.ic_edit_profile, getString(R.string.profile_edit)))
-        list.add(MyPageRvItem(R.drawable.shape_gradient_gray, R.drawable.ic_setting, getString(R.string.setting)))
+        list.add(MyPageRvItem(R.drawable.ic_post, getString(R.string.posting), 0))
+        list.add(MyPageRvItem(R.drawable.ic_comments, getString(R.string.comment), 0))
+        list.add(MyPageRvItem(R.drawable.ic_edit_profile, getString(R.string.profile_edit)))
+        list.add(MyPageRvItem(R.drawable.ic_setting, getString(R.string.setting)))
         return list
     }
 
     private fun setUiEvent(){
-
+//        binding.appbarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+//            binding.rvMypage.alpha = (appBarLayout.totalScrollRange + verticalOffset).toFloat() / appBarLayout.totalScrollRange
+//        }
     }
 
     private fun subscribeUI() {
