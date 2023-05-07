@@ -1,10 +1,12 @@
 package com.unity.mynativeapp.features.community
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.model.PostResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -40,8 +42,7 @@ class PostViewModel: ViewModel() {
     }
 
     private fun getPostAPI(data: String, s: String, i: Int, i1: Int) {
-        RetrofitClient.getApiService().getPost(data,s,i,i1).enqueue(object :
-            Callback<MyResponse<PostResponse>> {
+        RetrofitClient.getApiService().getPost(data,s,i,i1).enqueue(object : Callback<MyResponse<PostResponse>> {
             override fun onResponse(call: Call<MyResponse<PostResponse>>, response: Response<MyResponse<PostResponse>>) {
                 _loading.postValue(false)
 
@@ -107,4 +108,57 @@ class PostViewModel: ViewModel() {
     companion object {
         const val TAG = "DiaryViewModel"
     }*/
+
+
+
+    private val _postDetailData = MutableLiveData<PostDetailResponse?>()
+    val postDetailData: LiveData<PostDetailResponse?> = _postDetailData
+
+
+
+
+    fun PostDetail(i: Int) {
+
+        _loading.postValue(true)
+
+        getPostDetailAPI(i)
+    }
+
+    private fun getPostDetailAPI(i: Int) {
+        RetrofitClient.getApiService().getDetailPost(i).enqueue(object :
+            Callback<MyResponse<PostDetailResponse>> {
+            override fun onResponse(
+                call: Call<MyResponse<PostDetailResponse>>,
+                response: Response<MyResponse<PostDetailResponse>>
+            ) {
+                _loading.postValue(false)
+
+                val code = response.code()
+                Log.d(ContentValues.TAG, code.toString())
+                when (code) {
+
+                    200 -> { // 다이어리 목록 있음
+                        val data = response.body()?.data
+                        Log.d(ContentValues.TAG, data.toString())
+                        data?.let {
+                            _postDetailData.postValue(data)
+                        }
+                    }
+                    400 -> {// 다이어리 목록 없음
+                        _postDetailData.postValue(null)
+                    }
+
+                    else -> {
+                        Log.d(ContentValues.TAG, "$code")
+                    }
+                }
+            }
+
+
+            override fun onFailure(call: Call<MyResponse<PostDetailResponse>>, t: Throwable) {
+                Log.e(ContentValues.TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+            }
+        })
+    }
 }

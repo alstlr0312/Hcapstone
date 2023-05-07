@@ -48,7 +48,7 @@ interface RetrofitService {
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<DiaryWriteResponse>>
 
-	//게시글 상세확인
+	//게시글 목록 확인
 	@GET("/post")
 	fun getPost(
 		@Query("postType") postType: String,
@@ -56,6 +56,12 @@ interface RetrofitService {
 		@Query("page") page: Int,
 		@Query("size") size: Int
 	) : Call<MyResponse<PostResponse>>
+
+	//게시글 상세 확인
+	@GET("/post/detail/{num}")
+	fun getDetailPost(
+		@Path("num") num: Int
+	) : Call<MyResponse<PostDetailResponse>>
 	//게시글 작성
 	@Multipart
 	@POST("/post/write")
