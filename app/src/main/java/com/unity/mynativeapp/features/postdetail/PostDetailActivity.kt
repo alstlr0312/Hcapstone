@@ -27,7 +27,11 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     private val viewModel by viewModels<PostDetailViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val num = intent.getStringExtra("num")
         //setView()
+        if (num != null) {
+            viewModel.PostDetail(num.toInt())
+        }
         setUiEvent()
         subscribeUI()
     }
@@ -56,14 +60,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
     }
 
-    private fun setMediaSample(): MutableList<Int>{
-        var list = mutableListOf<Int>()
-        list.add(R.drawable.bugi)
-        list.add(R.drawable.photo01)
-        list.add(R.drawable.bugi)
-        list.add(R.drawable.bugi)
-        return list
-    }
+
 
     private fun setCommentSample(): MutableList<CommentDto>{
         var list = mutableListOf<CommentDto>()
@@ -101,8 +98,8 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 binding.tvUsername.setText(data.username)
                 binding.tvPostTitle.setText(data.title)
                 binding.tvPostContent.setText(data.content)
-                binding.tvViewsNum.setText(data.views)
-                binding.tvHeartNum.setText(data.likeCount)
+               // binding.tvViewsNum.setText(data.views)
+             //   binding.tvHeartNum.setText(data.likeCount)
 
                 val getMedia = data.mediaList
                 Log.d("bodyPart", getMedia.toString())

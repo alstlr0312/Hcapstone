@@ -17,11 +17,11 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
     var today = LocalDateTime.now()
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
 
-        init{
+        /*init{
             binding.root.setOnClickListener {
                 context.startActivity(Intent(context, PostDetailActivity::class.java))
             }
-        }
+        }*/
 
         fun bind(item: PostItem){
 
@@ -47,7 +47,11 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
             binding.tvHeartNum.text = item.likeCount.toString()
             //binding.tvCommentNum.text = item.commentCount.toString()
             binding.tvViewsNum.text = item.views.toString()
-
+            binding.root.setOnClickListener {
+                val intent = Intent(context, PostDetailActivity::class.java)
+                intent.putExtra("num",item.postId)
+                context.startActivity(intent)
+            }
 
         }
     }
