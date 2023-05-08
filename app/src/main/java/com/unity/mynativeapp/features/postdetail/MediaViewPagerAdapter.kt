@@ -15,12 +15,12 @@ import com.unity.mynativeapp.databinding.ItemVpMediaBinding
 class MediaViewPagerAdapter(val context: Context)
     : RecyclerView.Adapter<MediaViewPagerAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<Int>()
+    private var itemList = mutableListOf<ByteArray>()
 
     inner class ViewHolder(val binding: ItemVpMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(img: Int) {
+        fun bind(img: ByteArray) {
 
             Glide.with(binding.ivMedia)
                 .load(img)
@@ -53,8 +53,8 @@ class MediaViewPagerAdapter(val context: Context)
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<Int>) {
-        itemList = nList
+    fun addItem(byteArray: ByteArray) {
+        itemList.add(byteArray)
         notifyDataSetChanged()
     }
 

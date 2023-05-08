@@ -26,7 +26,7 @@ class PostDetailViewModel : ViewModel() {
     val postWriteSuccess: LiveData<Boolean> = _postWriteSuccess
 
     private val _postDetailData = MutableLiveData<PostDetailResponse?>()
-    val postData: LiveData<PostDetailResponse?> = _postDetailData
+    val postDetailData: LiveData<PostDetailResponse?> = _postDetailData
 
 
     private val _mediaData = MutableLiveData<ResponseBody?>()
@@ -76,5 +76,38 @@ class PostDetailViewModel : ViewModel() {
                 _loading.postValue(false)
             }
         })
+    }
+
+    fun media(num: Int) {
+
+        _loading.postValue(true)
+
+        getmediaAPI(num)
+    }
+
+    private fun getmediaAPI(num: Int) {
+        RetrofitClient.getApiService2().getMedia(num).enqueue(object :
+            Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                _loading.postValue(false)
+                if (response.isSuccessful) {
+                    val imageBytes = response.body()
+                    _mediaData.postValue(imageBytes)
+                } else {
+                    // 응답이 실패한 경우 처리하는 코드 작성
+                }
+
+            }
+
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+            }
+        })
+    }
+
+    companion object {
+        const val TAG = "DiaryViewModel"
     }
 }

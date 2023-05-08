@@ -2,6 +2,9 @@ package com.unity.mynativeapp.features.postdetail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -10,16 +13,21 @@ import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostDetailBinding
 import com.unity.mynativeapp.features.comment.CommentActivity
 import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
+import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter
+import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter2
+import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.CommentDto
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
 
 class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate) {
 
     private lateinit var mediaVpAdapter: MediaViewPagerAdapter // 게시물 미디어 어댑터
     private lateinit var commentRvAdapter: ParentCommentRvAdapter // 댓글 어댑터
     var firstStart = true
+    private val viewModel by viewModels<PostDetailViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setView()
+        //setView()
         setUiEvent()
         subscribeUI()
     }
@@ -31,7 +39,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         binding.vpPostMedia.offscreenPageLimit = 1
         binding.vpPostMedia.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.vpPostMedia.setCurrentItem(0, false)
-        mediaVpAdapter.getListFromView(setMediaSample())
+
 
         // 뷰페이저 인디케이터
         TabLayoutMediator(binding.tabLayout, binding.vpPostMedia){ tab, pos ->
@@ -82,6 +90,36 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     }
 
     private fun subscribeUI(){
+        viewModel.postDetailData.observe(this) { data ->
+            if (data != null) {
+                mediaVpAdapter = MediaViewPagerAdapter(this)
+                binding.vpPostMedia.adapter = mediaVpAdapter
+                binding.vpPostMedia.offscreenPageLimit = 1
+                binding.vpPostMedia.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                binding.vpPostMedia.setCurrentItem(0, false)
+
+                binding.tvUsername.setText(data.username)
+                binding.tvPostTitle.setText(data.title)
+                binding.tvPostContent.setText(data.content)
+                binding.tvViewsNum.setText(data.views)
+                binding.tvHeartNum.setText(data.likeCount)
+
+                val getMedia = data.mediaList
+                Log.d("bodyPart", getMedia.toString())
+                for (x in getMedia) {
+                    val lastSegment = x.substringAfterLast("/").toInt()
+                    viewModel.media(lastSegment)
+                    viewModel.mediaData.observe(this) { data2 ->
+                        if (data2 != null) {
+                            Log.d("bodyPartsdfasd", data2.toString())
+                            mediaVpAdapter.addItem(data2.bytes())
+                        }
+                    }
+                }
+            }
+
+
+        }
 
     }
 
