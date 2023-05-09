@@ -20,10 +20,10 @@ import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
 
 import com.unity.mynativeapp.model.CalenderRvItem
-import com.unity.mynativeapp.util.LoadingDialog
-import com.unity.mynativeapp.util.SPFileName
-import com.unity.mynativeapp.util.X_ACCESS_TOKEN
-import com.unity.mynativeapp.util.X_REFRESH_TOKEN
+import com.unity.mynativeapp.network.util.LoadingDialog
+import com.unity.mynativeapp.network.util.SPFileName
+import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
+import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess

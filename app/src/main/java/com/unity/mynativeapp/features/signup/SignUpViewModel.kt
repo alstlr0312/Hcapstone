@@ -11,7 +11,8 @@ import com.unity.mynativeapp.model.*
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import com.unity.mynativeapp.util.*
+import com.unity.mynativeapp.network.util.*
+
 import kotlinx.coroutines.NonDisposableHandle.parent
 import retrofit2.Call
 import retrofit2.Callback

@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.util
+package com.unity.mynativeapp.network.util
 
 import android.app.Dialog
 import android.content.Context

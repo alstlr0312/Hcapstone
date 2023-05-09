@@ -22,7 +22,7 @@ import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
-import com.unity.mynativeapp.util.*
+import com.unity.mynativeapp.network.util.LoadingDialog
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody

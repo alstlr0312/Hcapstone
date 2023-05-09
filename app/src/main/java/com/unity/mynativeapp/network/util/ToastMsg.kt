@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.util
+package com.unity.mynativeapp.network.util
 
 const val ID_EMPTY_ERROR = "아이디를 입력해주세요."
 const val ID_PATTERN_ERROR = "아이디는 5~20자 입니다."

@@ -3,7 +3,7 @@ package com.unity.mynativeapp
 import android.app.Application
 import android.content.Intent
 import android.util.Log
-import com.unity.mynativeapp.util.PreferenceUtil
+import com.unity.mynativeapp.network.util.PreferenceUtil
 import java.lang.System.exit
 import kotlin.system.exitProcess
 

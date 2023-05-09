@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.util
+package com.unity.mynativeapp.network.util
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE

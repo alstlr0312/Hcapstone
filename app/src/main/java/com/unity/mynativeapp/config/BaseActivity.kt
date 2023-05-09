@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.unity.mynativeapp.MyApplication
-import com.unity.mynativeapp.util.LoadingDialog
-import com.unity.mynativeapp.util.X_ACCESS_TOKEN
-import com.unity.mynativeapp.util.X_REFRESH_TOKEN
+import com.unity.mynativeapp.network.util.LoadingDialog
+import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
+import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
 import kotlin.system.exitProcess
 
 abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater) -> B):

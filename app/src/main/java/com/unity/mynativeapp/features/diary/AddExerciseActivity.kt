@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
-import com.unity.mynativeapp.util.hideKeyboard
+import com.unity.mynativeapp.network.util.hideKeyboard
 
 class AddExerciseActivity : AppCompatActivity() {
     lateinit var binding: ActivityAddExerciseBinding

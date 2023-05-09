@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.unity.mynativeapp.features.signup.SignUpActivity
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
 import com.unity.mynativeapp.features.BaseActivity
-import com.unity.mynativeapp.util.LoadingDialog
-import com.unity.mynativeapp.util.hideKeyboard
+import com.unity.mynativeapp.network.util.LoadingDialog
+import com.unity.mynativeapp.network.util.hideKeyboard
 
 
 class LoginActivity : AppCompatActivity() {

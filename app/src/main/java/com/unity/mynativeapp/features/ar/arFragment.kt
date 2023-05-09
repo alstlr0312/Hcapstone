@@ -21,9 +21,14 @@ class ArFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentArBinding.inflate(layoutInflater)
-        binding.button3.setOnClickListener {
+        binding.Unity.setOnClickListener {
             isUnityLoaded = true
             val nextIntent = Intent(context, MainActivity::class.java)
+            startActivity(nextIntent)
+        }
+        binding.Map.setOnClickListener {
+            isUnityLoaded = true
+            val nextIntent = Intent(context, MapActivity::class.java)
             startActivity(nextIntent)
         }
         return binding.root

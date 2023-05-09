@@ -10,7 +10,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentMypageBinding
 import com.unity.mynativeapp.model.MyPageRvItem
-import com.unity.mynativeapp.util.PreferenceUtil
+import com.unity.mynativeapp.network.util.PreferenceUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import java.time.LocalDate

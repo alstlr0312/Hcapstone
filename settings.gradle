@@ -19,5 +19,9 @@ dependencyResolutionManagement {
         flatDir {
             dirs "${project(':unityLibrary').projectDir}/libs"
         }
+        jcenter()
+        maven {
+            url 'https://naver.jfrog.io/artifactory/maven/'
+        }
     }
 }

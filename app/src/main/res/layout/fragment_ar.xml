@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,10 +8,27 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/Unity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unity"
+            tools:layout_editor_absoluteX="106dp"
+            tools:layout_editor_absoluteY="152dp" />
+
+        <Button
+            android:id="@+id/Map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Map"
+            app:layout_constraintEnd_toEndOf="@+id/Unity"
+            app:layout_constraintStart_toStartOf="@+id/Unity"
+            app:layout_constraintTop_toBottomOf="@+id/Unity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

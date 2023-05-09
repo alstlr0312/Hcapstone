@@ -70,4 +70,10 @@ interface RetrofitService {
 		@Part("writePostDto") writePostDto: RequestBody,
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<PostWriteResponse>>
+
+	// 회원 정보(마이페이지) 조회
+	@GET("/member/info")
+	fun getMemberPage(
+		@Query("username") username: String
+	): Call<MyResponse<MemberPageResponse>>
 }

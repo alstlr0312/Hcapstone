@@ -10,8 +10,8 @@ import android.util.Log
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.features.BaseActivity
 import com.unity.mynativeapp.R
-import com.unity.mynativeapp.util.X_ACCESS_TOKEN
-import com.unity.mynativeapp.util.X_REFRESH_TOKEN
+import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
+import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
 import okhttp3.Request
 import java.io.IOException
 import java.time.LocalDate

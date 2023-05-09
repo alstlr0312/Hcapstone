@@ -9,7 +9,8 @@ import com.unity.mynativeapp.features.home.HomeViewModel
 import com.unity.mynativeapp.model.LoginData
 import com.unity.mynativeapp.model.LoginRequest
 import com.unity.mynativeapp.model.NewTokenResponse
-import com.unity.mynativeapp.util.*
+import com.unity.mynativeapp.network.util.*
+
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -76,8 +77,12 @@ class XAccessTokenInterceptor : Interceptor {
 			val today = LocalDate.now().format(DateTimeFormatter.ofPattern("YYYY-MM"))
 			val refreshRequest = Request.Builder()
 				.url(RetrofitClient.getBaseUrl() + "diary?date=" + today).get()
-				.addHeader(AUTHORIZATION, "$GRANT_TYPE ${MyApplication.prefUtil.getString(X_ACCESS_TOKEN, null).toString()}")
-				.addHeader(REFRESH_TOKEN, "$GRANT_TYPE ${MyApplication.prefUtil.getString(X_REFRESH_TOKEN, null).toString()}")
+				.addHeader(
+                    AUTHORIZATION, "$GRANT_TYPE ${MyApplication.prefUtil.getString(
+                        X_ACCESS_TOKEN, null).toString()}")
+				.addHeader(
+                    REFRESH_TOKEN, "$GRANT_TYPE ${MyApplication.prefUtil.getString(
+                        X_REFRESH_TOKEN, null).toString()}")
 				.build()
 
 			val client = OkHttpClient.Builder().build()

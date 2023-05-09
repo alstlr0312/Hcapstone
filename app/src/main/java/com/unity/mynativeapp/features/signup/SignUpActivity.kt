@@ -15,8 +15,8 @@ import com.unity.mynativeapp.R
 
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
 import com.unity.mynativeapp.features.BaseActivity
-import com.unity.mynativeapp.util.LoadingDialog
-import com.unity.mynativeapp.util.hideKeyboard
+import com.unity.mynativeapp.network.util.LoadingDialog
+import com.unity.mynativeapp.network.util.hideKeyboard
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONObject

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
-import com.unity.mynativeapp.util.DeleteDialog
+import com.unity.mynativeapp.network.util.DeleteDialog
 
 class DiaryMediaRvAdapter(val context: Context)
     : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){

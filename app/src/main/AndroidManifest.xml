@@ -21,6 +21,14 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="uyhy60cpcq" />
+
+        <activity
             android:name=".features.comment.CommentActivity"
             android:exported="false" />
         <activity
@@ -73,6 +81,9 @@
             android:label="@string/app_name"
             android:process=":Unity"
             android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".features.ar.WalkMapFragmentActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
