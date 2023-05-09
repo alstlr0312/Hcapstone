@@ -20,6 +20,9 @@ class MapActivity : Activity(), OnMapReadyCallback {
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
     private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
+    private val marker = Marker()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +41,11 @@ class MapActivity : Activity(), OnMapReadyCallback {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        marker.position = LatLng(211708.264681572, 445907.582850538)
+        marker.map = naverMap
+        marker.captionText = "화랑대 철도공원"
+
+
     }
 
     override fun onStart() {
