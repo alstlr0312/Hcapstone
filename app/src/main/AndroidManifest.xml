@@ -20,9 +20,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
-        <activity
-            android:name=".MapActivity"
-            android:exported="false" />
+
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -82,7 +80,7 @@
             android:process=":Unity"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".features.ar.WalkMapFragmentActivity"
+            android:name=".features.ar.MapActivity"
             android:exported="false" />
     </application>
 

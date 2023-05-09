@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".features.ar.MapActivity">
-    <!-- 네이버 지도 -->
     <com.naver.maps.map.MapView
-        android:id="@+id/map_view"
+        android:id="@+id/Walkmap_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
