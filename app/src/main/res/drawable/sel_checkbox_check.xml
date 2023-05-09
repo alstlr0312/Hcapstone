@@ -5,7 +5,7 @@
         <shape>
             <solid android:color="@color/black" />
             <stroke
-                android:color="@color/main_red_dark"
+                android:color="@color/main_red"
                 android:width="1dp" />
             <corners
                 android:radius="3dp" />
@@ -17,7 +17,7 @@
             <!-- 배경 -->
             <item>
                 <shape>
-                    <solid android:color="@color/main_red_dark" />
+                    <solid android:color="@color/main_red" />
                     <corners
                         android:radius="3dp" />
                 </shape>

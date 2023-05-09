@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp"
         app:contentPadding="@dimen/fab_margin"
-        app:cardBackgroundColor="@color/post_item_bg">
+        app:cardBackgroundColor="@color/list_item_bg">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                     android:id="@+id/cb_heart"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    app:tint="@color/main_red"
+                    app:tint="@color/main_red_light"
                     android:layout_marginStart="8dp"
                     android:src="@drawable/ic_heart"/>
 
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textSize="11sp"
-                    android:textColor="@color/main_red"
+                    android:textColor="@color/main_red_light"
                     android:layout_marginStart="5dp"/>
 
                 <ImageView

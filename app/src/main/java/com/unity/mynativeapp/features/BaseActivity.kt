@@ -8,7 +8,7 @@ import android.view.View
 import com.unity.mynativeapp.features.ar.ArFragment
 import com.unity.mynativeapp.features.community.CommunityFragment
 import com.unity.mynativeapp.features.home.HomeFragment
-import com.unity.mynativeapp.features.mypage.MypageFragment
+import com.unity.mynativeapp.features.mypage.MyPageFragment
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityBaseBinding
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
@@ -16,7 +16,7 @@ import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 lateinit var homeFragment: HomeFragment
 lateinit var communityFragment: CommunityFragment
 lateinit var arFragment: ArFragment
-lateinit var mypageFragment: MypageFragment
+lateinit var mypageFragment: MyPageFragment
 
 class BaseActivity : AppCompatActivity() {
     val binding by lazy {ActivityBaseBinding.inflate(layoutInflater)}
@@ -48,7 +48,7 @@ class BaseActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menuMypage -> {
-                    mypageFragment = MypageFragment()
+                    mypageFragment = MyPageFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mypageFragment).commitAllowingStateLoss()
                     binding.btnWritePost.visibility = View.INVISIBLE
                     true

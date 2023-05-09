@@ -4,8 +4,8 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/main_black</item>
         <item name="colorPrimaryVariant">@color/main_black</item>
-        <item name="colorOnPrimary">@color/main_red</item>
-        <item name="colorAccent">@color/main_red</item>
+        <item name="colorOnPrimary">@color/main_red_light</item>
+        <item name="colorAccent">@color/main_red_light</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>

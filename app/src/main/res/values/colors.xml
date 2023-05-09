@@ -8,8 +8,9 @@
 
     <color name="main_black">#272727</color>
     <color name="main_black_dark">#202020</color>
-    <color name="main_red">#D12727</color>
-    <color name="main_red_dark">#AE2828</color>
+    <color name="main_red_light">#B33939</color>
+    <color name="main_red">#AA3030</color>
+    <color name="main_red_dark">#7A2D2D</color>
     <color name="red_btn_pressed">#7A1D1D</color>
     <color name="main_gray_dark">#424242</color>
     <color name="main_gray">#7C7C7C</color>
@@ -19,10 +20,10 @@
 
     <color name="line_red">#871616</color>
 
-    <color name="calender_note_color">#7E0000</color>
+    <color name="calender_diary_color">#7E0000</color>
     <color name="memo_bg">#D1D1D1</color>
 
-    <color name="post_item_bg">#373737</color>
+    <color name="list_item_bg">#373737</color>
 
 
 </resources>

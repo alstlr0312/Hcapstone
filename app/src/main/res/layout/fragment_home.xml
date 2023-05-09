@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/main_black"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".features.home.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_appbar"
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2022"
-                android:textColor="@color/main_red"
+                android:textColor="@color/main_red_light"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,14 +90,14 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_previous"
-                    app:tint="@color/main_red"/>
+                    app:tint="@color/main_red_light"/>
 
                 <TextView
                     android:id="@+id/tv_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
-                    android:textColor="@color/main_red"
+                    android:textColor="@color/main_red_light"
                     android:textSize="26sp"
                     android:textStyle="bold"
                     android:layout_marginHorizontal="40dp"/>
@@ -107,7 +107,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_next"
-                    app:tint="@color/main_red"/>
+                    app:tint="@color/main_red_light"/>
 
 
             </LinearLayout>
@@ -131,7 +131,7 @@
                     android:layout_weight="1"
                     android:text="@string/calendar_sunday"
                     android:textSize="14sp"
-                    android:textColor="@color/main_red"
+                    android:textColor="@color/main_red_light"
                     android:textStyle="bold"/>
 
                 <TextView

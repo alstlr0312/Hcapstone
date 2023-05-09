@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:spinnerMode="dropdown"
                     android:layout_margin="2dp"
-                    android:backgroundTint="@color/main_red_dark"/>
+                    android:backgroundTint="@color/main_red"/>
             </LinearLayout>
 
             <LinearLayout
@@ -111,14 +111,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_spinner_post_style"
                 app:layout_constraintEnd_toEndOf="parent">
-
                 <Spinner
                     android:id="@+id/spinner_post_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"
                     android:layout_margin="2dp"
-                    android:backgroundTint="@color/main_red_dark"
-                    android:spinnerMode="dropdown" />
+                    android:backgroundTint="@color/main_red"/>
             </LinearLayout>
 
             <EditText
@@ -190,7 +189,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_add_media"
-            app:tint="@color/main_red"/>
+            app:tint="@color/main_red_light"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_posting"
