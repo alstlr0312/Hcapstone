@@ -82,38 +82,37 @@
 
             <LinearLayout
                 android:id="@+id/layout_spinner_post_style"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/fab_margin"
                 android:background="@drawable/shape_edge_red_dark_rounded"
                 android:layout_marginStart="@dimen/fab_margin"
                 android:layout_marginEnd="60dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_exercise_posting"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/iv_exercise_posting">
                 <Spinner
                     android:id="@+id/spinner_post_style"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:spinnerMode="dropdown"
                     android:layout_margin="2dp"
-                    android:backgroundTint="@color/main_red"/>
+                    android:backgroundTint="@color/main_red"
+                    />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_spinner_post_category"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_edge_red_dark_rounded"
                 android:layout_marginTop="@dimen/fab_margin"
                 android:layout_marginStart="@dimen/fab_margin"
                 android:layout_marginEnd="60dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_spinner_post_style"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/layout_spinner_post_style">
                 <Spinner
                     android:id="@+id/spinner_post_category"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:spinnerMode="dropdown"
                     android:layout_margin="2dp"

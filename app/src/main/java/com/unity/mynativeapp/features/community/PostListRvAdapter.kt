@@ -2,18 +2,19 @@ package com.unity.mynativeapp.features.community
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
-import com.unity.mynativeapp.model.PostListDto
+import com.unity.mynativeapp.model.PostItem
 import java.time.LocalDateTime
 
 class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAdapter.ViewHolder>() {
 
-    var itemList = mutableListOf<PostListDto>()
+    var itemList = mutableListOf<PostItem>()
     var today = LocalDateTime.now()
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -23,7 +24,7 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
             }
         }
 
-        fun bind(item: PostListDto){
+        fun bind(item: PostItem){
 
 
             // 유저 이름
@@ -48,6 +49,11 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
             binding.tvCommentNum.text = item.commentCount.toString()
             binding.tvViewsNum.text = item.views.toString()
 
+            binding.root.setOnClickListener {
+                val intent = Intent(context, PostDetailActivity::class.java)
+                intent.putExtra("num",item.postId)
+                context.startActivity(intent)
+            }
         }
     }
 
@@ -64,14 +70,18 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<PostListDto>){
+    fun getListFromView(nList: MutableList<PostItem>){
         itemList = nList
         notifyDataSetChanged()
     }
 
-    fun addItem(item: PostListDto){
+    fun addItem(item: PostItem){
         itemList.add(item)
-        notifyDataSetChanged()
+        notifyItemChanged(itemCount-1)
+    }
+
+    fun removeAllItem(){
+        itemList = mutableListOf()
     }
 
 }

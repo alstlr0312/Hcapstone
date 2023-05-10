@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.diary
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -12,16 +13,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
+import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.util.DeleteDialog
 
 
-class DiaryMediaRvAdapter(val context: Context)
-    : RecyclerView.Adapter<DiaryMediaRvAdapter.ViewHolder>(){
+class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-    private var itemList = mutableListOf<Uri>()
+    private var itemList = mutableListOf<MediaRvItem>()
     private var pathList = mutableListOf<String>()
-    inner class ViewHolder(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
-
+    inner class ViewHolder_Uri(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
                 var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
@@ -47,40 +47,53 @@ class DiaryMediaRvAdapter(val context: Context)
             pathList.add(getRealPathFromUri(imageUri))
             //println("이미지 경로 : $pathList")
 
-            Glide.with(binding.photo)
-                .load(imageUri)
-                .placeholder(R.drawable.shape_bg_black_rounded)
-                .error(R.drawable.shape_bg_black_rounded)
-                .fallback(R.drawable.shape_bg_black_rounded)
-                .override(430, 430)
-                .apply(RequestOptions.centerCropTransform())
-                .into(binding.photo)
+            setImage(imageUri, binding)
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    inner class ViewHolder_byteArray(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(byteArray: ByteArray){
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            //binding.photo.setImageBitmap(bitmap)
+
+            setImage(bitmap, binding)
+
+        }
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when(viewType){
+            1 -> ViewHolder_Uri(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            2 -> ViewHolder_byteArray(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            else -> throw RuntimeException("DiaryMediaRvAdapter onCreateViewHolder ERROR")
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(itemList[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(holder is ViewHolder_Uri) itemList[position].uri?.let { holder.bind(it) }
+        else if(holder is ViewHolder_byteArray) itemList[position].byteArray?.let { holder.bind(it) }
     }
 
     override fun getItemCount(): Int {
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<Uri>){
-        itemList = nList
-    }
+    fun addItem(media: MediaRvItem){
 
-    fun addItem(imageUri: Uri){
-        itemList.add(imageUri)
+        itemList.add(media)
         notifyDataSetChanged()
     }
 
     fun getMediaList(): List<String>{
         return pathList
     }
+
+    override fun getItemViewType(position: Int):Int {
+        if(itemList[position].viewType == 1)
+            return 1
+        else if(itemList[position].viewType == 2)
+            return 2
+        else return 3
+    }
+
 
     private fun getRealPathFromUri(uri: Uri): String {
         val buildName = Build.MANUFACTURER
@@ -96,5 +109,16 @@ class DiaryMediaRvAdapter(val context: Context)
         val result = cursor.getString(columnIndex)
         cursor.close()
         return result
+    }
+
+    private fun setImage(image: Any, binding: ItemRvMediaBinding){
+        Glide.with(binding.photo)
+            .load(image)
+            .placeholder(R.drawable.shape_bg_black_rounded)
+            .error(R.drawable.shape_bg_black_rounded)
+            .fallback(R.drawable.shape_bg_black_rounded)
+            .override(430, 430)
+            .apply(RequestOptions.centerCropTransform())
+            .into(binding.photo)
     }
 }

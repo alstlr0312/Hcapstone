@@ -4,47 +4,49 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
+import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
+import com.unity.mynativeapp.features.home.HomeViewModel
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
-import com.unity.mynativeapp.model.DiaryWriteJson
 import com.unity.mynativeapp.model.DiaryWriteRequest
+import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.util.LoadingDialog
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import java.io.File
 
 
 lateinit var diaryActivity: DiaryActivity
-class DiaryActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityDiaryBinding.inflate(layoutInflater) }
+class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate){
     private val viewModel by viewModels<DiaryViewModel>()
+    private val homeViewModel by viewModels<HomeViewModel>()
     private lateinit var loadingDialog: LoadingDialog
-    private lateinit var exerciseDate: String   // 운동 날짜
-    lateinit var exerciseAdapter: DiaryExerciseRvAdapter // 오늘의 운동 Rv 어댑터
-    lateinit var mediaAdapter: DiaryMediaRvAdapter      // 미디어 Rv 어댑터
-    lateinit var mediaAdapter2: DiaryMediaRvAdapter2      // 미디어 Rv 어댑터
+    private lateinit var exerciseDate: String               // 운동 날짜
+    lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터
+    lateinit var mediaAdapter: DiaryMediaRvAdapter          // 미디어 Rv 어댑터
+    //lateinit var mediaAdapter2: DiaryMediaRvAdapter2        // 미디어 Rv 어댑터
     private var firstStart = true
-    private var status = 0 // 0(read), 1(write)
+    private var status = -1 // 0(read), 1(write)
+    private var diaryId = -1
+    private var isEditing = false
 
     var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->
         if(result.resultCode == RESULT_OK){
             val imageUri = result.data?.data
             imageUri?.let{
-                mediaAdapter.addItem(it)
+                mediaAdapter.addItem(MediaRvItem(1, it, null))
             }
         }
     }
@@ -52,7 +54,7 @@ class DiaryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+
         diaryActivity = this
         loadingDialog = LoadingDialog(this)
 
@@ -87,9 +89,12 @@ class DiaryActivity : AppCompatActivity() {
 
         if(status == 0) {
             setReadView()
-            viewModel.diaryDetail(exerciseDate)
+            viewModel.diaryDetail(exerciseDate) // 다이어리 상세 조회 요청
+        }else if(status == 1){
+            setWriteView()
+        } else{
+            Log.d(TAG, "$status")
         }
-        else setWriteView()
 
     }
 
@@ -101,7 +106,6 @@ class DiaryActivity : AppCompatActivity() {
         binding.edtMemo.hint = ""
         binding.edtMemo.isEnabled = false                   // 메모 수정 불가능
         exerciseAdapter.checkBoxIsClickable(false)       // 체크박스 수정 불가능
-
     }
 
     private fun setWriteView(){ // 일지 정보가 없거나 수정 버튼을 클릭한 경우 (Write)
@@ -139,6 +143,7 @@ class DiaryActivity : AppCompatActivity() {
 
         // 수정 아이콘 클릭
         binding.ivEdit.setOnClickListener {
+            isEditing = true
             setWriteView()
         }
 
@@ -170,7 +175,11 @@ class DiaryActivity : AppCompatActivity() {
                     imageList.add(uploadFile)
                 }
 
-                viewModel.diaryWrite(exdata, imageList)
+                if(isEditing){ // 다이어리 수정
+                    viewModel.diaryEdit(exdata, imageList, diaryId)
+                }else{ // 다이어리 작성
+                    viewModel.diaryWrite(exdata, imageList) // 다이어리 작성 요청
+                }
 
             }else{
                 Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
@@ -182,7 +191,10 @@ class DiaryActivity : AppCompatActivity() {
             finish()
         }
 
+
     }
+
+
 
     fun createPartFromString(stringData: String): RequestBody {
         return stringData.toRequestBody("application/json".toMediaTypeOrNull())
@@ -207,59 +219,75 @@ class DiaryActivity : AppCompatActivity() {
 
     private fun subscribeUI() {
         viewModel.toastMessage.observe(this) { message ->
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            showCustomToast(message)
         }
 
         viewModel.loading.observe(this) { isLoading ->
             if (isLoading) loadingDialog.show() else loadingDialog.dismiss()
         }
 
+        viewModel.logout.observe(this) { logout ->
+            if(logout) logout()
+        }
+
+        // 다이어리 상세 조회
         viewModel.diaryData.observe(this) { data ->
 
             if (data == null){  // 다이어리 상세조회 실패
-                setReadView()
-                binding.edtMemo.visibility = View.GONE
-            }else{
-                mediaAdapter2 = DiaryMediaRvAdapter2(this)
-                binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
-                binding.recyclerViewMedia.adapter = mediaAdapter2
+                setWriteView()
+            }else{ // 다이어리 상세조회 성공
 
-                setReadView()
-                val getReview = data.review.toString()
-                Log.d("getReview", getReview)
-                val getexInfo = data.exerciseInfo
-                Log.d("getexInfo", getexInfo.toString())
-                for(x in getexInfo){
+                setReadView()   // 읽기 모드
+
+                diaryId = data.diaryId
+                binding.edtMemo.setText(data.review)
+
+                Log.d("aaaaa", data.exerciseInfo.toString())
+
+                for(x in data.exerciseInfo){
+
+
                     val exerciseName = x.exerciseName
                     val reps = x.reps
                     val exSetCount = x.exSetCount
                     val isCardio = x.cardio
                     val cardioTime = x.cardioTime
-                    val bodyPart = x.bodyPart
-                    Log.d("exerciseName", exerciseName.toString())
-                    Log.d("reps", reps.toString())
-                    Log.d("exSetCount", exSetCount.toString())
-                    Log.d("isCardio", isCardio.toString())
-                    Log.d("cardioTime", cardioTime.toString())
-                    Log.d("bodyPart", bodyPart)
-                    exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName.toString(), reps, exSetCount, isCardio, cardioTime, bodyPart, false))
+                    var bodyPart = x.bodyPart
+                    val finished = x.finished
+
+                    exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName, reps, exSetCount,
+                        isCardio, cardioTime, bodyPart, finished))
                 }
-                val getMedia = data.mediaList
-                Log.d("bodyPart", getMedia.toString())
-                binding.edtMemo.setText(getReview.toString())
-                for(x in getMedia){
+
+                for(x in data.mediaList){
                     val lastSegment = x.substringAfterLast("/").toInt()
                     viewModel.media(lastSegment)
                     viewModel.mediaData.observe(this) { data2 ->
                         if (data2 != null) {
                             Log.d("bodyPartsdfasd",data2.toString())
-                            mediaAdapter2.addItem(data2.bytes())
+                            mediaAdapter.addItem(MediaRvItem(2, null, data2.bytes()))
                         }
                     }
                 }
-
-
             }
+        }
+
+        // 다이어리 작성
+        viewModel.diaryWriteSuccess.observe(this) { isSuccess ->
+
+            if(!isSuccess) return@observe
+
+            setReadView()
+        }
+
+        // 다이어리 수정
+        viewModel.diaryEditSuccess.observe(this) { isSuccess ->
+
+            if(!isSuccess) return@observe
+
+            setReadView()
+            isEditing = false
+
         }
     }
 

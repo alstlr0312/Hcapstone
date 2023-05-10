@@ -1,12 +1,7 @@
 package com.unity.mynativeapp.model
 
 import com.google.gson.annotations.SerializedName
-
-data class DiaryWriteJson(
-    @SerializedName("exerciseInfo") val exerciseInfo: List<DiaryExerciseRvItem>,
-    @SerializedName("review") val review: String,
-    @SerializedName("exerciseDate") val exerciseDate: String
-)
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
 
 data class DiaryExerciseRvItem(
     @SerializedName("exerciseName") val exerciseName: String,

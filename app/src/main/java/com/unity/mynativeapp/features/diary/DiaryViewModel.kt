@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.features.diary
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,8 @@ import com.unity.mynativeapp.model.DiaryWriteResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
+import com.unity.mynativeapp.util.EDIT_COMPLETE
+import com.unity.mynativeapp.util.SAVE_COMPLETE
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -25,6 +28,9 @@ class DiaryViewModel: ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
+    private val _logout = MutableLiveData<Boolean>(false)
+    val logout: LiveData<Boolean> = _logout
+
     private val _diaryWriteSuccess = MutableLiveData<Boolean>()
     val diaryWriteSuccess: LiveData<Boolean> = _diaryWriteSuccess
 
@@ -34,6 +40,9 @@ class DiaryViewModel: ViewModel() {
     private val _mediaData = MutableLiveData<ResponseBody?>()
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
+    private val _diaryEditSuccess = MutableLiveData<Boolean>()
+    val diaryEditSuccess: LiveData<Boolean> = _diaryEditSuccess
+
     // 다이어리 작성
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
         _loading.postValue(true)
@@ -42,18 +51,20 @@ class DiaryViewModel: ViewModel() {
 
     private fun postDiaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
         RetrofitClient.getApiService().postDiaryWrite(body,body1).enqueue(object :
-            Callback<MyResponse<DiaryWriteResponse>> {
-            override fun onResponse(call: Call<MyResponse<DiaryWriteResponse>>, response: Response<MyResponse<DiaryWriteResponse>>) {
-                // _loading.postValue(false)
+            Callback<MyResponse<String>> {
+            override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
+                _loading.postValue(false)
 
                 val code = response.code()
                 if(code == 201){ // 다이어리 작성 성공
                     val data = response.body()?.data
+                    _toastMessage.postValue(SAVE_COMPLETE)
                     _diaryWriteSuccess.postValue(true)
 
                 }else if(code == 401) { // 존재하지 않는 유저
                     // 재로그인
                     Log.d(TAG, "$code 존재하지 않는 유저")
+                    _logout.postValue(true)
                 }
                 else if(code == 400){
                     Log.d(TAG, "$code   ")
@@ -67,7 +78,7 @@ class DiaryViewModel: ViewModel() {
 
             }
 
-            override fun onFailure(call: Call<MyResponse<DiaryWriteResponse>>, t: Throwable) {
+            override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
 
@@ -103,6 +114,9 @@ class DiaryViewModel: ViewModel() {
                         val data = GsonBuilder().create().fromJson(body, MyError::class.java)
                         _toastMessage.postValue(data.error.toString())
                         _diaryData.postValue(null)
+                    }
+                    401 -> {
+                        _logout.postValue(true)
                     }
                     else -> {
                         Log.d(TAG, "$code")
@@ -143,6 +157,49 @@ class DiaryViewModel: ViewModel() {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
+            }
+        })
+    }
+
+    // 다이어리 수정
+    fun diaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
+        _loading.postValue(true)
+        patchDiaryEdit(diaryDto,files, diaryId)
+    }
+
+    private fun patchDiaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
+        RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto,files).enqueue(object :
+            Callback<MyResponse<String>> {
+            override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
+                _loading.postValue(false)
+
+                val code = response.code()
+                if(code == 200){ // 다이어리 수정 성공
+                   val data = response.body()?.data
+                    _toastMessage.postValue(EDIT_COMPLETE)
+                    _diaryEditSuccess.postValue(true)
+
+                }else if(code == 401) { // 존재하지 않는 유저
+                    // 재로그인
+                    Log.d(TAG, "$code 존재하지 않는 유저")
+                    _logout.postValue(true)
+                }
+                else if(code == 400){
+                    Log.d(TAG, "$code   ")
+                }else if(code == 415){
+                    Log.d(TAG, "$code 잘못된 Content-Type")
+                }else if(code == 500){
+                    Log.d(TAG, "$code 파일 입출력 오류")
+                }else{
+                    Log.d(TAG, "$code")
+                }
+
+            }
+
+            override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+
             }
         })
     }

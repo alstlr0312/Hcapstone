@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.MyApplication.Companion.bodyPartHashMap
+import com.unity.mynativeapp.MyApplication.Companion.bodyPartToKoHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
-import com.unity.mynativeapp.model.DiaryWriteJson
 import com.unity.mynativeapp.util.DeleteDialog
 
 
@@ -49,34 +49,36 @@ class DiaryExerciseRvAdapter(var context: Context)
         fun bind(item: DiaryExerciseRvItem){
 
             binding.checkbox.isChecked = item.finished
+            val part = bodyPartToKoHashMap[item.bodyPart]
+            if(part != null){
+                item.bodyPart = part
+            }
+
+
+            if(item.cardio == true){
+                item.bodyPart = context.getString(R.string.exercise_cardio)
+
+                binding.layoutExerciseNumbers.visibility = View.GONE
+                binding.layoutExerciseSet.visibility = View.GONE
+
+                binding.tvExerciseTime.text = item.cardioTime.toString()
+                binding.layoutExerciseTime.visibility = View.VISIBLE
+
+            }else{
+                binding.tvExerciseNumbers.text = item.reps.toString()
+                binding.layoutExerciseNumbers.visibility = View.VISIBLE
+
+                binding.tvExerciseSet.text = item.exSetCount.toString()
+                binding.layoutExerciseSet.visibility = View.VISIBLE
+
+                binding.layoutExerciseTime.visibility = View.GONE
+            }
 
             if(item.exerciseName != ""){
                 binding.tvExerciseName.text = item.bodyPart + " - " + item.exerciseName
             }else{
                 binding.tvExerciseName.text = item.bodyPart
             }
-
-            if(item.reps != null){
-                binding.tvExerciseNumbers.text = item.reps.toString()
-                binding.layoutExerciseNumbers.visibility = View.VISIBLE
-            }else{
-                binding.layoutExerciseNumbers.visibility = View.GONE
-            }
-
-            if(item.exSetCount != null){
-                binding.tvExerciseSet.text = item.exSetCount.toString()
-                binding.layoutExerciseSet.visibility = View.VISIBLE
-            }else{
-                binding.layoutExerciseSet.visibility = View.GONE
-            }
-
-            if(item.cardioTime != null){
-                binding.tvExerciseTime.text = item.cardioTime.toString()
-                binding.layoutExerciseTime.visibility = View.VISIBLE
-            }else{
-                binding.layoutExerciseTime.visibility = View.GONE
-            }
-
 
             binding.checkbox.setOnClickListener {
                 itemList[adapterPosition].finished = binding.checkbox.isChecked

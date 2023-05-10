@@ -67,18 +67,22 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
                         var formatDate = item.exerciseDate.format(DateTimeFormatter.ofPattern("YYYY.MM.dd"))
                         intent.putExtra("formatDate", formatDate)
                         intent.putExtra("exerciseDate", item.exerciseDate.toString())
+                        intent.putExtra("diaryId", item.diaryId)
                         var status: Int = if(item.dailyPercentage != -1) 0 else 1
                         intent.putExtra("mode", status)
 
                         context.startActivity(intent)
                     }else{ // 선택 되지 않은 날짜를 클릭했다면 ui 변경
 
+                        itemList[selectedDayIdx].isSelectedDay = false
+                        item.isSelectedDay = true
+                        selectedDayIdx = this.adapterPosition
+
                         selectedDayBinding.layoutDay.background = getDrawable(context, R.drawable.shape_edge_gray)
                         binding.layoutDay.background = getDrawable(context, R.color.main_gray)
                         selectedDayBinding = binding
 
-                        itemList[selectedDayIdx].isSelectedDay = false
-                        item.isSelectedDay = true
+
 
                     }
                 }

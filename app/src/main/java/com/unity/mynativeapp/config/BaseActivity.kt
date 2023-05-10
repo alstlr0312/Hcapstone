@@ -57,4 +57,5 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
             e.printStackTrace()
         }
     }
+
 }
