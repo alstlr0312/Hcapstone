@@ -76,4 +76,13 @@ interface RetrofitService {
 	fun getMemberPage(
 		@Query("username") username: String
 	): Call<MyResponse<MemberPageResponse>>
+
+
+	//지도 체육관 가져오기
+	@GET("/api/exercise/seoul")
+	fun getMap(
+		@Query("district") district: String,
+		@Query("offset") offset: Int,
+		@Query("limit") limit: Int
+	): Call<MyResponse<MapResponse>>
 }
