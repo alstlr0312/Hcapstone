@@ -1,24 +1,26 @@
 package com.unity.mynativeapp.features.ar
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.graphics.PointF
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.*
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.unity.mynativeapp.R
-import com.unity.mynativeapp.features.diary.DiaryViewModel
-import com.unity.mynativeapp.features.home.HomeViewModel
+import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter
+import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter2
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import java.io.IOException
 import java.util.*
 
@@ -30,7 +32,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private val marker = Marker()
     private val viewModel by viewModels<MapModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -113,6 +114,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         Log.d("구",roadAdd)
         viewModel.GetMap(roadAdd,1,1000)
+        subscribeUI()
+
 
 
 
@@ -173,6 +176,40 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         return addressResult
     }
+    //주소 좌표 변환
 
+    private fun setMark(marker: Marker, lat: Double, lng: Double) {
+        //원근감 표시
+        marker.isIconPerspectiveEnabled = true
+        //아이콘 지정
+        //marker.icon = OverlayImage.fromResource(resourceID)
+        //마커의 투명도
+        marker.alpha = 0.8f
+        //마커 위치
+        marker.position = LatLng(lat, lng)
+        //마커 우선순위
+        marker.zIndex = 10
+        //마커 표시
+        marker.map = naverMap
+    }
 
+    private fun subscribeUI() {
+
+        viewModel.mapData.observe(this) { data ->
+            if (data != null) {  // 다이어리 목록 없음
+                val getjgitemInfo = data.JgItem
+                for (x in getjgitemInfo) {
+                    val Row = x.row
+                    for (r in Row) {
+                        val SITEWHLADDR = r.SITEWHLADDR
+                        val TRDSTATENM = r.TRDSTATENM
+                        val DTLSTATENM = r.DTLSTATENM
+
+                    }
+                }
+            }
+
+        }
+
+    }
 }
