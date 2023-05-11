@@ -4,23 +4,17 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.unity.mynativeapp.R
-import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter
-import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter2
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import java.io.IOException
 import java.util.*
 
@@ -30,7 +24,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
     private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
-    private val marker = Marker()
     private val viewModel by viewModels<MapModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,13 +104,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }else if(addressarr[2]=="강북구"){
             roadAdd="LOCALDATA_103701_GB"
         }
-
         Log.d("구",roadAdd)
         viewModel.GetMap(roadAdd,1,1000)
         subscribeUI()
-
-
-
 
     }
 
@@ -177,8 +166,50 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         return addressResult
     }
     //주소 좌표 변환
+    fun getLocationFromAddress(strAddress: String): LatLng? {
+        val geoCoder = Geocoder(applicationContext, Locale.KOREA)
+        val address: List<Address>?
+        var p1: LatLng? = null
 
-    private fun setMark(marker: Marker, lat: Double, lng: Double) {
+        try {
+            address = geoCoder.getFromLocationName(strAddress, 5)
+            if (address == null) {
+                return null
+            }
+            val location: Address = address[0]
+            location.latitude
+            location.longitude
+
+            p1 = LatLng(location.latitude, location.longitude)
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+        }
+        return p1
+    }
+
+    private fun subscribeUI() {
+
+        viewModel.mapData.observe(this) { data ->
+            if (data != null) {  // 다이어리 목록 없음
+                val getjgitemInfo = data.LOCALDATA_103701_SP.row
+                var name = 0
+                for (x in getjgitemInfo) {
+                    val Address = x.SITEWHLADDR
+                    val TRDSTATENM = x.TRDSTATENM
+                    val DTLSTATENM = x.DTLSTATENM
+                    val status = x.BPLCNM
+                    val location = getLocationFromAddress(Address.toString())
+                    Log.d("좌표",getLocationFromAddress(Address.toString()).toString())
+                    setMark(location, Address,status )
+                }
+            }
+
+        }
+
+    }
+
+    private fun setMark(location: LatLng?, Address: String?, status: String?) {
+        val marker = Marker()
         //원근감 표시
         marker.isIconPerspectiveEnabled = true
         //아이콘 지정
@@ -186,30 +217,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         //마커의 투명도
         marker.alpha = 0.8f
         //마커 위치
-        marker.position = LatLng(lat, lng)
+        if (location != null) {
+            marker.position = location
+        }
+        marker.captionText = Address.toString()
         //마커 우선순위
         marker.zIndex = 10
         //마커 표시
         marker.map = naverMap
-    }
-
-    private fun subscribeUI() {
-
-        viewModel.mapData.observe(this) { data ->
-            if (data != null) {  // 다이어리 목록 없음
-                val getjgitemInfo = data.JgItem
-                for (x in getjgitemInfo) {
-                    val Row = x.row
-                    for (r in Row) {
-                        val SITEWHLADDR = r.SITEWHLADDR
-                        val TRDSTATENM = r.TRDSTATENM
-                        val DTLSTATENM = r.DTLSTATENM
-
-                    }
-                }
-            }
-
-        }
-
     }
 }

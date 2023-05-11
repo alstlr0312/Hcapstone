@@ -3,9 +3,9 @@ package com.unity.mynativeapp.model
 import com.google.gson.annotations.SerializedName
 
 data class MapResponse(
-    @SerializedName(" LOCALDATA_103701_JG") val JgItem: List<JgItem>,
+    @SerializedName("LOCALDATA_103701_JG") val LOCALDATA_103701_SP: LOCALDATA103701SP
 )
-data class JgItem(
+data class LOCALDATA103701SP(
     @SerializedName("isFirst") val isFirst: Boolean? = null,
     @SerializedName("list_total_count") val list_total_count: Int? = null,
     @SerializedName("isLast") val isLast: Boolean?= null,

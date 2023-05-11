@@ -58,18 +58,6 @@ interface RetrofitService {
 		@Query("size") size: Int
 	) : Call<MyResponse<PostResponse>>
 
-	//게시글 상세 확인
-	@GET("/post/detail/{num}")
-	fun getDetailPost(
-		@Path("num") num: Int
-	) : Call<MyResponse<PostDetailResponse>>
-	//게시글 작성
-	@Multipart
-	@POST("/post/write")
-	fun postPostWrite(
-		@Part("writePostDto") writePostDto: RequestBody,
-		@Part imageFile: MutableList<MultipartBody.Part>
-	): Call<MyResponse<PostWriteResponse>>
 
 	// 다이어리 수정
 	@Multipart

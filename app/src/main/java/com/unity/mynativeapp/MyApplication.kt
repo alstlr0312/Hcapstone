@@ -1,7 +1,8 @@
 package com.unity.mynativeapp
 
 import android.app.Application
-import com.unity.mynativeapp.util.PreferenceUtil
+import com.unity.mynativeapp.network.util.PreferenceUtil
+
 
 class MyApplication: Application() {
 

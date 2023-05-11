@@ -19,7 +19,7 @@ import com.unity.mynativeapp.features.home.HomeViewModel
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.model.MediaRvItem
-import com.unity.mynativeapp.util.LoadingDialog
+import com.unity.mynativeapp.network.util.LoadingDialog
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

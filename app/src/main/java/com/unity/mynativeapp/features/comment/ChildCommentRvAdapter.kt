@@ -12,8 +12,6 @@ import com.unity.mynativeapp.databinding.ItemRvChildCommentBinding
 import com.unity.mynativeapp.model.CommentDto
 
 class ChildCommentRvAdapter(var itemList: MutableList<CommentDto>, val context: Context): RecyclerView.Adapter<ChildCommentRvAdapter.ViewHolder>() {
-
-
     inner class ViewHolder(val binding: ItemRvChildCommentBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: CommentDto){
 

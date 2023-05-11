@@ -6,9 +6,9 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
+import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.network.util.hideKeyboard
 
 class AddExerciseActivity : AppCompatActivity() {

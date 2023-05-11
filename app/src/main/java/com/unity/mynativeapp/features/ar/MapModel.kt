@@ -38,7 +38,7 @@ class MapModel : ViewModel() {
     }
 
     private fun  getMapAPI(district: String, offset: Int, limit: Int) {
-        RetrofitClient.getApiService().getMap(district,offset, limit).enqueue(object :
+        RetrofitClient.getApiService().getMap(district,offset,limit).enqueue(object :
             Callback<MyResponse<MapResponse>> {
             override fun onResponse(
                 call: Call<MyResponse<MapResponse>>,
