@@ -112,10 +112,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         Log.d("구",roadAdd)
-        viewModel.GetMap(roadAdd,10,1)
-        marker.position = LatLng(37.62444907132257, 127.09321109051345)
-        marker.map = naverMap
-        marker.captionText = "화랑대 철도공원"
+        viewModel.GetMap(roadAdd,1,1000)
+
 
 
     }
