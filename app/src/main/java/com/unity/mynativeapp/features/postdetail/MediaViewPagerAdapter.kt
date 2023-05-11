@@ -53,9 +53,13 @@ class MediaViewPagerAdapter(val context: Context)
         return itemList.size
     }
 
+    fun getListFromView(nList: MutableList<ByteArray>) {
+        itemList = nList
+        notifyDataSetChanged()
+    }
+
     fun addItem(byteArray: ByteArray) {
         itemList.add(byteArray)
         notifyDataSetChanged()
     }
-
 }

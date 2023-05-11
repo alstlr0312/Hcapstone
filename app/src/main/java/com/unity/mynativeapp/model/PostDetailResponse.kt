@@ -14,6 +14,6 @@ data class PostDetailResponse (
     @SerializedName("createdAt") val createdAt: String,
     @SerializedName("postType") val postType: String,
     @SerializedName("workOutCategory") val workOutCategory: String,
-    @SerializedName("comments") val comments: String,
+    @SerializedName("comments") val comments: Int,
     @SerializedName("mine") val mine: Boolean
 )

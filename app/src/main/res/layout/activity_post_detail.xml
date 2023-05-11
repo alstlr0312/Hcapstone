@@ -136,17 +136,17 @@
                 app:layout_constraintStart_toEndOf="@id/iv_profile_img"
                 app:layout_constraintTop_toTopOf="@id/iv_profile_img" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/cb_heart"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                app:tint="@color/main_red_light"
+                android:background="@drawable/sel_checkbox_heart"
+                android:button="@android:color/transparent"
+                android:checked="false"
                 android:layout_marginEnd="@dimen/fab_margin"
-                android:src="@drawable/ic_heart"
                 app:layout_constraintEnd_toStartOf="@id/iv_menu"
                 app:layout_constraintTop_toTopOf="@id/iv_menu"
                 app:layout_constraintBottom_toBottomOf="@id/iv_menu"/>
-
 
 
             <ImageView
@@ -262,7 +262,7 @@
                 android:id="@+id/tv_comment_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6"
+                android:text="0"
                 android:textSize="14sp"
                 android:textColor="@color/main_gray_light2"
                 android:layout_marginStart="5dp"
@@ -296,7 +296,7 @@
                 android:id="@+id/tv_views_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6"
+                android:text="0"
                 android:textSize="14sp"
                 android:textColor="@color/main_gray_light2"
                 android:layout_marginStart="5dp"

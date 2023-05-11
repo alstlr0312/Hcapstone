@@ -1,6 +1,6 @@
 package com.unity.mynativeapp.features.home
 
-import android.content.ContentValues.TAG
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel(): ViewModel() {
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
@@ -51,11 +51,11 @@ class HomeViewModel: ViewModel() {
                             _homeData.postValue(data)
                         }
                     }
-                    401 -> {// refresh 토큰 만료
-                        _logout.postValue(true)
-                    }
                     400 -> { // 다이어리 목록 없음
                         _homeData.postValue(null)
+                    }
+                    401 -> {// refresh 토큰 만료
+                        _logout.postValue(true)
                     }
                     else -> {
                         Log.d(TAG, "$code")

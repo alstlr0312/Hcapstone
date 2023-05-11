@@ -9,3 +9,4 @@ data class DiaryWriteRequest(
     @SerializedName("exerciseDate") val exerciseDate: String,
 )
 
+

@@ -50,7 +50,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         binding.recyclerViewCalendar.adapter = calenderRvAdapter
 
 
-        setCalenderView()
+        //setCalenderView()
 
         //setListener()
 
@@ -97,7 +97,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         // 홈화면 요청
         requestData = selectedDate.format(DateTimeFormatter.ofPattern("YYYY-MM"))
         viewModel.home(requestData)
-
     }
 
     fun setUiEvent(){
@@ -165,9 +164,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
                 for(i in 1 until selectedDate.lengthOfMonth()+1){
                     if(j < result!!.size && result[j].exerciseDate!! == compareDate.toString()){ // 다이어리 있음
                         if(i == selectedDate.dayOfMonth){
-                            dayList.add(CalenderRvItem(compareDate, true, result[j].dailyPercentage))
+                            dayList.add(CalenderRvItem(compareDate, true, result[j].dailyPercentage, result[j].diaryId))
                         }else{
-                            dayList.add(CalenderRvItem(compareDate, false, result[j].dailyPercentage))
+                            dayList.add(CalenderRvItem(compareDate,false, result[j].dailyPercentage, result[j].diaryId))
                         }
                         j++
                     }else{  // 다이어리 없음
@@ -192,10 +191,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
     override fun onResume() {
         super.onResume()
 
-        if(!firstStart){
-            firstStart = true
-            setCalenderView()
-        }
+        setCalenderView()
 
 
     }

@@ -27,7 +27,7 @@ data class PostItem(
     @SerializedName("workOutCategory") val workOutCategory: String,
     @SerializedName("createdAt") val createdAt: String,
     @SerializedName("title") val title: String,
-    @SerializedName("postId") val postId: String,
+    @SerializedName("postId") val postId: Int,
     @SerializedName("mediaListCount") val mediaListCount: Int,
     @SerializedName("likeCount") val likeCount: Int,
     @SerializedName("views") val views: Int,

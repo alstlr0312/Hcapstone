@@ -23,6 +23,9 @@ class PostViewModel: ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
+    private val _logout = MutableLiveData<Boolean>()
+    val logout: LiveData<Boolean> = _logout
+
     private val _postWriteSuccess = MutableLiveData<Boolean>()
     val postWriteSuccess: LiveData<Boolean> = _postWriteSuccess
 
@@ -34,15 +37,15 @@ class PostViewModel: ViewModel() {
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
 
-    fun community(data: String, s: String, i: Int, i1: Int) {
+    fun community(type: String?=null, category: String?=null, page: Int?=null, size: Int?=null) {
 
         _loading.postValue(true)
 
-        getPostAPI(data, s,i,i1)
+        getPostAPI(type, category, page, size)
     }
 
-    private fun getPostAPI(data: String, s: String, i: Int, i1: Int) {
-        RetrofitClient.getApiService().getPost(data,s,i,i1).enqueue(object : Callback<MyResponse<PostResponse>> {
+    private fun getPostAPI(type: String?, category: String?, page: Int?, size: Int?) {
+        RetrofitClient.getApiService().getPost(type,category,page,size).enqueue(object : Callback<MyResponse<PostResponse>> {
             override fun onResponse(call: Call<MyResponse<PostResponse>>, response: Response<MyResponse<PostResponse>>) {
                 _loading.postValue(false)
 
@@ -50,8 +53,6 @@ class PostViewModel: ViewModel() {
                 Log.d(TAG, code.toString())
 
                 when(code) {
-
-
                     200 -> { // 다이어리 목록 있음
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
@@ -62,7 +63,7 @@ class PostViewModel: ViewModel() {
                     400 -> {// 다이어리 목록 없음
                         _postData.postValue(null)
                     }
-
+                    401 -> _logout.postValue(true)
                     else -> {
                         Log.d(TAG, "$code")
                     }
@@ -76,89 +77,5 @@ class PostViewModel: ViewModel() {
             }
         })
     }
-    /*fun media(num: Int) {
 
-        _loading.postValue(true)
-
-        getmediaAPI(num)
-    }
-
-    private fun getmediaAPI(num: Int) {
-        RetrofitClient.getApiService2().getMedia(num).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                _loading.postValue(false)
-                if (response.isSuccessful) {
-                    val imageBytes = response.body()
-                    _mediaData.postValue(imageBytes)
-                } else {
-                    // 응답이 실패한 경우 처리하는 코드 작성
-                }
-
-            }
-
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-            }
-        })
-    }
-
-    companion object {
-        const val TAG = "DiaryViewModel"
-    }*/
-
-
-
-    private val _postDetailData = MutableLiveData<PostDetailResponse?>()
-    val postDetailData: LiveData<PostDetailResponse?> = _postDetailData
-
-
-
-
-    fun PostDetail(i: Int) {
-
-        _loading.postValue(true)
-
-        getPostDetailAPI(i)
-    }
-
-    private fun getPostDetailAPI(i: Int) {
-        RetrofitClient.getApiService().getDetailPost(i).enqueue(object :
-            Callback<MyResponse<PostDetailResponse>> {
-            override fun onResponse(
-                call: Call<MyResponse<PostDetailResponse>>,
-                response: Response<MyResponse<PostDetailResponse>>
-            ) {
-                _loading.postValue(false)
-
-                val code = response.code()
-                Log.d(ContentValues.TAG, code.toString())
-                when (code) {
-
-                    200 -> { // 다이어리 목록 있음
-                        val data = response.body()?.data
-                        Log.d(ContentValues.TAG, data.toString())
-                        data?.let {
-                            _postDetailData.postValue(data)
-                        }
-                    }
-                    400 -> {// 다이어리 목록 없음
-                        _postDetailData.postValue(null)
-                    }
-
-                    else -> {
-                        Log.d(ContentValues.TAG, "$code")
-                    }
-                }
-            }
-
-
-            override fun onFailure(call: Call<MyResponse<PostDetailResponse>>, t: Throwable) {
-                Log.e(ContentValues.TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-            }
-        })
-    }
 }

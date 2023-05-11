@@ -47,7 +47,7 @@ interface RetrofitService {
 	fun postDiaryWrite(
 		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
 		@Part imageFile: MutableList<MultipartBody.Part>
-	): Call<MyResponse<DiaryWriteResponse>>
+	): Call<MyResponse<String>>
 
 	//게시글 목록 확인
 	@GET("/post")
@@ -70,6 +70,37 @@ interface RetrofitService {
 		@Part("writePostDto") writePostDto: RequestBody,
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<PostWriteResponse>>
+
+	// 다이어리 수정
+	@Multipart
+	@PATCH("/diary/edit/{num}")
+	fun patchDiaryEdit(
+		@Path("num") num: Int,
+		@Part("writeDiaryDto") writeDiaryDto: RequestBody,
+		@Part imageFile: MutableList<MultipartBody.Part>
+		): Call<MyResponse<String>>
+
+	//게시글 목록 확인
+	@GET("/post")
+	fun getPost(
+		@Query("postType") postType: String?,
+		@Query("woryOutCategory") woryOutCategory: String?,
+		@Query("page") page: Int?,
+		@Query("size") size: Int?
+	) : Call<MyResponse<PostResponse>>
+
+	//게시글 상세 확인
+	@GET("/post/detail/{num}")
+	fun getDetailPost(
+		@Path("num") num: Int
+	) : Call<MyResponse<PostDetailResponse>>
+	//게시글 작성
+	@Multipart
+	@POST("/post/write")
+	fun postPostWrite(
+		@Part("writePostDto") writePostDto: RequestBody,
+		@Part imageFile: MutableList<MultipartBody.Part>
+	): Call<MyResponse<String>>
 
 	// 회원 정보(마이페이지) 조회
 	@GET("/member/info")

@@ -5,8 +5,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.model.PostResponse
+import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import okhttp3.ResponseBody
@@ -22,6 +25,9 @@ class PostDetailViewModel : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
+    private val _logout = MutableLiveData<Boolean>()
+    val logout: LiveData<Boolean> = _logout
+
     private val _postWriteSuccess = MutableLiveData<Boolean>()
     val postWriteSuccess: LiveData<Boolean> = _postWriteSuccess
 
@@ -33,15 +39,15 @@ class PostDetailViewModel : ViewModel() {
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
 
-    fun PostDetail(i: Int) {
+    fun postDetail(postId: Int) {
 
         _loading.postValue(true)
 
-        getPostDetailAPI(i)
+        getPostDetailAPI(postId)
     }
 
-    private fun getPostDetailAPI(i: Int) {
-        RetrofitClient.getApiService().getDetailPost(i).enqueue(object :
+    private fun getPostDetailAPI(postId: Int) {
+        RetrofitClient.getApiService().getDetailPost(postId).enqueue(object :
             Callback<MyResponse<PostDetailResponse>> {
             override fun onResponse(
                 call: Call<MyResponse<PostDetailResponse>>,
@@ -50,22 +56,22 @@ class PostDetailViewModel : ViewModel() {
                 _loading.postValue(false)
 
                 val code = response.code()
-                Log.d(ContentValues.TAG, code.toString())
+                Log.d("here1111", "$code $postId")
                 when (code) {
-
-                    200 -> { // 다이어리 목록 있음
+                    200 -> { // 게시글 상세 조회 성공
                         val data = response.body()?.data
-                        Log.d(ContentValues.TAG, data.toString())
+                        Log.d(TAG, data.toString())
                         data?.let {
                             _postDetailData.postValue(data)
                         }
                     }
-                    400 -> {// 다이어리 목록 없음
+                    401 -> _logout.postValue(true)
+                    400 -> {// 존재하지 않는 게시글
                         _postDetailData.postValue(null)
                     }
 
                     else -> {
-                        Log.d(ContentValues.TAG, "$code")
+                        Log.d(TAG, "$code")
                     }
                 }
             }
@@ -86,7 +92,7 @@ class PostDetailViewModel : ViewModel() {
     }
 
     private fun getmediaAPI(num: Int) {
-        RetrofitClient.getApiService2().getMedia(num).enqueue(object :
+        RetrofitClient.getApiService().getMedia(num).enqueue(object :
             Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 _loading.postValue(false)
@@ -95,19 +101,22 @@ class PostDetailViewModel : ViewModel() {
                     _mediaData.postValue(imageBytes)
                 } else {
                     // 응답이 실패한 경우 처리하는 코드 작성
+                    val body = response.errorBody()?.string()
+                    val data = GsonBuilder().create().fromJson(body, MyError::class.java)
+                    _toastMessage.postValue(data.error.toString())
                 }
 
             }
 
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(TAG, "Error: ${t.message}")
+                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })
     }
 
     companion object {
-        const val TAG = "DiaryViewModel"
+        const val TAG = "PostDetailViewModel"
     }
 }

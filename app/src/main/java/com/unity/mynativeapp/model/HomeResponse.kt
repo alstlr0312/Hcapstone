@@ -10,5 +10,6 @@ data class HomeResponse(
 
 data class Calender(
     val dailyPercentage: Int,
-    val exerciseDate: String
+    val exerciseDate: String,
+    val diaryId: Int,
 )

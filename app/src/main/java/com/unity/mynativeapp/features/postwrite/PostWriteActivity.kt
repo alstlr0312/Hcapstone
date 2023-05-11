@@ -3,47 +3,38 @@ package com.unity.mynativeapp.features.postwrite
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.MyApplication.Companion.postTypeHashMap
+import com.unity.mynativeapp.MyApplication.Companion.workOutCategoryHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostWriteBinding
-import com.unity.mynativeapp.features.community.PostViewModel
-import com.unity.mynativeapp.features.diary.DiaryMediaRvAdapter
-import com.unity.mynativeapp.features.diary.DiaryViewModel
-import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.model.PostWriteRequest
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
-import java.io.File
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-
+import java.io.File
 
 class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWriteBinding::inflate) {
 
     lateinit var postStyleArr: ArrayList<String>
     lateinit var postCategoryArr: ArrayList<String>
     lateinit var mediaAdapter: PostWriteMediaRvAdapter      // 미디어 Rv 어댑터
-    private val viewModel by viewModels<PostwriteViewModel>()
-    var imageResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val imageUri = result.data?.data
-                imageUri?.let {
-                    mediaAdapter.addItem(it)
-                }
+    private val viewModel by viewModels<PostWriteViewModel>()
+
+    var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        if(result.resultCode == RESULT_OK){
+            val imageUri = result.data?.data
+            imageUri?.let{
+                mediaAdapter.addItem(it)
             }
         }
-
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,19 +43,15 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         subscribeUI()
     }
 
-    private fun setView() {
+    private fun setView(){
 
-        postStyleArr = arrayListOf(
-            getString(R.string.please_select_post_style),
+        postStyleArr = arrayListOf(getString(R.string.please_select_post_style),
             getString(R.string.q_and_a), getString(R.string.knowledge_sharing),
-            getString(R.string.show_off), getString(R.string.assess), getString(R.string.freedom)
-        )
+            getString(R.string.show_off), getString(R.string.assess), getString(R.string.free))
 
-        postCategoryArr = arrayListOf(
-            getString(R.string.please_select_post_category),
+        postCategoryArr = arrayListOf(getString(R.string.please_select_post_category),
             getString(R.string.health), getString(R.string.pilates), getString(R.string.yoga),
-            getString(R.string.jogging), getString(R.string.etc)
-        )
+            getString(R.string.jogging), getString(R.string.etc))
 
 
         val postStyleArrayAdapter = SpinnerAdapter(this, R.layout.item_spinner, postStyleArr)
@@ -73,12 +60,9 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         binding.spinnerPostCategory.adapter = postCategoryArrayAdapter
 
         mediaAdapter = PostWriteMediaRvAdapter(this)
-        binding.rvPostMedia.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPostMedia.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPostMedia.adapter = mediaAdapter
     }
-
-
 
     private fun setUiEvent() {
         // 미디어 추가
@@ -93,30 +77,23 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         }
 
         binding.btnPosting.setOnClickListener {//게시글 등록
-            val sstyle = binding.spinnerPostStyle.selectedItem.toString()
-            val scat = binding.spinnerPostCategory.selectedItem.toString()
-            val postitle = binding.edtPostTitle.text.toString()
-            val posttext = binding.edtPostText.text.toString()
-            Log.d("diaryActivity", sstyle)
-            Log.d("diaryActivity", scat)
-            Log.d("diaryActivity", postitle)
-            Log.d("diaryActivity", posttext)
+            var type = binding.spinnerPostStyle.selectedItem.toString()
+            val category = binding.spinnerPostCategory.selectedItem.toString()
+            val title = binding.edtPostTitle.text.toString()
+            val text = binding.edtPostText.text.toString()
+
+
             val jsonRequest = PostWriteRequest(
-                postitle,
-                posttext,
-                sstyle,
-                scat
+                title,
+                text,
+                postTypeHashMap[type].toString(),
+                workOutCategoryHashMap[category].toString()
             )
-            //    val jsonBody = RequestBody.create(parse("application/json"),jsonObject2)
 
             val gson = GsonBuilder().serializeNulls().create()
-            val jsonObject = JSONObject().put("writePostDto", gson.toJson(jsonRequest))
-            Log.d("diaryActivity", jsonObject.toString())
-            val jsonObject11 = JSONObject(jsonObject.toString())
-
             val requestBodyString = gson.toJson(jsonRequest).toString()
             val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
-            val exdata = createPartFromString(requestBodyWithoutBackslashes)
+            val postData = createPartFromString(requestBodyWithoutBackslashes)
 
 
             // 미디어
@@ -128,11 +105,9 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
                 val uploadFile: MultipartBody.Part =
                     MultipartBody.Part.createFormData("files", file.name, requestFile)
                 imageList.add(uploadFile)
-                Log.d("234234234234", element)
             }
 
-            viewModel.postWrite(exdata, imageList)
-            Log.d("diaryActivity111111", jsonObject11.toString())
+            viewModel.postWrite(postData, imageList)
         }
 
     }
@@ -142,7 +117,23 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
 
 
     private fun subscribeUI(){
+        viewModel.toastMessage.observe(this){ message ->
+            showCustomToast(message)
+        }
 
+        viewModel.loading.observe(this) { isLoading ->
+            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
+        }
+
+        viewModel.logout.observe(this) { logout ->
+            if(logout) logout()
+        }
+
+        viewModel.postWriteSuccess.observe(this){ isSuccess ->
+            if(!isSuccess) return@observe
+
+            finish()
+        }
     }
 
 }
