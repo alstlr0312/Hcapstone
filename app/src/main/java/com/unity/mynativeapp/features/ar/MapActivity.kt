@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.annotations.SerializedName
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
@@ -16,6 +17,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.unity.mynativeapp.R
+import com.unity.mynativeapp.model.LocalData
+import com.unity.mynativeapp.model.rowItem
 import java.io.IOException
 import java.util.*
 
@@ -26,7 +29,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
     private val viewModel by viewModels<MapModel>()
-    private var markers = ArrayList<MapModel>()
+    var roadAdd:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -54,7 +57,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("lon",lon.toString())
         Log.d("getAddress(lat,lon)",getAddress(lat,lon))
         Log.d("getAddress(lat,lon)", addressarr[2])
-        var roadAdd:String=""
         if(addressarr[2]=="종로구"){
             roadAdd="LOCALDATA_103701_JN"
         } else if(addressarr[2]=="도봉구"){
@@ -192,37 +194,137 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun subscribeUI() {
 
         viewModel.mapData.observe(this) { data ->
-            if (data != null) {  // 다이어리 목록 없음
-                val getjgitemInfo = data.LOCALDATA_103701_SP.row
-                var name = 0
-                for (x in getjgitemInfo) {
-                    val Address = x.SITEWHLADDR
-                    val status = x.DTLSTATENM
-                    val name = x.BPLCNM
-                    val location = getLocationFromAddress(Address.toString())
-                    Log.d("좌표",getLocationFromAddress(Address.toString()).toString())
+            if (data != null) {
 
-                    addMark(location, Address.toString(),status.toString(), name.toString())
-                }
+                    val getjn = data.LOCALDATA_103701_JN?.row
+                    if (getjn != null) {
+                        makemark(getjn)
+                    }
+                    val getdb = data.LOCALDATA_103701_DB?.row
+                    if (getdb != null) {
+                        makemark(getdb)
+                    }
+                    val getsp = data.LOCALDATA_103701_SP?.row
+                    if (getsp != null) {
+                        makemark(getsp)
+                    }
+                    val getgr = data.LOCALDATA_103701_GR?.row
+                    if (getgr != null) {
+                        makemark(getgr)
+                    }
+                    val getjr = data.LOCALDATA_103701_JR?.row
+                    if (getjr != null) {
+                        makemark(getjr)
+                    }
+                    val getsd = data.LOCALDATA_103701_SD?.row
+                    if (getsd != null) {
+                        makemark(getsd)
+                    }
+                    val getgd = data.LOCALDATA_103701_GD?.row
+                    if (getgd != null) {
+                        makemark(getgd)
+                    }
+                    val getdd = data.LOCALDATA_103701_DD?.row
+                    if (getdd != null) {
+                        makemark(getdd)
+                    }
+                    val getys = data.LOCALDATA_103701_YS?.row
+                    if (getys != null) {
+                        makemark(getys)
+                    }
+                    val getgn = data.LOCALDATA_103701_GN?.row
+                    if (getgn != null) {
+                        makemark(getgn)
+                    }
+                    val getgs = data.LOCALDATA_103701_GS?.row
+                    if (getgs != null) {
+                        makemark(getgs)
+                    }
+                    val getyd = data.LOCALDATA_103701_YD?.row
+                    if (getyd != null) {
+                        makemark(getyd)
+                    }
+                    val getnw = data.LOCALDATA_103701_NW?.row
+                    if (getnw != null) {
+                        makemark(getnw)
+                    }
+                    val getdj = data.LOCALDATA_103701_DJ?.row
+                    if (getdj != null) {
+                        makemark(getdj)
+                    }
+                    val getep = data.LOCALDATA_103701_EP?.row
+                    if (getep != null) {
+                        makemark(getep)
+                    }
+                    val getga = data.LOCALDATA_103701_GA?.row
+                    if (getga != null) {
+                        makemark(getga)
+                    }
+                    val getyc = data.LOCALDATA_103701_YC?.row
+                    if (getyc != null) {
+                        makemark(getyc)
+                    }
+                    val getsb = data.LOCALDATA_103701_SB?.row
+                    if (getsb != null) {
+                        makemark(getsb)
+                    }
+                    val getmp = data.LOCALDATA_103701_MP?.row
+                    if (getmp != null) {
+                        makemark(getmp)
+                    }
+                    val getsm = data.LOCALDATA_103701_SM?.row
+                    if (getsm != null) {
+                        makemark(getsm)
+                    }
+                    val getgc = data.LOCALDATA_103701_GC?.row
+                    if (getgc != null) {
+                        makemark(getgc)
+                    }
+                    val getjg = data.LOCALDATA_103701_JG?.row
+                    if (getjg != null) {
+                        makemark(getjg)
+                    }
+                    val getgj = data.LOCALDATA_103701_GJ?.row
+                    if (getgj != null) {
+                        makemark(getgj)
+                    }
+                    val getsc = data.LOCALDATA_103701_SC?.row
+                    if (getsc != null) {
+                        makemark(getsc)
+                    }
+                    val getgb = data.LOCALDATA_103701_GB?.row
+                    if (getgb != null) {
+                        makemark(getgb)
+                    }
+
             }
 
         }
 
     }
 
+    private fun makemark(getitem: List<rowItem>) {
+        for (x in getitem) {
+            val Address = x.SITEWHLADDR
+            val status = x.DTLSTATENM
+            val name = x.BPLCNM
+            val location = getLocationFromAddress(Address.toString())
+            Log.d("좌표", getLocationFromAddress(Address.toString()).toString())
+            addMark(location, Address.toString(), status.toString(), name.toString())
+        }
+    }
+
     private fun addMark(location: LatLng?, Address: String?, status: String?, name: String?) {
         val marker = Marker()
         //원근감 표시
         marker.isIconPerspectiveEnabled = true
-        //아이콘 지정
-        //marker.icon = OverlayImage.fromResource(resourceID)
         //마커의 투명도
         marker.alpha = 0.8f
         //마커 위치
         if (location != null) {
             marker.position = location
         }
-        marker.captionText = Address.toString()
+       // marker.captionText = name.toString()
         //마커 우선순위
         marker.zIndex = 10
 
