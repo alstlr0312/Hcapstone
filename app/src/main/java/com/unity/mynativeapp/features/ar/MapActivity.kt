@@ -13,6 +13,7 @@ import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.unity.mynativeapp.R
 import java.io.IOException
@@ -25,6 +26,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
     private val viewModel by viewModels<MapModel>()
+    private var markers = ArrayList<MapModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -195,12 +197,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 var name = 0
                 for (x in getjgitemInfo) {
                     val Address = x.SITEWHLADDR
-                    val TRDSTATENM = x.TRDSTATENM
-                    val DTLSTATENM = x.DTLSTATENM
-                    val status = x.BPLCNM
+                    val status = x.DTLSTATENM
+                    val name = x.BPLCNM
                     val location = getLocationFromAddress(Address.toString())
                     Log.d("좌표",getLocationFromAddress(Address.toString()).toString())
-                    setMark(location, Address,status )
+
+                    addMark(location, Address,status, name)
                 }
             }
 
@@ -208,7 +210,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    private fun setMark(location: LatLng?, Address: String?, status: String?) {
+    private fun addMark(location: LatLng?, Address: String?, status: String?, name: String?) {
         val marker = Marker()
         //원근감 표시
         marker.isIconPerspectiveEnabled = true
@@ -223,7 +225,20 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.captionText = Address.toString()
         //마커 우선순위
         marker.zIndex = 10
+
         //마커 표시
         marker.map = naverMap
+
+        marker.setOnClickListener(object : Overlay.OnClickListener {
+            override fun onClick(@NonNull overlay: Overlay): Boolean {
+                val bottomSheet = MapBottomSheetFragment(this)
+                bottomSheet.address = Address.toString()
+                bottomSheet.status = status.toString()
+                bottomSheet.name = name.toString()
+                bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                return false
+            }
+        })
+
     }
 }
