@@ -202,7 +202,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     val location = getLocationFromAddress(Address.toString())
                     Log.d("좌표",getLocationFromAddress(Address.toString()).toString())
 
-                    addMark(location, Address,status, name)
+                    addMark(location, Address.toString(),status.toString(), name.toString())
                 }
             }
 
@@ -231,10 +231,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         marker.setOnClickListener(object : Overlay.OnClickListener {
             override fun onClick(@NonNull overlay: Overlay): Boolean {
+                val bundle = Bundle()
+                bundle.putString("Address", Address)
+                bundle.putString("status", status)
+                bundle.putString("name", name)
                 val bottomSheet = MapBottomSheetFragment(this)
-                bottomSheet.address = Address.toString()
-                bottomSheet.status = status.toString()
-                bottomSheet.name = name.toString()
+                bottomSheet.arguments = bundle
                 bottomSheet.show(supportFragmentManager, bottomSheet.tag)
                 return false
             }
