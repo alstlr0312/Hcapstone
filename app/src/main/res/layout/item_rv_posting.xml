@@ -77,7 +77,7 @@
                     app:tint="@color/main_gray_light2"/>
 
                 <TextView
-                    android:id="@+id/tv_views_num"
+                    android:id="@+id/tv_views_cnt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
@@ -104,7 +104,7 @@
                     android:layout_marginStart="5dp"/>
 
                 <ImageView
-                    android:id="@+id/cb_heart"
+                    android:id="@+id/cb_like"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     app:tint="@color/main_red_light"
@@ -112,7 +112,7 @@
                     android:src="@drawable/ic_heart"/>
 
                 <TextView
-                    android:id="@+id/tv_heart_num"
+                    android:id="@+id/tv_like_cnt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
@@ -129,7 +129,7 @@
                     app:tint="@color/white"/>
 
                 <TextView
-                    android:id="@+id/tv_comment_num"
+                    android:id="@+id/tv_comment_cnt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"

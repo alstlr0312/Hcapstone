@@ -33,7 +33,15 @@ interface RetrofitService {
 		@Query("date") date: String
 	) : Call<MyResponse<HomeResponse>>
 
+	// 미디어 조회
+	@GET("/media/{num}")
+	fun getMedia(
+		@Path("num") num: Int
+	) : Call<ResponseBody>
 
+	/*
+	//////////////// 다이어리 ///////////////
+	 */
 	// 다이어리 작성
 	@Multipart
 	@POST("/diary/write")
@@ -48,12 +56,6 @@ interface RetrofitService {
 		@Query("date") date: String
 	) : Call<MyResponse<DiaryResponse>>
 
-	// 미디어 조회
-	@GET("/media/{num}")
-	fun getMedia(
-		@Path("num") num: Int
-	) : Call<ResponseBody>
-
 	// 다이어리 수정
 	@Multipart
 	@PATCH("/diary/edit/{num}")
@@ -63,6 +65,10 @@ interface RetrofitService {
 		@Part imageFile: MutableList<MultipartBody.Part>
 		): Call<MyResponse<String>>
 
+
+	/*
+	////////////// 게시글 /////////////
+	 */
 	//게시글 목록 확인
 	@GET("/post")
 	fun getPost(
@@ -77,6 +83,7 @@ interface RetrofitService {
 	fun getDetailPost(
 		@Path("num") num: Int
 	) : Call<MyResponse<PostDetailResponse>>
+
 	//게시글 작성
 	@Multipart
 	@POST("/post/write")
@@ -85,6 +92,16 @@ interface RetrofitService {
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<String>>
 
+	// 좋아요
+	@PATCH("post/like")
+	fun patchPostLike(
+		@Query("post_id") post_id: Int,
+		@Query("clicked") clicked: Boolean,
+	): Call<MyResponse<Int>>
+
+	/*
+	//////////// 회원정보 ////////////////
+	 */
 	// 회원 정보(마이페이지) 조회
 	@GET("/member/info")
 	fun getMemberPage(

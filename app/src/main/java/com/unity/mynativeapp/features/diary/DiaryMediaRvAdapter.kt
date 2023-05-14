@@ -51,6 +51,27 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
         }
     }
     inner class ViewHolder_byteArray(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
+
+        init{
+            binding.root.setOnLongClickListener OnLongClickListener@{
+                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
+                dialog.show()
+
+                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
+                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
+
+                btnYes.setOnClickListener {
+                    itemList.removeAt(adapterPosition)
+                    dialog.dismiss()
+                    notifyDataSetChanged()
+                }
+                btnNo.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                return@OnLongClickListener true
+            }
+        }
         fun bind(byteArray: ByteArray){
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             //binding.photo.setImageBitmap(bitmap)

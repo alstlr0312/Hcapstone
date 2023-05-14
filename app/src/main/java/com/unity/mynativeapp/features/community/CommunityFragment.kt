@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.unity.mynativeapp.MyApplication.Companion.postTypeHashMap
+import com.unity.mynativeapp.MyApplication.Companion.workOutCategoryHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
@@ -22,6 +24,12 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
 
     private val viewModel by viewModels<PostViewModel>()
     private lateinit var postingRvAdapter: PostListRvAdapter
+    private var postType: String? = null
+    private var workOutCategory: String? = null
+    private var getPostIsFirst = true
+    private var getPostHasNext = false
+    private var currentPage = 0
+    private val pageSize = 20
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,13 +41,41 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
             postingRvAdapter = PostListRvAdapter(requireContext())
             rvPosting.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             rvPosting.adapter = postingRvAdapter
-            //postingRvAdapter.getListFromView(postListSample())
 
+            binding.tvFilter.text = getString(R.string.total)
 
             // 게시물 필터 설정
             layoutFilter.setOnClickListener {
                 var dialog = PostSortDialog(requireContext())
                 dialog.show()
+
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        var btnStr = ""
+
+                        if(dialog.checkedSortText != getString(R.string.total) && dialog.checkedSortText != null){
+                            btnStr = btnStr + dialog.checkedSortText + " > "
+                            postType = postTypeHashMap[dialog.checkedSortText]
+                        }else{
+                            postType = null
+                        }
+
+                        if(dialog.checkedCateText != getString(R.string.total) && dialog.checkedCateText != null){
+                            btnStr += dialog.checkedCateText
+                            workOutCategory = workOutCategoryHashMap[dialog.checkedCateText]
+                        }else{
+                            btnStr = btnStr.split(" > ")[0]
+                            workOutCategory = null
+                        }
+
+                        if(dialog.checkedSortText == getString(R.string.total) && dialog.checkedCateText == getString(R.string.total)){
+                            btnStr = getString(R.string.total)
+                        }
+
+                        binding.tvFilter.text = btnStr
+                        viewModel.community(postType, workOutCategory, currentPage, pageSize)
+                    }
+                }
             }
         }
 
@@ -64,10 +100,21 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
         }
 
         viewModel.postData.observe(viewLifecycleOwner) { data ->
-            val getexInfo = data?.postListDto
 
-            if (getexInfo != null) {
-                for (x in getexInfo) {
+            if(data != null){
+                postingRvAdapter.removeAllItem()
+
+                val getExInfo = data.postListDto
+
+                if(getExInfo.isEmpty()){
+                    binding.emptyView.visibility = View.VISIBLE
+                    binding.rvPosting.visibility = View.GONE
+                }else{
+                    binding.emptyView.visibility = View.INVISIBLE
+                    binding.rvPosting.visibility = View.VISIBLE
+                }
+
+                for (x in getExInfo) {
                     val username = x.username
                     val title = x.title
                     val commentCount = x.commentCount
@@ -81,15 +128,17 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
 
                     postingRvAdapter.addItem(PostItem(username,postType,workOutCategory,createdAt,title,postId,mediaListCount,likeCount,views,commentCount))
                 }
-            }
 
+                getPostHasNext = data.hasNext
+                getPostIsFirst = data.isFirst
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         postingRvAdapter.removeAllItem()
-        viewModel.community()
+        viewModel.community(postType, workOutCategory, currentPage, pageSize)
     }
 
 }

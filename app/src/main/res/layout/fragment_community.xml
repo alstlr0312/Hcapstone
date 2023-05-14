@@ -97,4 +97,14 @@
         android:layout_marginHorizontal="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_post"
+        android:textColor="@color/main_gray_light2"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
