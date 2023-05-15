@@ -22,17 +22,11 @@ class MapBottomSheetFragment(param: Overlay.OnClickListener) : BottomSheetDialog
         val name = bundle?.getString("name")
         val status = bundle?.getString("status")
         val Address = bundle?.getString("Address")
-        binding!!.infoAddress.setText(name)
-        binding!!.infoName.setText(Address)
-        binding!!.infoKind.setText(status)
+        binding!!.infoAddress.setText(Address)
+        binding!!.infoName.setText(name)
+        binding!!.infoStatus.setText(status)
         return binding!!.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        view?.findViewById<TextView>(R.id.info_name)
-        view?.findViewById<TextView>(R.id.info_address)
-        view?.findViewById<TextView>(R.id.info_kind)
-    }
 
 }

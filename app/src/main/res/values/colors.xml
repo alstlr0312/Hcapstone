@@ -24,6 +24,7 @@
     <color name="memo_bg">#D1D1D1</color>
 
     <color name="list_item_bg">#373737</color>
+    <color name="transparent">#00FFFFFF</color>
 
 
 </resources>

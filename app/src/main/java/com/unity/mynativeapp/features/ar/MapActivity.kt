@@ -324,7 +324,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (location != null) {
             marker.position = location
         }
-       // marker.captionText = name.toString()
+        marker.captionText = name.toString()
         //마커 우선순위
         marker.zIndex = 10
 

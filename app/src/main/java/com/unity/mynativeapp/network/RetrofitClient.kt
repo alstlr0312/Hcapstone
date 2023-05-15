@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-private const val baseUrl = "http://54.180.85.25:8080/"
+private const val baseUrl = "https://you-have-to.duckdns.org/"
 
 object RetrofitClient{
 
