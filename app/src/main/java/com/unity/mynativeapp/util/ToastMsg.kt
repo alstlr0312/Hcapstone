@@ -18,6 +18,7 @@ const val EMAIL_CODE_SEND_SUCCESS = "입력된 이메일로 인증코드를 발�
 const val EMAIL_CODE_SAME_ERROR = "잘못된 인증코드 입니다."
 const val EMAIL_DUPLICATE_ERROR = "이미 존재하는 이메일입니다."
 
-const val SAVE_COMPLETE = "저장 완료"
-const val EDIT_COMPLETE = "수정 완료"
-const val POST_WRITE_COMPLETE = "게시글 작성 완료"
+const val SAVE_COMPLETE = "저장 완료."
+const val EDIT_COMPLETE = "수정 완료."
+const val DELETE_COMPLETE = "삭제 완료."
+const val POST_WRITE_COMPLETE = "게시글 작성 완료."

@@ -9,24 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getDrawable
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.util.DeleteDialog
+import kotlinx.coroutines.*
 import java.time.format.DateTimeFormatter
 
 
-class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAdapter.ViewHolder>(){
+class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerView.Adapter<CalenderRvAdapter.ViewHolder>(){
 
     var itemList = mutableListOf<CalenderRvItem>()
     lateinit var selectedDayBinding: ItemRvCalenderBinding
     var selectedDayIdx: Int = -1
+    private val diaryDeleteCallback = listener
 
     inner class ViewHolder(val binding: ItemRvCalenderBinding): RecyclerView.ViewHolder(binding.root){
-
-
         fun bind(item: CalenderRvItem){
 
             if(item.exerciseDate == null){
@@ -100,11 +101,11 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
 
                         btnYes.setOnClickListener {
 
-                            item.dailyPercentage = -1
-                            dialog.dismiss()
-                            notifyDataSetChanged()
+                            diaryDeleteCallback.diaryDeleteListener(item.diaryId)
 
-                            // 다이어리 삭제 요청
+
+                            dialog.dismiss()
+
                         }
                         btnNo.setOnClickListener {
                             dialog.dismiss()
@@ -133,6 +134,15 @@ class CalenderRvAdapter(val context: Context): RecyclerView.Adapter<CalenderRvAd
 
     fun getListFormView(nList: MutableList<CalenderRvItem>){
         itemList = nList
+    }
+
+    fun setDiaryDeleteSuccess(diaryId: Int){
+        for(item in itemList){
+            if(item.diaryId == diaryId){
+                item.dailyPercentage = -1
+                notifyDataSetChanged()
+            }
+        }
     }
 
 

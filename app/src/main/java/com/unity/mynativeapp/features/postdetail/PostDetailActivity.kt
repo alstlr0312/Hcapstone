@@ -153,13 +153,15 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 for (x in getMedia) {
                     val lastSegment = x.substringAfterLast("/").toInt()
                     viewModel.media(lastSegment)
-                    viewModel.mediaData.observe(this) { data2 ->
-                        if (data2 != null) {
-                            Log.d("bodyPartsdfasd", data2.toString())
-                            mediaVpAdapter.addItem(data2.bytes())
-                        }
-                    }
+
                 }
+            }
+        }
+
+        viewModel.mediaData.observe(this) { data2 ->
+            if (data2 != null) {
+                Log.d("bodyPartsdfasd", data2.toString())
+                mediaVpAdapter.addItem(data2.bytes())
             }
         }
 

@@ -1,16 +1,15 @@
 package com.unity.mynativeapp.features.diary
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.model.DiaryResponse
-import com.unity.mynativeapp.model.DiaryWriteResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
+import com.unity.mynativeapp.util.DELETE_COMPLETE
 import com.unity.mynativeapp.util.EDIT_COMPLETE
 import com.unity.mynativeapp.util.SAVE_COMPLETE
 import okhttp3.MultipartBody
@@ -42,6 +41,8 @@ class DiaryViewModel: ViewModel() {
 
     private val _diaryEditSuccess = MutableLiveData<Boolean>()
     val diaryEditSuccess: LiveData<Boolean> = _diaryEditSuccess
+
+
 
     // 다이어리 작성
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
@@ -164,10 +165,10 @@ class DiaryViewModel: ViewModel() {
     // 다이어리 수정
     fun diaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
         _loading.postValue(true)
-        patchDiaryEdit(diaryDto,files, diaryId)
+        patchDiaryEditAPI(diaryDto,files, diaryId)
     }
 
-    private fun patchDiaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
+    private fun patchDiaryEditAPI(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
         RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto,files).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
@@ -203,6 +204,8 @@ class DiaryViewModel: ViewModel() {
             }
         })
     }
+
+
 
     companion object {
         const val TAG = "DiaryViewModel"

@@ -65,10 +65,16 @@ interface RetrofitService {
 		@Part imageFile: MutableList<MultipartBody.Part>
 		): Call<MyResponse<String>>
 
+	// 다이어리 삭제
+	@PATCH("diary/delete/{num}")
+	fun patchDiaryDelete(
+		@Path("num") num: Int,
+	): Call<MyResponse<Int>>
 
 	/*
 	////////////// 게시글 /////////////
 	 */
+
 	//게시글 목록 확인
 	@GET("/post")
 	fun getPost(

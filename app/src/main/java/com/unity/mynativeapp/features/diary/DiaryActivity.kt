@@ -1,10 +1,15 @@
 package com.unity.mynativeapp.features.diary
 
+import android.R.attr
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,11 +25,15 @@ import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.util.LoadingDialog
+import com.unity.mynativeapp.util.MEDIA_EDIT_REMOVE_PATH
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 lateinit var diaryActivity: DiaryActivity
@@ -40,6 +49,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
     private var status = -1 // 0(read), 1(write)
     private var diaryId = -1
     private var isEditing = false
+    private val saveMediaRealPath = arrayListOf<String>()
 
     var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->
@@ -47,6 +57,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             val imageUri = result.data?.data
             imageUri?.let{
                 mediaAdapter.addItem(MediaRvItem(1, it, null))
+                //Log.d("aaaaa", getRealPathFromUri(it))
             }
         }
     }
@@ -57,7 +68,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
         diaryActivity = this
         loadingDialog = LoadingDialog(this)
-
 
 
         setView()
@@ -105,7 +115,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         binding.btnAddMedia.visibility = View.INVISIBLE     //
         binding.edtMemo.hint = ""
         binding.edtMemo.isEnabled = false                   // 메모 수정 불가능
-        exerciseAdapter.checkBoxIsClickable(false)       // 체크박스 수정 불가능
     }
 
     private fun setWriteView(){ // 일지 정보가 없거나 수정 버튼을 클릭한 경우 (Write)
@@ -114,11 +123,11 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         binding.btnAddExercise.visibility = View.VISIBLE        // 추가 버튼 보이기
         binding.btnAddMedia.visibility = View.VISIBLE           //
         binding.edtMemo.isEnabled = true                        // 메모 수정 가능
-        exerciseAdapter.checkBoxIsClickable(true)            // 체크박스 수정 가능
 
         if(binding.edtMemo.text.toString() == "")
             binding.edtMemo.hint = getString(R.string.please_input)
     }
+
 
     private fun setUiEvent(){
 
@@ -145,6 +154,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         binding.ivEdit.setOnClickListener {
             isEditing = true
             setWriteView()
+
         }
 
         // 저장 아이콘 클릭
@@ -167,20 +177,36 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 val exdata = createPartFromString(requestBodyWithoutBackslashes)
 
                 // 미디어
+                val mediaList = mediaAdapter.getMediaList()
                 val imageList: ArrayList<MultipartBody.Part> = ArrayList()
-                for (element in mediaAdapter.getMediaList()) {
-                    val file = File(element)
-                    val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-                    val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
-                    imageList.add(uploadFile)
-                }
 
                 if(isEditing){ // 다이어리 수정
+                    for(i in mediaList.indices){
+                        val bitmap = mediaList[i].bitmap
+                        val uri = mediaList[i].uri
+                        var file = File("")
+                        if(bitmap != null){
+                            val realPath = saveMedia(bitmap, "remove$i")
+                            file = File(realPath)
+                        }else if(uri != null){
+                            file = File(getRealPathFromUri(uri))
+                        }
+                        val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+                        val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
+                        imageList.add(uploadFile)
+                    }
                     viewModel.diaryEdit(exdata, imageList, diaryId)
                 }else{ // 다이어리 작성
+                    for (element in mediaList) {
+                        if(element.uri != null){
+                            val file = File(getRealPathFromUri(element.uri))
+                            val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+                            val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
+                            imageList.add(uploadFile)
+                        }
+                    }
                     viewModel.diaryWrite(exdata, imageList) // 다이어리 작성 요청
                 }
-
             }else{
                 Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
             }
@@ -190,7 +216,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         binding.btnBack.setOnClickListener {
             finish()
         }
-
 
     }
 
@@ -242,8 +267,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 diaryId = data.diaryId
                 binding.edtMemo.setText(data.review)
 
-                Log.d("aaaaa", data.exerciseInfo.toString())
-
                 for(x in data.exerciseInfo){
 
 
@@ -262,13 +285,15 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 for(x in data.mediaList){
                     val lastSegment = x.substringAfterLast("/").toInt()
                     viewModel.media(lastSegment)
-                    viewModel.mediaData.observe(this) { data2 ->
-                        if (data2 != null) {
-                            Log.d("bodyPartsdfasd",data2.toString())
-                            mediaAdapter.addItem(MediaRvItem(2, null, data2.bytes()))
-                        }
-                    }
                 }
+            }
+        }
+
+        viewModel.mediaData.observe(this) { data ->
+            if (data != null) {
+                val byteArray = data.bytes()
+                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                mediaAdapter.addItem(MediaRvItem(2, null, bitmap))
             }
         }
 
@@ -283,7 +308,9 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         // 다이어리 수정
         viewModel.diaryEditSuccess.observe(this) { isSuccess ->
 
-            if(!isSuccess) return@observe
+            removeDirFromGallery(MEDIA_EDIT_REMOVE_PATH)
+
+            if(!isSuccess){ return@observe }
 
             setReadView()
             isEditing = false
@@ -295,4 +322,37 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         const val TAG = "DiaryActivity"
     }
 
+
+
+    // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 갤러리에 임시 저장
+    private fun saveMedia(bitmap: Bitmap, imgName: String): String {
+        val saveDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + MEDIA_EDIT_REMOVE_PATH
+        val file = File(saveDir)
+        if (!file.exists()) {
+            file.mkdir()
+        }
+        val tempFile = File(saveDir, "$imgName.png")
+        var output: FileOutputStream?
+
+        try {
+            tempFile.createNewFile()
+            output = FileOutputStream(tempFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+            output.close()
+        }catch (e: Exception) {
+            showCustomToast(e.message.toString())
+        }
+        return tempFile.absolutePath
+    }
+
+    // 임시로 저장 해놓은 이미지의 디렉터리 삭제
+    private fun removeDirFromGallery(dirName: String){ // 미디어 삭제
+        val storagePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).path + dirName
+        val file = File(storagePath)
+        try{
+            if(file.isDirectory){
+                file.delete()
+            }
+        }catch (e: Exception){}
+    }
 }

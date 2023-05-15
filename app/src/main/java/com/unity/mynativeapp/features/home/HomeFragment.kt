@@ -26,16 +26,16 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
 
-
+interface OnItemClick {
+    fun diaryDeleteListener(num: Int)
+}
 class HomeFragment : BaseFragment<FragmentHomeBinding>(
-    FragmentHomeBinding::bind, R.layout.fragment_home)  {
+    FragmentHomeBinding::bind, R.layout.fragment_home), OnItemClick  {
 
-    //private val binding by lazy{FragmentHomeBinding.inflate(layoutInflater)}
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var todayDate: LocalDate
     private lateinit var selectedDate: LocalDate
     private lateinit var calenderRvAdapter: CalenderRvAdapter
-    //private lateinit var loadingDialog: LoadingDialog
     private lateinit var requestData: String
     private var firstStart = true
 
@@ -43,7 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         todayDate = LocalDate.now()
         selectedDate = todayDate
 
-        calenderRvAdapter = CalenderRvAdapter(requireContext())
+        calenderRvAdapter = CalenderRvAdapter(requireContext(), this)
         binding.recyclerViewCalendar.layoutManager = GridLayoutManager(context, 7)
         binding.recyclerViewCalendar.adapter = calenderRvAdapter
 
@@ -185,6 +185,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
                 calenderRvAdapter.notifyDataSetChanged()
             }
         }
+        viewModel.diaryDeleteData.observe(viewLifecycleOwner){ data ->
+            if(data == null) return@observe
+
+            calenderRvAdapter.setDiaryDeleteSuccess(data)
+        }
+    }
+
+    override fun diaryDeleteListener(num: Int) {
+        viewModel.diaryDelete(num)
     }
     override fun onResume() {
         super.onResume()
