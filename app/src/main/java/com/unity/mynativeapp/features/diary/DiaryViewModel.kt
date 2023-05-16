@@ -9,15 +9,16 @@ import com.unity.mynativeapp.model.DiaryResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import com.unity.mynativeapp.util.DELETE_COMPLETE
 import com.unity.mynativeapp.util.EDIT_COMPLETE
 import com.unity.mynativeapp.util.SAVE_COMPLETE
+import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.URL
 
 class DiaryViewModel: ViewModel() {
 
@@ -143,8 +144,9 @@ class DiaryViewModel: ViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 _loading.postValue(false)
                 if (response.isSuccessful) {
-                    val imageBytes = response.body()
-                    _mediaData.postValue(imageBytes)
+                    val data = response.body()
+                    _mediaData.postValue(data)
+
                 } else {
                     // 응답이 실패한 경우 처리하는 코드 작성
                     val body = response.errorBody()?.string()
@@ -156,7 +158,7 @@ class DiaryViewModel: ViewModel() {
 
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(TAG, "Error: ${t.message}")
+                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })

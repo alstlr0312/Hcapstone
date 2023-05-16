@@ -7,9 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.features.diary.DiaryViewModel
-import com.unity.mynativeapp.features.login.LoginViewModel
 import com.unity.mynativeapp.model.PostDetailResponse
-import com.unity.mynativeapp.model.PostResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -94,6 +92,7 @@ class PostDetailViewModel : ViewModel() {
     }
 
     private fun getmediaAPI(num: Int) {
+
         RetrofitClient.getApiService().getMedia(num).enqueue(object :
             Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

@@ -1,12 +1,15 @@
 package com.unity.mynativeapp.features.diary
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
+import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.util.DeleteDialog
 
@@ -45,12 +49,26 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                 return@OnLongClickListener true
             }
         }
-        fun bind(imageUri: Uri){
+        fun bind_post(uriItem: MediaRvItem){
 
-            pathList.add(getRealPathFromUri(imageUri))
-            //println("이미지 경로 : $pathList")
+            when(uriItem.viewType){
+                1 -> { // 사진
+                    binding.iconPlay.visibility = View.GONE
+                }
+                2 -> { // 동영상
+                    binding.iconPlay.visibility = View.VISIBLE
+                }
+            }
 
-            setImage(imageUri, binding)
+            setImage(uriItem.uri!!, binding)
+
+            binding.root.setOnClickListener {
+                val intent = Intent(context, MediaFullActivity::class.java)
+                intent.putExtra("uri", uriItem.uri.toString())
+                intent.putExtra("viewType", uriItem.viewType)
+                context.startActivity(intent)
+            }
+
         }
     }
 
@@ -76,59 +94,45 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                 return@OnLongClickListener true
             }
         }
-        fun bind(bitmap: Bitmap){
+        fun bind_get(bitmapItem: MediaRvItem){
             //val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             //binding.photo.setImageBitmap(bitmap)
 
-            setImage(bitmap, binding)
-
-
-
-        }
-    }
-
-    // 다이어리 수정할 때 보내야 하는 미디어 타입 -> String(imagePath): 받은 미디어를 갤러리에 저장 후 불러와서 path 변환해서 요청
-    inner class ViewHolder_patch(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
-                dialog.show()
-
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    itemList.removeAt(adapterPosition)
-                    dialog.dismiss()
-                    notifyDataSetChanged()
-                }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
+            bitmapItem.bitmap?.let{
+                when(bitmapItem.viewType){
+                    3 -> { // 사진
+                        binding.iconPlay.visibility = View.GONE
+                        binding.root.setOnClickListener {
+                            val intent = Intent(context, MediaFullActivity::class.java)
+                            intent.putExtra("bitmap", bitmapItem.bitmap)
+                            intent.putExtra("viewType", bitmapItem.viewType)
+                            context.startActivity(intent)
+                        }
+                    }
+                    4 -> { // 동영상
+                        binding.iconPlay.visibility = View.VISIBLE
+                    }
                 }
 
-                return@OnLongClickListener true
+
+                setImage(it, binding)
             }
-        }
 
-        fun bind(imageUri: Uri) {
-
-            //pathList.add(getRealPathFromUri(imageUri))
-            //println("이미지 경로 : $pathList")
-
-            setImage(imageUri, binding)
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             1 -> ViewHolder_post(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            2 -> ViewHolder_get(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            2 -> ViewHolder_post(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            3 -> ViewHolder_get(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw RuntimeException("DiaryMediaRvAdapter onCreateViewHolder ERROR")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is ViewHolder_post) itemList[position].uri?.let { holder.bind(it) }
-        else if(holder is ViewHolder_get) itemList[position].bitmap?.let { holder.bind(it) }
+        if(holder is ViewHolder_post) itemList[position].uri?.let{holder.bind_post(itemList[position])}
+        else if(holder is ViewHolder_get) itemList[position].bitmap?.let{holder.bind_get(itemList[position])}
     }
 
     override fun getItemCount(): Int {
@@ -177,7 +181,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
         Glide.with(binding.photo)
             .load(image)
             .placeholder(R.drawable.shape_bg_black_rounded)
-            .error(R.drawable.shape_bg_black_rounded)
+            .error(R.drawable.ic_image_failed)
             .fallback(R.drawable.shape_bg_black_rounded)
             .override(430, 430)
             .apply(RequestOptions.centerCropTransform())

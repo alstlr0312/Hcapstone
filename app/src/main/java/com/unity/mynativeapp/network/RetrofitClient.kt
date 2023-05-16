@@ -1,11 +1,13 @@
 package com.unity.mynativeapp.network
 
+import com.google.gson.GsonBuilder
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 private const val baseUrl = "https://you-have-to.duckdns.org/"
@@ -22,7 +24,8 @@ object RetrofitClient{
 	private val retrofit = Retrofit.Builder()
 		.baseUrl(baseUrl)
 		.client(okHttpClient)
-		.addConverterFactory(GsonConverterFactory.create())
+		//.addConverterFactory(ScalarsConverterFactory.create())
+		.addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
 		.build()
 
 	private val retrofitService = retrofit.create(RetrofitService::class.java)

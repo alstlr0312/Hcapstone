@@ -21,6 +21,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.features.home.HomeViewModel
+import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.model.MediaRvItem
@@ -51,12 +52,16 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
     private var isEditing = false
     private val saveMediaRealPath = arrayListOf<String>()
 
-    var imageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->
         if(result.resultCode == RESULT_OK){
             val imageUri = result.data?.data
             imageUri?.let{
-                mediaAdapter.addItem(MediaRvItem(1, it, null))
+                if(it.toString().contains("image")){
+                    mediaAdapter.addItem(MediaRvItem(1, it, null))
+                }else if(it.toString().contains("video")){
+                    mediaAdapter.addItem(MediaRvItem(2, it, null))
+                }else{}
                 //Log.d("aaaaa", getRealPathFromUri(it))
             }
         }
@@ -144,8 +149,8 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 Toast.makeText(this, getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
             }else{
                 val intent = Intent(Intent.ACTION_PICK)
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-                imageResult.launch(intent)
+                intent.setDataAndType(MediaStore.AUTHORITY_URI, "image/* video/*")
+                mediaResult.launch(intent)
             }
         }
 
@@ -269,7 +274,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
                 for(x in data.exerciseInfo){
 
-
                     val exerciseName = x.exerciseName
                     val reps = x.reps
                     val exSetCount = x.exSetCount
@@ -293,7 +297,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             if (data != null) {
                 val byteArray = data.bytes()
                 val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                mediaAdapter.addItem(MediaRvItem(2, null, bitmap))
+                mediaAdapter.addItem(MediaRvItem(3, null, bitmap))
             }
         }
 
