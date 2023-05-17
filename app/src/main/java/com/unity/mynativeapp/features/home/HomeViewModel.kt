@@ -11,7 +11,6 @@ import com.unity.mynativeapp.model.HomeResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import com.unity.mynativeapp.util.DELETE_COMPLETE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -92,7 +91,7 @@ class HomeViewModel(): ViewModel() {
                 val code = response.code()
                 if(code == 200){ // 다이어리 삭제 성공
                     val data = response.body()?.data
-                    _toastMessage.postValue(DELETE_COMPLETE)
+                    _toastMessage.postValue(com.unity.mynativeapp.network.util.DELETE_COMPLETE)
                     _diaryDeleteData.postValue(data)
 
                 }else if(code == 401) { // 존재하지 않는 유저

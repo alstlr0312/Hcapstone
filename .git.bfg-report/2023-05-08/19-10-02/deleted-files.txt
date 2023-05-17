@@ -1,4 +1,3 @@
-f8b02ce4a730859007b741700f9eebbb93a8411a 333880639 app-release.apk
-16b10eb5423b1fbde34b53bf5b815614ff6c6964 333876343 app-release.apk
-7f0b99fad6a7197daeb4a867e51e3ceeec8f344d 326050859 app-release.zip
-69eac4a766e038f95f1e6071b8bb0bf79079fe48 326051266 app-release.zip
+version https://git-lfs.github.com/spec/v1
+oid sha256:cd6937b0c2f4c2b79b428a7615bbd7c8e0b8baead056e242a6850e2f3fea8d73
+size 272

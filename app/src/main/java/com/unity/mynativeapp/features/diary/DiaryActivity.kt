@@ -20,13 +20,11 @@ import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
-import com.unity.mynativeapp.features.home.HomeViewModel
-import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.DiaryWriteRequest
 import com.unity.mynativeapp.model.MediaRvItem
-import com.unity.mynativeapp.util.LoadingDialog
-import com.unity.mynativeapp.util.MEDIA_EDIT_REMOVE_PATH
+import com.unity.mynativeapp.network.util.LoadingDialog
+import com.unity.mynativeapp.network.util.MEDIA_EDIT_REMOVE_PATH
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -40,7 +38,7 @@ import java.io.IOException
 lateinit var diaryActivity: DiaryActivity
 class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate){
     private val viewModel by viewModels<DiaryViewModel>()
-    private val homeViewModel by viewModels<HomeViewModel>()
+    //private val homeViewModel by viewModels<Dia>()
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var exerciseDate: String               // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터

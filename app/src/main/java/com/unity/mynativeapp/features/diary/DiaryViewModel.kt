@@ -9,8 +9,8 @@ import com.unity.mynativeapp.model.DiaryResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import com.unity.mynativeapp.util.EDIT_COMPLETE
-import com.unity.mynativeapp.util.SAVE_COMPLETE
+import com.unity.mynativeapp.network.util.EDIT_COMPLETE
+import com.unity.mynativeapp.network.util.SAVE_COMPLETE
 import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -160,6 +160,7 @@ class DiaryViewModel: ViewModel() {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
                 _loading.postValue(false)
+
             }
         })
     }

@@ -15,8 +15,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.model.CalenderRvItem
-import com.unity.mynativeapp.util.DeleteDialog
-import kotlinx.coroutines.*
+import com.unity.mynativeapp.network.util.DeleteDialog
 import java.time.format.DateTimeFormatter
 
 
