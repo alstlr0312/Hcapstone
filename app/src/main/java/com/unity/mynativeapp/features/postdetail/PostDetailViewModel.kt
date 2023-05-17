@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.PostDetailResponse
-import com.unity.mynativeapp.model.PostResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -28,17 +27,17 @@ class PostDetailViewModel : ViewModel() {
     private val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
 
-    private val _postWriteSuccess = MutableLiveData<Boolean>()
-    val postWriteSuccess: LiveData<Boolean> = _postWriteSuccess
-
     private val _postDetailData = MutableLiveData<PostDetailResponse?>()
     val postDetailData: LiveData<PostDetailResponse?> = _postDetailData
-
 
     private val _mediaData = MutableLiveData<ResponseBody?>()
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
+    private val _likePressed = MutableLiveData<Boolean>()
+    val likePressed: MutableLiveData<Boolean> = _likePressed
 
+
+    ///// 게시물 상세 조회
     fun postDetail(postId: Int) {
 
         _loading.postValue(true)
@@ -84,6 +83,7 @@ class PostDetailViewModel : ViewModel() {
         })
     }
 
+    ////// 미디어
     fun media(num: Int) {
 
         _loading.postValue(true)
@@ -92,6 +92,7 @@ class PostDetailViewModel : ViewModel() {
     }
 
     private fun getmediaAPI(num: Int) {
+
         RetrofitClient.getApiService().getMedia(num).enqueue(object :
             Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -111,6 +112,38 @@ class PostDetailViewModel : ViewModel() {
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+            }
+        })
+    }
+
+
+    //// 좋아요
+    fun like(postId: Int, isClicked: Boolean){
+        _loading.postValue(true)
+
+        RetrofitClient.getApiService().patchPostLike(postId, isClicked).enqueue(object:
+        Callback<MyResponse<Int>> {
+            override fun onResponse(
+                call: Call<MyResponse<Int>>,
+                response: Response<MyResponse<Int>>
+            ) {
+                _loading.postValue(false)
+                when(response.code()){
+                    200 -> { // 요청 성공
+                        _likePressed.postValue(true)
+                    }
+                    400 -> { // 요청 실패
+                        val body = response.errorBody()?.string()
+                        val data = GsonBuilder().create().fromJson(body, MyError::class.java)
+                        val error = data.error.toString()
+                        _toastMessage.postValue(error)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MyResponse<Int>>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })

@@ -3,33 +3,59 @@ package com.unity.mynativeapp.features.community
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.CheckBox
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.DialogPostSortBinding
+import com.unity.mynativeapp.databinding.ItemRvCheckboxBinding
 
+data class CbItem(
+    val title: String,
+    var isChecked: Boolean
+)
 class PostSortDialog(context: Context): Dialog(context) {
 
     val binding by lazy { DialogPostSortBinding.inflate(layoutInflater) }
-    var sortCbList = arrayListOf<String>()   // 정렬 체크박스 리스트
-    var categoryCbList = arrayListOf<String>()      // 카테고리 체크박스 리스트
-    interface PostFragmentInterfacer {
-        fun onButtonClick(inputcb: String, inputscb: String)
-    }
-    private var fragmentInterfacer: PostFragmentInterfacer? = null
+    //var sortCbList = arrayListOf<CheckBox>()    // 정렬 체크박스 리스트
+    //var categoryCbList = arrayListOf<CheckBox>()    // 카테고리 체크박스 리스트
+    lateinit var sortAdapter: CheckBoxAdapter
+    lateinit var categoryAdapter: CheckBoxAdapter
+    var resultCode = 0
+    var checkedSortText: String? = null
+    var checkedCateText: String? = null
+
+    var sortTextList = listOf(R.string.total, R.string.q_and_a, R.string.knowledge_sharing,
+        R.string.show_off, R.string.assess, R.string.free)
+    var categoryTextList = listOf(R.string.total, R.string.health, R.string.pilates,
+        R.string.yoga, R.string.jogging, R.string.etc)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        setCbList()
-        setsortCbList()
-        binding.btnApply.setOnClickListener {
-            val inputcb = setCbList().toString()
-            val inputscb = setsortCbList().toString()
-            fragmentInterfacer?.onButtonClick(inputcb,inputscb)
+
+        sortAdapter = CheckBoxAdapter(setCbList(sortTextList))
+        binding.rvSort.layoutManager = GridLayoutManager(context, 3)
+        binding.rvSort.adapter = sortAdapter
+
+        categoryAdapter = CheckBoxAdapter(setCbList(categoryTextList))
+        binding.rvCategory.layoutManager = GridLayoutManager(context, 3)
+        binding.rvCategory.adapter = categoryAdapter
+
+        binding.btnCancel.setOnClickListener {
+            resultCode = 0
             dismiss()
         }
+        binding.btnApply.setOnClickListener {
+            resultCode = 1
+            checkedSortText = sortAdapter.getCheckedText()
+            checkedCateText = categoryAdapter.getCheckedText()
+            dismiss()
+        }
+
     }
-    fun setFragmentInterfacer(fragmentInterfacer: PostFragmentInterfacer) {
-        this.fragmentInterfacer = fragmentInterfacer
-    }
+
     override fun show() {
         if (!this.isShowing) super.show()
     }
@@ -38,30 +64,57 @@ class PostSortDialog(context: Context): Dialog(context) {
         if (this.isShowing) super.dismiss()
     }
 
+    private fun setCbList(titleList: List<Int>): MutableList<CbItem> {
+        var list = mutableListOf<CbItem>()
 
-    private fun setsortCbList() {
-        with(binding) {
-            sortCbList.add(cbQAndA.text.toString())
-            sortCbList.add(cbShowOff.text.toString())
-            sortCbList.add(cbKnowledgeSharing.text.toString())
-            sortCbList.add(cbSortTotal.text.toString())
-            sortCbList.add(cbAssess.text.toString())
-            sortCbList.add(cbFree.text.toString())
-
+        for(title in titleList){
+            if(title == R.string.total){
+                list.add(CbItem(context.getString(title), true))
+            }else{
+                list.add(CbItem(context.getString(title), false))
+            }
         }
-    }
-    private fun setCbList() {
-        with(binding) {
-            categoryCbList.add(cbCategoryTotal.text.toString())
-            categoryCbList.add(cbHealth.text.toString())
-            categoryCbList.add(cbPilates.text.toString())
-            categoryCbList.add(cbYoga.text.toString())
-            categoryCbList.add(cbJogging.text.toString())
-            categoryCbList.add(cbEtc.text.toString())
-
-        }
+        return list
     }
 
+    inner class CheckBoxAdapter(var cbList: MutableList<CbItem>): RecyclerView.Adapter<CheckBoxAdapter.ViewHolder>(){
 
+        var bindingList = mutableListOf<ItemRvCheckboxBinding>()
+        inner class ViewHolder(val binding: ItemRvCheckboxBinding): RecyclerView.ViewHolder(binding.root){
+            fun bind(item: CbItem){
+                binding.checkBox.text = item.title
+                binding.checkBox.isChecked = item.isChecked
+            }
+
+            init{
+                bindingList.add(binding)
+                binding.checkBox.setOnClickListener {
+                    for(item in bindingList){
+                        item.checkBox.isChecked = item == binding
+                    }
+                }
+            }
+        }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return ViewHolder(ItemRvCheckboxBinding.inflate(layoutInflater, parent, false))
+        }
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bind(cbList[position])
+        }
+        override fun getItemCount(): Int {
+            return cbList.size
+        }
+
+        fun getCheckedText(): String? {
+            for(item in bindingList){
+                if(item.checkBox.isChecked){
+                    return item.checkBox.text.toString()
+                }
+            }
+            return null
+        }
+
+
+    }
 }
 

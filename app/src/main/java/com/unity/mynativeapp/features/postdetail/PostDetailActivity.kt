@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -26,7 +27,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     private var firstStart = true
     private val viewModel by viewModels<PostDetailViewModel>()
     private var postId = -1
-
+    private var postLikeCnt = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,7 +85,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         return list
     }
 
-    private fun setUiEvent(){
+    private fun setUiEvent() {
 
         // 댓글 조회 & 작성 액티비티로 이동
         binding.tvSeeMoreComment.setOnClickListener {
@@ -97,6 +98,12 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             finish()
         }
 
+        binding.cbLike.setOnClickListener {
+            if (it is CheckBox) {
+                viewModel.like(postId, !(it.isChecked))
+            }
+
+        }
     }
 
     private fun subscribeUI(){
@@ -105,6 +112,11 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             if(it) logout()
         }
 
+        viewModel.toastMessage.observe(this){
+            showCustomToast(it)
+        }
+
+        // 게시글 조회
         viewModel.postDetailData.observe(this) { data ->
             if (data != null) {
 
@@ -115,15 +127,16 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 binding.tvPostTitle.text = data.title
                 binding.tvPostContent.text = data.content
 
-                binding.tvHeartNum.text = data.likeCount.toString()
-                binding.tvCommentNum.text = "0"
-                binding.tvViewsNum.text = data.views.toString()
+                postLikeCnt = data.likeCount
+                binding.tvLikeCnt.text = postLikeCnt.toString()
+                binding.tvCommentCnt.text = "0"
+                binding.tvViewsCnt.text = data.views.toString()
 
                 binding.tvPostDate.text = data.createdAt
 
-                binding.cbHeart.isChecked = data.likePressed
+                binding.cbLike.isChecked = data.likePressed
 
-                if(binding.tvCommentNum.text == "0"){
+                if(binding.tvCommentCnt.text == "0"){
                     binding.tvComment2.visibility = View.GONE
                     binding.tvSeeMoreComment.text = getString(R.string.write_comment)
                 }else{
@@ -140,18 +153,32 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 for (x in getMedia) {
                     val lastSegment = x.substringAfterLast("/").toInt()
                     viewModel.media(lastSegment)
-                    viewModel.mediaData.observe(this) { data2 ->
-                        if (data2 != null) {
-                            Log.d("bodyPartsdfasd", data2.toString())
-                            mediaVpAdapter.addItem(data2.bytes())
-                        }
-                    }
+
                 }
             }
+        }
 
+        viewModel.mediaData.observe(this) { data2 ->
+            if (data2 != null) {
+                Log.d("bodyPartsdfasd", data2.toString())
+                mediaVpAdapter.addItem(data2.bytes())
+            }
+        }
 
+        // 좋아요
+        viewModel.likePressed.observe(this){
+            if(it){
+                if(binding.cbLike.isChecked){
+                    postLikeCnt++
+                }else{
+                    postLikeCnt--
+                }
+                binding.tvLikeCnt.text = postLikeCnt.toString()
+            }
         }
     }
+
+
 
     override fun onResume() {
         super.onResume()

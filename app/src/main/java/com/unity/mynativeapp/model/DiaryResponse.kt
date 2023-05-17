@@ -19,7 +19,7 @@ data class ExerciseItem(
     @SerializedName("exerciseName") val exerciseName: String,
     @SerializedName("reps") val reps: Int? = 0,
     @SerializedName("exSetCount") val exSetCount: Int ?= 0,
-    @SerializedName(" cardio") val cardio : Boolean,
+    @SerializedName("cardio") val cardio : Boolean,
     @SerializedName("cardioTime") val cardioTime: Int ?= 0,
     @SerializedName("bodyPart") val bodyPart: String,
     @SerializedName("finished") val finished: Boolean,

@@ -107,12 +107,12 @@
 
     <string name="sort">정렬</string>
     <string name="category">카테고리</string>
-    <string name="q_and_a">SHOW_OFF</string>
+    <string name="q_and_a">Q&amp;A</string>
     <string name="knowledge_sharing">지식공유</string>
     <string name="show_off">자랑</string>
     <string name="free">자유</string>
     <string name="assess">평가</string>
-    <string name="health">HEALTH</string>
+    <string name="health">헬스</string>
     <string name="pilates">필라테스</string>
     <string name="yoga">요가</string>
     <string name="jogging">조깅</string>
@@ -132,11 +132,12 @@
     <string name="write_comment">댓글 쓰기</string>
     <string name="add_comment">댓글 추가...</string>
     <string name="please_write_comment">댓글을 작성해 주세요!</string>
-    <string name="good">좋아요</string>
+    <string name="like">좋아요</string>
     <string name="comment">댓글</string>
     <string name="child_comment">답글</string>
     <string name="close">닫기</string>
     <string name="views">조회수</string>
+    <string name="no_post">해당하는 게시물이 없어요!</string>
 
     <!-- 마이페이지 -->
     <string name="profile_edit">프로필 수정</string>

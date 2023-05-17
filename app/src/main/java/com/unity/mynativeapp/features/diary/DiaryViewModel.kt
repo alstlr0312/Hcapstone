@@ -1,24 +1,24 @@
 package com.unity.mynativeapp.features.diary
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.model.DiaryResponse
-import com.unity.mynativeapp.model.DiaryWriteResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import com.unity.mynativeapp.network.util.EDIT_COMPLETE
-import com.unity.mynativeapp.network.util.SAVE_COMPLETE
+import com.unity.mynativeapp.util.EDIT_COMPLETE
+import com.unity.mynativeapp.util.SAVE_COMPLETE
+import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.URL
 
 class DiaryViewModel: ViewModel() {
 
@@ -42,6 +42,8 @@ class DiaryViewModel: ViewModel() {
 
     private val _diaryEditSuccess = MutableLiveData<Boolean>()
     val diaryEditSuccess: LiveData<Boolean> = _diaryEditSuccess
+
+
 
     // 다이어리 작성
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
@@ -142,8 +144,9 @@ class DiaryViewModel: ViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 _loading.postValue(false)
                 if (response.isSuccessful) {
-                    val imageBytes = response.body()
-                    _mediaData.postValue(imageBytes)
+                    val data = response.body()
+                    _mediaData.postValue(data)
+
                 } else {
                     // 응답이 실패한 경우 처리하는 코드 작성
                     val body = response.errorBody()?.string()
@@ -155,7 +158,7 @@ class DiaryViewModel: ViewModel() {
 
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(TAG, "Error: ${t.message}")
+                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })
@@ -164,10 +167,10 @@ class DiaryViewModel: ViewModel() {
     // 다이어리 수정
     fun diaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
         _loading.postValue(true)
-        patchDiaryEdit(diaryDto,files, diaryId)
+        patchDiaryEditAPI(diaryDto,files, diaryId)
     }
 
-    private fun patchDiaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
+    private fun patchDiaryEditAPI(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
         RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto,files).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
@@ -203,6 +206,8 @@ class DiaryViewModel: ViewModel() {
             }
         })
     }
+
+
 
     companion object {
         const val TAG = "DiaryViewModel"

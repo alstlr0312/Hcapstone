@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:src="@drawable/photo01"
+        android:background="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

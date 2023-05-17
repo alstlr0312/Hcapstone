@@ -132,17 +132,16 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/iv_profile_img"
-                app:layout_constraintEnd_toStartOf="@+id/cb_heart"
+                app:layout_constraintEnd_toStartOf="@+id/cb_like"
                 app:layout_constraintStart_toEndOf="@id/iv_profile_img"
                 app:layout_constraintTop_toTopOf="@id/iv_profile_img" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/cb_heart"
+                android:id="@+id/cb_like"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:background="@drawable/sel_checkbox_heart"
                 android:button="@android:color/transparent"
-                android:checked="false"
                 android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintEnd_toStartOf="@id/iv_menu"
                 app:layout_constraintTop_toTopOf="@id/iv_menu"
@@ -214,10 +213,10 @@
 
 
             <TextView
-                android:id="@+id/tv_good"
+                android:id="@+id/tv_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/good"
+                android:text="@string/like"
                 android:textColor="@color/main_gray_light2"
                 android:textSize="14sp"
                 android:layout_marginStart="@dimen/fab_margin"
@@ -225,26 +224,26 @@
                 app:layout_constraintTop_toBottomOf="@id/tab_layout"/>
 
             <TextView
-                android:id="@+id/tv_heart_num"
+                android:id="@+id/tv_like_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textSize="14sp"
                 android:textColor="@color/main_gray_light2"
                 android:layout_marginStart="5dp"
-                app:layout_constraintStart_toEndOf="@id/tv_good"
-                app:layout_constraintTop_toTopOf="@id/tv_good"
-                app:layout_constraintBottom_toBottomOf="@id/tv_good"/>
+                app:layout_constraintStart_toEndOf="@id/tv_like"
+                app:layout_constraintTop_toTopOf="@id/tv_like"
+                app:layout_constraintBottom_toBottomOf="@id/tv_like"/>
 
             <ImageView
-                android:id="@+id/iv_heart_dot"
+                android:id="@+id/iv_like_dot"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:src="@drawable/ic_dot"
                 app:tint="@color/main_gray_light2"
-                app:layout_constraintStart_toEndOf="@id/tv_heart_num"
-                app:layout_constraintTop_toTopOf="@id/tv_heart_num"
-                app:layout_constraintBottom_toBottomOf="@id/tv_heart_num"/>
+                app:layout_constraintStart_toEndOf="@id/tv_like_cnt"
+                app:layout_constraintTop_toTopOf="@id/tv_like_cnt"
+                app:layout_constraintBottom_toBottomOf="@id/tv_like_cnt"/>
 
 
             <TextView
@@ -254,12 +253,12 @@
                 android:text="@string/comment"
                 android:textColor="@color/main_gray_light2"
                 android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/iv_heart_dot"
-                app:layout_constraintTop_toTopOf="@id/iv_heart_dot"
-                app:layout_constraintBottom_toBottomOf="@id/iv_heart_dot"/>
+                app:layout_constraintStart_toEndOf="@id/iv_like_dot"
+                app:layout_constraintTop_toTopOf="@id/iv_like_dot"
+                app:layout_constraintBottom_toBottomOf="@id/iv_like_dot"/>
 
             <TextView
-                android:id="@+id/tv_comment_num"
+                android:id="@+id/tv_comment_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -276,9 +275,9 @@
                 android:layout_height="10dp"
                 android:src="@drawable/ic_dot"
                 app:tint="@color/main_gray_light2"
-                app:layout_constraintStart_toEndOf="@id/tv_comment_num"
-                app:layout_constraintTop_toTopOf="@id/tv_comment_num"
-                app:layout_constraintBottom_toBottomOf="@id/tv_comment_num"/>
+                app:layout_constraintStart_toEndOf="@id/tv_comment_cnt"
+                app:layout_constraintTop_toTopOf="@id/tv_comment_cnt"
+                app:layout_constraintBottom_toBottomOf="@id/tv_comment_cnt"/>
 
 
             <TextView
@@ -293,7 +292,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/iv_comment_dot"/>
 
             <TextView
-                android:id="@+id/tv_views_num"
+                android:id="@+id/tv_views_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"

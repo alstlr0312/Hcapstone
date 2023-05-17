@@ -19,11 +19,13 @@
         app:layout_constraintBottom_toTopOf="@id/sortLayout"/>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/sortLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintBottom_toTopOf="@id/categoryLayout"
@@ -34,238 +36,56 @@
             android:id="@+id/tv_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/sort"
             android:textSize="15sp"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:textColor="@color/white"/>
 
-
-
-        <CheckBox
-            android:id="@+id/cb_sort_total"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_sort"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/total"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:checked="true"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="20dp"
-            app:layout_constraintStart_toEndOf="@id/tv_sort"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/fab_margin"/>
 
-        <CheckBox
-            android:id="@+id/cb_q_and_a"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/q_and_a"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_sort_total"
-            app:layout_constraintTop_toTopOf="@id/cb_sort_total"
-            app:layout_constraintBottom_toBottomOf="@id/cb_sort_total"/>
+    </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/cb_knowledge_sharing"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/knowledge_sharing"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_q_and_a"
-            app:layout_constraintTop_toTopOf="@id/cb_q_and_a"
-            app:layout_constraintBottom_toBottomOf="@id/cb_q_and_a"/>
-
-        <CheckBox
-            android:id="@+id/cb_show_off"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/show_off"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@id/cb_sort_total"
-            app:layout_constraintTop_toBottomOf="@id/cb_sort_total"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cb_assess"/>
-
-        <CheckBox
-            android:id="@+id/cb_assess"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/assess"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_show_off"
-            app:layout_constraintTop_toTopOf="@id/cb_show_off"
-            app:layout_constraintBottom_toBottomOf="@id/cb_show_off"/>
-
-        <CheckBox
-            android:id="@+id/cb_free"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/free"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_assess"
-            app:layout_constraintTop_toTopOf="@id/cb_assess"
-            app:layout_constraintBottom_toBottomOf="@id/cb_show_off"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/categoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sortLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_no">
+        app:layout_constraintBottom_toTopOf="@id/btn_cancel">
 
 
         <TextView
             android:id="@+id/tv_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/category"
             android:textSize="15sp"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:textColor="@color/white"/>
 
-        <CheckBox
-            android:id="@+id/cb_category_total"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_category"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/total"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:checked="true"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="20dp"
-            app:layout_constraintStart_toEndOf="@id/tv_category"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/fab_margin"/>
 
-        <CheckBox
-            android:id="@+id/cb_health"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/health"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_category_total"
-            app:layout_constraintTop_toTopOf="@id/cb_category_total"
-            app:layout_constraintBottom_toBottomOf="@id/cb_category_total"/>
 
-        <CheckBox
-            android:id="@+id/cb_pilates"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/pilates"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_health"
-            app:layout_constraintTop_toTopOf="@id/cb_health"
-            app:layout_constraintBottom_toBottomOf="@id/cb_health"/>
-
-        <CheckBox
-            android:id="@+id/cb_yoga"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/yoga"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@id/cb_category_total"
-            app:layout_constraintTop_toBottomOf="@id/cb_category_total"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <CheckBox
-            android:id="@+id/cb_jogging"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/jogging"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_yoga"
-            app:layout_constraintTop_toTopOf="@id/cb_yoga"
-            app:layout_constraintBottom_toBottomOf="@id/cb_yoga"/>
-
-        <CheckBox
-            android:id="@+id/cb_etc"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:background="@drawable/sel_checkbox_box"
-            android:button="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/etc"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/cb_jogging"
-            app:layout_constraintTop_toTopOf="@id/cb_jogging"
-            app:layout_constraintBottom_toBottomOf="@id/cb_jogging"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <Button
-        android:id="@+id/btn_no"
+        android:id="@+id/btn_cancel"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:text="@string/cancel"
@@ -290,7 +110,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/categoryLayout"
-        app:layout_constraintStart_toEndOf="@id/btn_no"
+        app:layout_constraintStart_toEndOf="@id/btn_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

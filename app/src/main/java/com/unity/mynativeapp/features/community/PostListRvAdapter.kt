@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
@@ -16,13 +17,8 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
 
     var itemList = mutableListOf<PostItem>()
     var today = LocalDateTime.now()
-    inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
 
-        init{
-            binding.root.setOnClickListener {
-                context.startActivity(Intent(context, PostDetailActivity::class.java))
-            }
-        }
+    inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: PostItem){
 
@@ -45,9 +41,9 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
                 binding.tvMediaNum.visibility = View.GONE
                 binding.ivMedia.visibility = View.GONE
             }
-            binding.tvHeartNum.text = item.likeCount.toString()
-            binding.tvCommentNum.text = item.commentCount.toString()
-            binding.tvViewsNum.text = item.views.toString()
+            binding.tvLikeCnt.text = item.likeCount.toString()
+            binding.tvCommentCnt.text = item.commentCount.toString()
+            binding.tvViewsCnt.text = item.views.toString()
 
             binding.root.setOnClickListener {
                 val intent = Intent(context, PostDetailActivity::class.java)
@@ -82,6 +78,8 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
 
     fun removeAllItem(){
         itemList = mutableListOf()
+        notifyDataSetChanged()
     }
+
 
 }
