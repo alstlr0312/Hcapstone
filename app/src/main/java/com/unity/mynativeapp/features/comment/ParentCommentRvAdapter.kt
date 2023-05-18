@@ -9,31 +9,34 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvParentCommentBinding
-import com.unity.mynativeapp.model.CommentDto
+import com.unity.mynativeapp.model.CommentData
+import com.unity.mynativeapp.model.PostItem
 
 class ParentCommentRvAdapter(val context: Context): RecyclerView.Adapter<ParentCommentRvAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<CommentDto>()
+    private var itemList = mutableListOf<CommentData>()
 
     inner class ViewHolder(val binding: ItemRvParentCommentBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item: CommentDto){
+        fun bind(item: CommentData){
 
             with(binding){
 
-                Glide.with(ivProfileImg)
-                    .load(item.profileImage)
-                    .placeholder(R.drawable.ic_profile_photo_base)
-                    .error(R.drawable.ic_profile_photo_base)
-                    .fallback(R.drawable.ic_profile_photo_base)
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(ivProfileImg)
+                if(item.profileImage!=null){
+                    Glide.with(ivProfileImg)
+                        .load(item.profileImage)
+                        .placeholder(R.drawable.ic_profile_photo_base)
+                        .error(R.drawable.ic_profile_photo_base)
+                        .fallback(R.drawable.ic_profile_photo_base)
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(ivProfileImg)
+                }
 
                 tvUsername.text = item.username
                 tvPostDate.text = item.createdAt
                 tvCommentContext.text = item.commentContext
 
-                if(item.childCount > 0){
+                if(item.childCount > 0){ // 자식 댓글이 있으면
                     layoutInvisibleChildComment.visibility = View.VISIBLE
                     tvChildCommentNum.text = item.childCount.toString()
                     layoutVisibleChildComment.visibility = View.GONE
@@ -42,19 +45,17 @@ class ParentCommentRvAdapter(val context: Context): RecyclerView.Adapter<ParentC
                     layoutVisibleChildComment.visibility = View.GONE
                 }
             }
-        }
 
-        init{
             // 답글 보기 클릭
             binding.layoutInvisibleChildComment.setOnClickListener {
                 // 자식 댓글 조회 요청
 
-                var childNum = binding.tvChildCommentNum.text.toString().toInt()
-                val childCommentList = mutableListOf<CommentDto>()
-                while(childNum != 0){
-                    childCommentList.add(CommentDto(-1, "대댓글$childNum...", "방금", R.drawable.ic_profile_photo_base, "user0$childNum"))
-                    childNum -= 1
-                }
+                var childNum = item.childCount
+                val childCommentList = mutableListOf<CommentData>()
+//                while(childNum != 0){
+//                    childCommentList.add(CommentData(-1, "대댓글$childNum...", "방금", null, "user0$childNum"))
+//                    childNum -= 1
+//                }
                 binding.rvChildComment.adapter = ChildCommentRvAdapter(childCommentList, context)
 
                 it.visibility = View.GONE
@@ -67,6 +68,7 @@ class ParentCommentRvAdapter(val context: Context): RecyclerView.Adapter<ParentC
                 binding.layoutInvisibleChildComment.visibility = View.VISIBLE
             }
         }
+
 
     }
 
@@ -83,8 +85,18 @@ class ParentCommentRvAdapter(val context: Context): RecyclerView.Adapter<ParentC
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<CommentDto>){
+    fun getListFromView(nList: MutableList<CommentData>){
         itemList = nList
         notifyDataSetChanged()
+    }
+
+    fun removeAllItem(){
+        itemList = mutableListOf()
+        notifyDataSetChanged()
+    }
+
+    fun addItem(item: CommentData){
+        itemList.add(item)
+        notifyItemChanged(itemCount-1)
     }
 }

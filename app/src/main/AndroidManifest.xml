@@ -26,7 +26,8 @@
             android:exported="false" />
         <activity
             android:name=".features.comment.CommentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".features.postdetail.PostDetailActivity"
             android:exported="false" />

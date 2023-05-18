@@ -9,13 +9,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvChildCommentBinding
-import com.unity.mynativeapp.model.CommentDto
+import com.unity.mynativeapp.model.CommentData
 
-class ChildCommentRvAdapter(var itemList: MutableList<CommentDto>, val context: Context): RecyclerView.Adapter<ChildCommentRvAdapter.ViewHolder>() {
+class ChildCommentRvAdapter(var itemList: MutableList<CommentData>, val context: Context): RecyclerView.Adapter<ChildCommentRvAdapter.ViewHolder>() {
 
 
     inner class ViewHolder(val binding: ItemRvChildCommentBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(item: CommentDto){
+        fun bind(item: CommentData){
 
             with(binding){
 
@@ -49,7 +49,7 @@ class ChildCommentRvAdapter(var itemList: MutableList<CommentDto>, val context: 
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<CommentDto>){
+    fun getListFromView(nList: MutableList<CommentData>){
         itemList = nList
         notifyDataSetChanged()
     }

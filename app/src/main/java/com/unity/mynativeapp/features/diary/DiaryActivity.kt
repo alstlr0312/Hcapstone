@@ -41,7 +41,6 @@ lateinit var diaryActivity: DiaryActivity
 class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate){
     private val viewModel by viewModels<DiaryViewModel>()
     private val homeViewModel by viewModels<HomeViewModel>()
-    private lateinit var loadingDialog: LoadingDialog
     private lateinit var exerciseDate: String               // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter          // 미디어 Rv 어댑터

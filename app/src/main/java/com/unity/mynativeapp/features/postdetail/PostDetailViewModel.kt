@@ -38,7 +38,7 @@ class PostDetailViewModel : ViewModel() {
 
 
     ///// 게시물 상세 조회
-    fun postDetail(postId: Int) {
+    fun getPostDetail(postId: Int) {
 
         _loading.postValue(true)
 
@@ -55,7 +55,6 @@ class PostDetailViewModel : ViewModel() {
                 _loading.postValue(false)
 
                 val code = response.code()
-                Log.d("here1111", "$code $postId")
                 when (code) {
                     200 -> { // 게시글 상세 조회 성공
                         val data = response.body()?.data
