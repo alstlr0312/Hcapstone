@@ -7,6 +7,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -21,13 +24,16 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
     protected lateinit var binding: B
         private set
 
-    lateinit var lodingDialog: LoadingDialog
+    lateinit var loadingDialog: LoadingDialog
+    lateinit var inputMethodManager: InputMethodManager
+    var keyBoardIsShowing: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
         setContentView(binding.root)
 
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
     fun showCustomToast(message: String) {
@@ -35,13 +41,13 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
     }
 
     fun showLoadingDialog(context: Context) {
-        lodingDialog = LoadingDialog(context)
-        lodingDialog.show()
+        loadingDialog = LoadingDialog(context)
+        loadingDialog.show()
     }
 
     fun dismissLoadingDialog() {
-        if (lodingDialog.isShowing) {
-            lodingDialog.dismiss()
+        if (loadingDialog.isShowing) {
+            loadingDialog.dismiss()
         }
     }
 
@@ -60,6 +66,19 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
             e.printStackTrace()
         }
     }
+
+    // 키보드 보이기
+    fun hideKeyboad(){
+        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+    }
+
+    fun showKeyBoard(view: View, edtText: EditText){
+        keyBoardIsShowing = inputMethodManager.showSoftInput(edtText, 0)
+    }
+
+
+    // 키보드 숨기기
+
 
     fun getRealPathFromUri(uri: Uri): String {
         val buildName = Build.MANUFACTURER

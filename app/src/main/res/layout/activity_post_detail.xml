@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_black"
     tools:context=".features.postdetail.PostDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -64,6 +63,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/shape_gradient_gray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 

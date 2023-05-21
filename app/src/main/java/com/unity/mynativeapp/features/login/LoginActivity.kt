@@ -3,28 +3,18 @@ package com.unity.mynativeapp.features.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.unity.mynativeapp.features.signup.SignUpActivity
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
-import com.unity.mynativeapp.features.BaseActivity
-import com.unity.mynativeapp.network.util.LoadingDialog
-import com.unity.mynativeapp.network.util.hideKeyboard
+import com.unity.mynativeapp.features.signup.SignUpActivity
 
 
-class LoginActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBinding>(
+    ActivityLoginBinding::inflate) {
     private val viewModel by viewModels<LoginViewModel>()
-
-    lateinit var dialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
-        dialog = LoadingDialog(this)
 
         // viewModel의 Data를 Observe하는 이벤트 모음 함수
         subscribeUI()
@@ -46,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.layoutMain.setOnClickListener {
-            this.hideKeyboard()
+            hideKeyboad()
         }
     }
 
@@ -56,13 +46,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) dialog.show() else dialog.dismiss()
+            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
         }
 
         viewModel.loginSuccess.observe(this) { isSuccess ->
             if (!isSuccess) return@observe
 
-            startActivity(Intent(this, BaseActivity::class.java))
+            startActivity(Intent(this, com.unity.mynativeapp.features.BaseActivity::class.java))
             finish()
         }
     }

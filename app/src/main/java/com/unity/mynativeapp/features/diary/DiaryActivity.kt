@@ -1,11 +1,9 @@
 package com.unity.mynativeapp.features.diary
 
-import android.R.attr
+
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -38,8 +36,7 @@ import java.io.IOException
 lateinit var diaryActivity: DiaryActivity
 class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate){
     private val viewModel by viewModels<DiaryViewModel>()
-    //private val homeViewModel by viewModels<Dia>()
-    private lateinit var loadingDialog: LoadingDialog
+
     private lateinit var exerciseDate: String               // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter          // 미디어 Rv 어댑터
@@ -51,7 +48,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
     private val saveMediaRealPath = arrayListOf<String>()
 
     var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        result ->
+            result ->
         if(result.resultCode == RESULT_OK){
             val imageUri = result.data?.data
             imageUri?.let{

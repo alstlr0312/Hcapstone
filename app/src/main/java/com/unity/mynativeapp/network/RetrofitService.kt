@@ -109,6 +109,22 @@ interface RetrofitService {
 	): Call<MyResponse<Int>>
 
 	/*
+	/////////// 댓글 ////////////////
+	 */
+	@GET("/comment")
+	fun getComment(
+		@Query("postId") postId: Int,
+		@Query("username") username: String?,
+		@Query("page") page: Int?,
+		@Query("size") size: Int?,
+	): Call<MyResponse<CommentGetResponse>>
+
+	@POST("/comment/write")
+	fun postCommentWrite(
+		@Body commentWriteRequest: CommentWriteRequest
+	): Call<MyResponse<String>>
+
+	/*
 	//////////// 회원정보 ////////////////
 	 */
 	// 회원 정보(마이페이지) 조회

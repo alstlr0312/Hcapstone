@@ -18,7 +18,7 @@ lateinit var communityFragment: CommunityFragment
 lateinit var arFragment: ArFragment
 lateinit var mypageFragment: MyPageFragment
 
-class BaseActivity : AppCompatActivity() {
+class BaseActivity<T> : AppCompatActivity() {
     val binding by lazy {ActivityBaseBinding.inflate(layoutInflater)}
     var firstStart = true
     override fun onCreate(savedInstanceState: Bundle?) {

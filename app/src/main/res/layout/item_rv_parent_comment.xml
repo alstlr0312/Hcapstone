@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/fab_margin"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/main_black">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_profile_img"
@@ -46,6 +45,17 @@
         android:textColor="@color/main_gray_light"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/iv_dot"
+        app:layout_constraintTop_toTopOf="@id/tv_username"
+        app:layout_constraintBottom_toBottomOf="@id/tv_username"/>
+
+    <ImageView
+        android:layout_width="@dimen/icon_small_size"
+        android:layout_height="@dimen/icon_small_size"
+        android:src="@drawable/ic_comment"
+        app:tint="@color/main_red_light"
+        android:layout_marginStart="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/tv_post_date"
         app:layout_constraintTop_toTopOf="@id/tv_username"
         app:layout_constraintBottom_toBottomOf="@id/tv_username"/>
 
