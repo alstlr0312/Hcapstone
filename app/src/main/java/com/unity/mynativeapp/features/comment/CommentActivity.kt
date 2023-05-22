@@ -1,22 +1,29 @@
 package com.unity.mynativeapp.features.comment
 
+import android.app.Service
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityCommentBinding
-import com.unity.mynativeapp.model.CommentData
 import com.unity.mynativeapp.model.CommentWriteRequest
+import com.unity.mynativeapp.model.OnCommentClick
+import com.unity.mynativeapp.util.KeyboardVisibilityUtil
 
-class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBinding::inflate) {
+
+class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBinding::inflate),
+    OnCommentClick {
 
     private lateinit var commentRvAdapter: ParentCommentRvAdapter // 댓글 어댑터
     private var firstStart = true
     private val viewModel by viewModels<CommentViewModel>()
     private var postId = -1
+    private var focusParentId = -1
+    lateinit var keyboardVisibilityUtil: KeyboardVisibilityUtil
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,30 +31,25 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         setView()
         setUiEvent()
         subscribeUI()
+
     }
 
     private fun setView(){
 
 
         // 게시물 댓글 리사이클러뷰 (댓글 3개)
-        commentRvAdapter = ParentCommentRvAdapter(this)
+        commentRvAdapter = ParentCommentRvAdapter(this, this)
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         binding.rvPostComment.adapter = commentRvAdapter
-        //commentRvAdapter.getListFromView(setCommentSample())
+        commentRvAdapter.setPostId(postId)
+
+        viewModel.commentGet(postId, null, null, null, null)
+
+        binding.edtAddComment.requestFocus()
+        showKeyBoard(binding.edtAddComment)
 
     }
 
-//    private fun setCommentSample(): MutableList<CommentDto>{
-//        var list = mutableListOf<CommentDto>()
-//        list.add(CommentDto(0, "댓글1...", "방금", R.drawable.ic_profile_photo_base, "user1"))
-//        list.add(CommentDto(1, "댓글2...", "방금", R.drawable.ic_profile_photo_base, "user2"))
-//        list.add(CommentDto(2, "댓글3...", "방금", R.drawable.ic_profile_photo_base, "user3"))
-//        list.add(CommentDto(0, "댓글4...", "방금", R.drawable.ic_profile_photo_base, "user4"))
-//        list.add(CommentDto(3, "댓글5...", "방금", R.drawable.ic_profile_photo_base, "user5"))
-//        list.add(CommentDto(0, "댓글6...", "방금", R.drawable.ic_profile_photo_base, "user6"))
-//
-//        return list
-//    }
 
     private fun setUiEvent(){
 
@@ -65,6 +67,25 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
                 ))
             }
         }
+
+        keyboardVisibilityUtil = KeyboardVisibilityUtil(window,
+            onShowKeyboard = {
+                binding.root.run {
+                    //키보드 올라왔을때 원하는 동작
+                }
+            },
+            onHideKeyboard = {
+                binding.root.run {
+                    //키보드 내려갔을때 원하는 동작
+                    if(focusParentId != -1){
+                        focusParentId = -1
+                        commentRvAdapter.setUnFocusComment()
+                    }
+
+                }
+            }
+        )
+
 
 
     }
@@ -85,9 +106,9 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         viewModel.commentWriteSuccess.observe(this){
             if(!it) return@observe
 
-            //viewModel.commentGet(postId, null, null, null) // 댓글 다시 전체 조회
+            viewModel.commentGet(postId, null, null, null, null) // 댓글 다시 전체 조회
 
-            hideKeyboad()
+            hideKeyBoard()
             binding.edtAddComment.setText("")
 
         }
@@ -97,12 +118,15 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             if(data != null && data.commentListDto.isNotEmpty()) {
                 binding.tvNoComment.visibility = View.GONE
 
-                commentRvAdapter.removeAllItem()
+                if(data.parentId == null){
+                    commentRvAdapter.removeAllItem()
 
-                for(comment in data.commentListDto){
-                    commentRvAdapter.addItem(comment)
+                    for(comment in data.commentListDto){
+                        commentRvAdapter.addItem(comment)
+                    }
+                }else{
+                    commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
                 }
-
             }else{
                 binding.tvNoComment.visibility = View.VISIBLE
             }
@@ -120,4 +144,17 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
     override fun onRestart() {
         super.onRestart()
     }
+
+    override fun childCommentGetListener(parentId: Int) {
+        viewModel.commentGet(postId, parentId, null, null, null)
+    }
+
+    override fun writeChildComment(parentId: Int) {
+        focusParentId = parentId
+        binding.edtAddComment.requestFocus()
+
+        showKeyBoard(binding.edtAddComment)
+    }
+
+
 }

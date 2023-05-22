@@ -23,7 +23,6 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
     AppCompatActivity() {
     protected lateinit var binding: B
         private set
-
     lateinit var loadingDialog: LoadingDialog
     lateinit var inputMethodManager: InputMethodManager
     var keyBoardIsShowing: Boolean = false
@@ -34,6 +33,7 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
         setContentView(binding.root)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
     }
 
     fun showCustomToast(message: String) {
@@ -68,12 +68,13 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
     }
 
     // 키보드 보이기
-    fun hideKeyboad(){
-        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+    fun hideKeyBoard(){
+        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
-    fun showKeyBoard(view: View, edtText: EditText){
-        keyBoardIsShowing = inputMethodManager.showSoftInput(edtText, 0)
+    fun showKeyBoard(edtText: EditText){
+        keyBoardIsShowing = inputMethodManager.showSoftInput(edtText, InputMethodManager.HIDE_IMPLICIT_ONLY)
+
     }
 
 
