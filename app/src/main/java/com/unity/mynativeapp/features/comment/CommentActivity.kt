@@ -21,7 +21,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
     private var firstStart = true
     private val viewModel by viewModels<CommentViewModel>()
     private var postId = -1
-    private var focusParentId = -1
+    private var focusParentId: Int? = null
     lateinit var keyboardVisibilityUtil: KeyboardVisibilityUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,13 +57,14 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             finish()
         }
 
-        // 부모 댓글 추가
+        // 댓글 추가
         binding.btnSendComment.setOnClickListener {
             if(binding.edtAddComment.text.toString() != ""){
+
                 viewModel.commentWrite(CommentWriteRequest(
                     postId,
                     binding.edtAddComment.text.toString(),
-                    parentId = null
+                    focusParentId
                 ))
             }
         }
@@ -77,8 +78,8 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             onHideKeyboard = {
                 binding.root.run {
                     //키보드 내려갔을때 원하는 동작
-                    if(focusParentId != -1){
-                        focusParentId = -1
+                    if(focusParentId != null){
+                        focusParentId = null
                         commentRvAdapter.setUnFocusComment()
                     }
 
@@ -103,6 +104,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             showCustomToast(it)
         }
 
+        // 댓글 작성
         viewModel.commentWriteSuccess.observe(this){
             if(!it) return@observe
 
@@ -118,13 +120,13 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             if(data != null && data.commentListDto.isNotEmpty()) {
                 binding.tvNoComment.visibility = View.GONE
 
-                if(data.parentId == null){
+                if(data.parentId == null){ // 부모 댓글
                     commentRvAdapter.removeAllItem()
 
                     for(comment in data.commentListDto){
                         commentRvAdapter.addItem(comment)
                     }
-                }else{
+                }else{ // 자식 댓글
                     commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
                 }
             }else{
