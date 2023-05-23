@@ -14,20 +14,29 @@
 
         <Button
             android:id="@+id/Unity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/ic_barbell2"
             android:text="Unity"
-            tools:layout_editor_absoluteX="106dp"
-            tools:layout_editor_absoluteY="152dp" />
+            android:textColor="#F8F3F3"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/Map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/baseline_map_24"
             android:text="Map"
-            app:layout_constraintEnd_toEndOf="@+id/Unity"
-            app:layout_constraintStart_toStartOf="@+id/Unity"
-            app:layout_constraintTop_toBottomOf="@+id/Unity" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

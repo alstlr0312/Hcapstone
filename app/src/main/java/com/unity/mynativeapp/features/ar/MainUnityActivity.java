@@ -10,7 +10,7 @@ public class MainUnityActivity extends OverrideUnityActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // addControlsToUnityFrame();
+
 
         Intent intent = getIntent();
         handleIntent(intent);
