@@ -39,13 +39,13 @@ class MyApplication: Application() {
         postTypeToKoHashMap["Q_AND_A"] = getString(R.string.q_and_a)
         postTypeToKoHashMap["KNOWLEDGE"] = getString(R.string.knowledge_sharing)
         postTypeToKoHashMap["SHOW_OFF"] = getString(R.string.show_off)
-        postTypeToKoHashMap["ASSESS"] = getString(R.string.assess)
+        postTypeToKoHashMap["COMPETITION"] = getString(R.string.assess)
         postTypeToKoHashMap["FREE"] = getString(R.string.free)
 
         postTypeHashMap[getString(R.string.q_and_a)] = "Q_AND_A"
         postTypeHashMap[getString(R.string.knowledge_sharing)] = "KNOWLEDGE"
         postTypeHashMap[getString(R.string.show_off)] = "SHOW_OFF"
-        postTypeHashMap[getString(R.string.assess)] = "ASSESS"
+        postTypeHashMap[getString(R.string.assess)] = "COMPETITION"
         postTypeHashMap[getString(R.string.free)] = "FREE"
 
 
