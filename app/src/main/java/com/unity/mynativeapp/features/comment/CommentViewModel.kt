@@ -39,15 +39,15 @@ class CommentViewModel : ViewModel() {
     val commentGetData : MutableLiveData<CommentGetResponse?> = _commentGetData
 
     ///// 댓글 조회
-    fun commentGet(postId: Int, username: String?, page: Int?, size: Int?) { //comment?postId=1&page=0&size=6'
+    fun commentGet(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) { //comment?postId=1&page=0&size=6'
 
         _loading.postValue(true)
 
-        getCommentAPI(postId, username, page, size)
+        getCommentAPI(postId, parentId, username, page, size)
     }
 
-    private fun getCommentAPI(postId: Int, username: String?, page: Int?, size: Int?) {
-        RetrofitClient.getApiService().getComment(postId, username, page, size).enqueue(object :
+    private fun getCommentAPI(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) {
+        RetrofitClient.getApiService().getComment(postId, parentId, username, page, size).enqueue(object :
             Callback<MyResponse<CommentGetResponse>> {
             override fun onResponse(
                 call: Call<MyResponse<CommentGetResponse>>,
@@ -62,6 +62,7 @@ class CommentViewModel : ViewModel() {
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
                         if(data != null){
+                            data.parentId = parentId
                             _commentGetData.postValue(data)
                         }
                     }

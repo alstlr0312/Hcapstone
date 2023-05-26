@@ -17,8 +17,10 @@ import com.unity.mynativeapp.databinding.ActivityPostDetailBinding
 import com.unity.mynativeapp.features.comment.CommentActivity
 import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
 import com.unity.mynativeapp.model.CommentData
+import com.unity.mynativeapp.model.OnCommentClick
 
-class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate) {
+
+class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate), OnCommentClick {
 
     private lateinit var mediaVpAdapter: MediaViewPagerAdapter // 게시물 미디어 어댑터
     private lateinit var commentRvAdapter: ParentCommentRvAdapter // 댓글 어댑터
@@ -56,31 +58,13 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
 
         // 게시물 댓글 리사이클러뷰
-        commentRvAdapter = ParentCommentRvAdapter(this)
+        commentRvAdapter = ParentCommentRvAdapter(this,this)
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         binding.rvPostComment.adapter = commentRvAdapter
-
+        commentRvAdapter.setPostId(postId)
 
 
     }
-
-//    private fun setMediaSample(): MutableList<Int>{
-//        var list = mutableListOf<Int>()
-//        list.add(R.drawable.bugi)
-//        list.add(R.drawable.photo01)
-//        list.add(R.drawable.bugi)
-//        list.add(R.drawable.bugi)
-//        return list
-//    }
-
-//    private fun setCommentSample(): MutableList<CommentDto>{
-//        var list = mutableListOf<CommentDto>()
-//        list.add(CommentDto(0, "댓글1...", "방금", R.drawable.ic_profile_photo_base, "user1"))
-//        list.add(CommentDto(1, "댓글2...", "방금", R.drawable.ic_profile_photo_base, "user2"))
-//        list.add(CommentDto(2, "댓글3...", "방금", R.drawable.ic_profile_photo_base, "user3"))
-//
-//        return list
-//    }
 
     private fun setUiEvent() {
 
@@ -159,12 +143,6 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 // 댓글
                 if(data.comments.isNotEmpty()){
                     commentRvAdapter.getListFromView(data.comments as MutableList<CommentData>)
-                    for(comment in data.comments) {
-                        //if(comment.childCount > 0){
-                        // 요청 후
-                        //commentRvAdapter.addChildComment(parentId, content)
-                        //}
-                    }
                 }
 
             }
@@ -188,6 +166,14 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 binding.tvLikeCnt.text = postLikeCnt.toString()
             }
         }
+
+        // 댓글 조회
+        viewModel.commentGetData.observe(this) {data->
+            if(data != null && data.commentListDto.isNotEmpty()) {
+
+                commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
+            }
+        }
     }
 
 
@@ -203,5 +189,13 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     override fun onRestart() {
         super.onRestart()
         viewModel.getPostDetail(postId)
+    }
+
+    override fun childCommentGetListener(parentId: Int) {
+        viewModel.commentGet(postId, parentId, null, null, null)
+    }
+
+    override fun writeChildComment(parentId: Int) {
+
     }
 }

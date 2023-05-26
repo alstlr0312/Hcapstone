@@ -36,7 +36,7 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
         }
 
         binding.layoutMain.setOnClickListener {
-            hideKeyboad()
+            hideKeyBoard()
         }
     }
 

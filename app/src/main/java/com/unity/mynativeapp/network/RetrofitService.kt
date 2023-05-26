@@ -114,6 +114,7 @@ interface RetrofitService {
 	@GET("/comment")
 	fun getComment(
 		@Query("postId") postId: Int,
+		@Query("parentId") parent: Int?,
 		@Query("username") username: String?,
 		@Query("page") page: Int?,
 		@Query("size") size: Int?,

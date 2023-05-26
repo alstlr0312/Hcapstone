@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/fab_margin"
+    android:background="?android:attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -72,6 +73,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_username"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
     <LinearLayout
         android:id="@+id/layout_invisible_child_comment"
         android:layout_width="wrap_content"
@@ -116,6 +118,7 @@
             android:id="@+id/rv_child_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"/>
 

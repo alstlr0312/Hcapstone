@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.features.comment.CommentViewModel
 import com.unity.mynativeapp.features.diary.DiaryViewModel
+import com.unity.mynativeapp.model.CommentGetResponse
 import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
@@ -143,6 +145,53 @@ class PostDetailViewModel : ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<Int>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+            }
+        })
+    }
+
+    private val _commentGetData = MutableLiveData<CommentGetResponse?>()
+    val commentGetData : MutableLiveData<CommentGetResponse?> = _commentGetData
+
+    ///// 댓글 조회
+    fun commentGet(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) { //comment?postId=1&page=0&size=6'
+
+        _loading.postValue(true)
+
+        getCommentAPI(postId, parentId, username, page, size)
+    }
+
+    private fun getCommentAPI(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) {
+        RetrofitClient.getApiService().getComment(postId, parentId, username, page, size).enqueue(object :
+            Callback<MyResponse<CommentGetResponse>> {
+            override fun onResponse(
+                call: Call<MyResponse<CommentGetResponse>>,
+                response: Response<MyResponse<CommentGetResponse>>
+            ) {
+                _loading.postValue(false)
+
+                val code = response.code()
+                Log.d("aaaaa", "$code $postId")
+                when (code) {
+                    200 -> { // 댓글 조회 성공
+                        val data = response.body()?.data
+                        Log.d(CommentViewModel.TAG, data.toString())
+                        if(data != null){
+                            data.parentId = parentId
+                            _commentGetData.postValue(data)
+                        }
+                    }
+                    401 -> _logout.postValue(true)
+                    400 -> {// 존재하지 않는 댓글
+                        _commentGetData.postValue(null)
+                    }
+                    else -> {
+                        Log.d(CommentViewModel.TAG, "$code")
+                    }
+                }
+            }
+            override fun onFailure(call: Call<MyResponse<CommentGetResponse>>, t: Throwable) {
+                Log.e(ContentValues.TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })
