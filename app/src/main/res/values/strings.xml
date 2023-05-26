@@ -105,8 +105,8 @@
     <string name="total">전체</string>
     <string name="apply">적용</string>
 
-    <string name="sort">정렬</string>
-    <string name="category">카테고리</string>
+    <string name="sort">카테고리</string>
+    <string name="category">운동 종류</string>
     <string name="q_and_a">Q&amp;A</string>
     <string name="knowledge_sharing">지식공유</string>
     <string name="show_off">자랑</string>
@@ -118,14 +118,14 @@
     <string name="jogging">조깅</string>
 
     <string name="post_write">게시글 쓰기</string>
-    <string name="please_select_post_style">-게시판을 선택해 주세요-</string>
-    <string name="please_select_post_category">-카테고리를 선택해 주세요-</string>
+    <string name="please_select_post_style">-카테고리을 선택해 주세요-</string>
+    <string name="please_select_post_category">-운동 종목을 선택해 주세요-</string>
     <string name="please_input_title">제목을 입력해 주세요.</string>
     <string name="please_input_text">내용을 입력해 주세요.</string>
     <string name="media">미디어</string>
     <string name="complete">완료</string>
     <string name="post_up">게시하기</string>
-    <string name="posting">게시글</string>
+    <string name="posting">카테고리</string>
     <string name="upload_date">작성일</string>
     <string name="see_more_comment">댓글 더보기</string>
     <string name="see_comment">댓글 보기</string>
