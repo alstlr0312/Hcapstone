@@ -39,6 +39,9 @@ dependencies {
 
     implementation 'io.github.ParkSangGwon:tedpermission-rx3:3.3.0'
 
+    //apk 통합
+    implementation project(':unityLibrary')
+
 }
 
 

@@ -118,8 +118,8 @@
     <string name="jogging">조깅</string>
 
     <string name="post_write">게시글 쓰기</string>
-    <string name="please_select_post_style">-카테고리을 선택해 주세요-</string>
-    <string name="please_select_post_category">-운동 종목을 선택해 주세요-</string>
+    <string name="please_select_post_style">-카테고리를 선택해 주세요-</string>
+    <string name="please_select_post_category">-운동 종류를 선택해 주세요-</string>
     <string name="please_input_title">제목을 입력해 주세요.</string>
     <string name="please_input_text">내용을 입력해 주세요.</string>
     <string name="media">미디어</string>
