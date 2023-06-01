@@ -22,7 +22,7 @@ class MyApplication: Application() {
         bodyPartHashMap[getString(R.string.exercise_back)] = "BACK"
         bodyPartHashMap[getString(R.string.exercise_chest)] = "CHEST"
         bodyPartHashMap[getString(R.string.exercise_shoulder)] = "SHOULDER"
-        bodyPartHashMap[getString(R.string.exercise_legs)] = "LEG"
+        bodyPartHashMap[getString(R.string.exercise_legs)] = "LEGS"
         bodyPartHashMap[getString(R.string.exercise_abs)] = "ABS"
         bodyPartHashMap[getString(R.string.exercise_biceps)] = "BICEP"
         bodyPartHashMap[getString(R.string.exercise_triceps)] = "TRICEP"
@@ -31,7 +31,7 @@ class MyApplication: Application() {
         bodyPartToKoHashMap["BACK"] = getString(R.string.exercise_back)
         bodyPartToKoHashMap["CHEST"] = getString(R.string.exercise_chest)
         bodyPartToKoHashMap["SHOULDER"] = getString(R.string.exercise_shoulder)
-        bodyPartToKoHashMap["LEG"] = getString(R.string.exercise_legs)
+        bodyPartToKoHashMap["LEGS"] = getString(R.string.exercise_legs)
         bodyPartToKoHashMap["ABS"] = getString(R.string.exercise_abs)
         bodyPartToKoHashMap["BICEP"] = getString(R.string.exercise_biceps)
         bodyPartToKoHashMap["TRICEP"] = getString(R.string.exercise_triceps)

@@ -176,6 +176,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
                 val exdata = createPartFromString(requestBodyWithoutBackslashes)
 
+
                 // 미디어
                 val mediaList = mediaAdapter.getMediaList()
                 val imageList: ArrayList<MultipartBody.Part> = ArrayList()

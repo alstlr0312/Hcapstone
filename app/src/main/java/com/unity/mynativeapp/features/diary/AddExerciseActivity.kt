@@ -2,6 +2,7 @@ package com.unity.mynativeapp.features.diary
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.SeekBar
@@ -95,6 +96,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         diaryActivity.exerciseAdapter.addItem(
                             DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
                         )
+                        Log.d("하체",bodyPart)
                         finish()
                     }
                 }
