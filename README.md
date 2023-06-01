@@ -51,7 +51,7 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/57493546/237001396-3e01c550-f99d-4b7d-86ac-e00a587139a8.png" alt="구조도"></p>
 
 # Reference
-안드로이드 GitHub : https://github.com/10000DOO/YouHaveTo
+서버 GitHub : https://github.com/10000DOO/YouHaveTo
 API 문서 : https://documenter.getpostman.com/view/18513911/2s935oLPKm  
 ## 팀 소개
 ### 팀명 : 헬짱
