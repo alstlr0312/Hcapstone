@@ -60,3 +60,6 @@ API 문서 : https://documenter.getpostman.com/view/18513911/2s935oLPKm
 김민식 : https://github.com/alstlr0312  
 이예림 : https://github.com/yerim425  
 정윤주 : https://github.com/YJMINT  
+
+다운로드 링크: https://drive.google.com/file/d/1pHKzfCYyIMou03O4gGjw-GcOyIroeVHH/view?usp=drive_link
+
