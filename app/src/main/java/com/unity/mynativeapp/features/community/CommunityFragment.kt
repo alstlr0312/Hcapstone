@@ -3,15 +3,12 @@ package com.unity.mynativeapp.features.community
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.unity.mynativeapp.MyApplication.Companion.postTypeHashMap
-import com.unity.mynativeapp.MyApplication.Companion.workOutCategoryHashMap
+import com.unity.mynativeapp.MyApplication.Companion.postCategoryHashMap
+import com.unity.mynativeapp.MyApplication.Companion.postExerciseTypeHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
@@ -55,14 +52,14 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
 
                         if(dialog.checkedSortText != getString(R.string.total) && dialog.checkedSortText != null){
                             btnStr = btnStr + dialog.checkedSortText + " > "
-                            postType = postTypeHashMap[dialog.checkedSortText]
+                            postType = postCategoryHashMap[dialog.checkedSortText]
                         }else{
                             postType = null
                         }
 
                         if(dialog.checkedCateText != getString(R.string.total) && dialog.checkedCateText != null){
                             btnStr += dialog.checkedCateText
-                            workOutCategory = workOutCategoryHashMap[dialog.checkedCateText]
+                            workOutCategory = postExerciseTypeHashMap[dialog.checkedCateText]
                         }else{
                             btnStr = btnStr.split(" > ")[0]
                             workOutCategory = null

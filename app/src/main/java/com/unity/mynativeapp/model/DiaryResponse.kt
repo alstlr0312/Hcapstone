@@ -16,13 +16,13 @@ data class DiaryResponse(
         get() = mediaList.map { Uri.parse(it) } // 각 문자열을 Uri.parse() 메서드를 사용하여 Uri 객체로 변환하여 반환
 }
 data class ExerciseItem(
-    @SerializedName("exerciseName") val exerciseName: String,
-    @SerializedName("reps") val reps: Int? = 0,
-    @SerializedName("exSetCount") val exSetCount: Int ?= 0,
-    @SerializedName("cardio") val cardio : Boolean,
-    @SerializedName("cardioTime") val cardioTime: Int ?= 0,
-    @SerializedName("bodyPart") val bodyPart: String,
-    @SerializedName("finished") val finished: Boolean,
+    @SerializedName("exerciseName") var exerciseName: String,
+    @SerializedName("reps") var reps: Int? = 0,
+    @SerializedName("exSetCount") var exSetCount: Int ?= 0,
+    @SerializedName("cardio") var cardio : Boolean,
+    @SerializedName("cardioTime") var cardioTime: Int ?= 0,
+    @SerializedName("bodyPart") var bodyPart: String,
+    @SerializedName("finished") var finished: Boolean,
 )
 
 data class DateItem(

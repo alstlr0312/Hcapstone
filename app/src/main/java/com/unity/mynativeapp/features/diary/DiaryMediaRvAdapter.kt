@@ -2,12 +2,6 @@ package com.unity.mynativeapp.features.diary
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,11 +22,11 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
     private var itemList = mutableListOf<MediaRvItem>()
     private var pathList = mutableListOf<String>()
 
-    // 다이어리 작성할 때 미디어 타입 -> Uri를 path로 변경하여 요청
+    // 다이어리 작성할 때 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
+                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -77,7 +71,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
+                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -127,6 +121,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
             1 -> ViewHolder_post(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             2 -> ViewHolder_post(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             3 -> ViewHolder_get(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            4 -> ViewHolder_get(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw RuntimeException("DiaryMediaRvAdapter onCreateViewHolder ERROR")
         }
     }
@@ -150,32 +145,14 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
         return itemList
     }
 
-    fun getByteToPathList(): List<MediaRvItem>{
-        return itemList
-    }
     override fun getItemViewType(position: Int):Int {
         if(itemList[position].viewType == 1)
             return 1
         else if(itemList[position].viewType == 2)
             return 2
-        else return 3
-    }
-
-
-    fun getRealPathFromUri(uri: Uri): String {
-        val buildName = Build.MANUFACTURER
-        if(buildName.equals("Xiaomi")){
-            return uri.path!!
-        }
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, proj, null, null, null)
-        if(cursor!!.moveToFirst()){
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-        return result
+        else if(itemList[position].viewType == 3)
+            return 3
+        else return 4
     }
 
     private fun setImage(image: Any, binding: ItemRvMediaBinding){

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="답글 달기"
-        android:id="@+id/menuChildComment"
+        android:title="@string/accuse_post"
+        android:id="@+id/menuAccusePost"
         android:visible="true"
         android:enabled="true"/>
     <item
-        android:title="댓글 신고"
-        android:id="@+id/menuAccuseComment"
+        android:title="@string/send_message"
+        android:id="@+id/menuSendMsg"
         android:visible="true"
         android:enabled="true"/>
     <item
-        android:title="회원 정보"
-        android:id="@+id/menuMemberInfo"
+        android:title="@string/refresh"
+        android:id="@+id/menuRefresh"
         android:visible="true"
         android:enabled="true"/>
 </menu>

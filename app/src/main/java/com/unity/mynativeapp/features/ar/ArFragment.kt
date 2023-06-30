@@ -23,9 +23,9 @@ class ArFragment : Fragment() {
         binding = FragmentArBinding.inflate(layoutInflater)
         binding.Unity.setOnClickListener {
             isUnityLoaded = true
-            val intent= Intent(context, MainUnityActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            startActivityForResult(intent, 1)
+            //val intent= Intent(context, MainUnityActivity::class.java)
+            //intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            //startActivityForResult(intent, 1)
         }
         binding.Map.setOnClickListener {
             isUnityLoaded = true

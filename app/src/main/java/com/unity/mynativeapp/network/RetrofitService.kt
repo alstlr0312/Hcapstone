@@ -101,6 +101,20 @@ interface RetrofitService {
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<String>>
 
+	//게시글 수정
+	@Multipart
+	@PATCH("/post/edit/{postId}")
+	fun postPatchEdit(
+		@Path("postId") postId: Int,
+		@Part("writePostDto") writePostDto: RequestBody,
+		@Part imageFile: MutableList<MultipartBody.Part>
+	): Call<MyResponse<String>>
+
+	@PATCH("/post/delete/{postId}")
+	fun patchPostDelete(
+		@Path("postId") postId: Int,
+	): Call<MyResponse<String>>
+
 	// 좋아요
 	@PATCH("post/like")
 	fun patchPostLike(

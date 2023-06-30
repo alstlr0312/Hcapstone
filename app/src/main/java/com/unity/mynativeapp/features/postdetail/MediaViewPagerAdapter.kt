@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.postdetail
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,12 +14,12 @@ import com.unity.mynativeapp.model.OnCommentClick
 class MediaViewPagerAdapter(val context: Context)
     : RecyclerView.Adapter<MediaViewPagerAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<ByteArray>()
+    private var itemList = mutableListOf<Bitmap>()
 
     inner class ViewHolder(val binding: ItemVpMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(img: ByteArray) {
+        fun bind(img: Bitmap) {
 
             Glide.with(binding.ivMedia)
                 .load(img)
@@ -51,13 +52,22 @@ class MediaViewPagerAdapter(val context: Context)
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<ByteArray>) {
+    fun getListFromView(nList: MutableList<Bitmap>) {
         itemList = nList
         notifyDataSetChanged()
     }
 
-    fun addItem(byteArray: ByteArray) {
-        itemList.add(byteArray)
+    fun getMediaList(): ArrayList<Bitmap>{
+
+        return itemList as ArrayList<Bitmap>
+    }
+
+    fun addItem(bitmap: Bitmap) {
+        itemList.add(bitmap)
+        notifyDataSetChanged()
+    }
+    fun removeAllItem() {
+        itemList = mutableListOf()
         notifyDataSetChanged()
     }
 }

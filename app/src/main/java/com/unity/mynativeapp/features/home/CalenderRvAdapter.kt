@@ -68,8 +68,6 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
                         intent.putExtra("formatDate", formatDate)
                         intent.putExtra("exerciseDate", item.exerciseDate.toString())
                         intent.putExtra("diaryId", item.diaryId)
-                        var status: Int = if(item.dailyPercentage != -1) 0 else 1
-                        intent.putExtra("mode", status)
 
                         context.startActivity(intent)
                     }else{ // 선택 되지 않은 날짜를 클릭했다면 ui 변경

@@ -13,6 +13,8 @@ import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
+import com.unity.mynativeapp.network.util.DELETE_COMPLETE
+import com.unity.mynativeapp.network.util.POST_EDIT_COMPLETE
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,6 +33,9 @@ class PostDetailViewModel : ViewModel() {
 
     private val _postDetailData = MutableLiveData<PostDetailResponse?>()
     val postDetailData: LiveData<PostDetailResponse?> = _postDetailData
+
+    private val _postDeleteSuccess = MutableLiveData<Boolean>()
+    val postDeleteSuccess: LiveData<Boolean> = _postDeleteSuccess
 
     private val _mediaData = MutableLiveData<ResponseBody?>()
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
@@ -69,7 +74,6 @@ class PostDetailViewModel : ViewModel() {
                     400 -> {// 존재하지 않는 게시글
                         _postDetailData.postValue(null)
                     }
-
                     else -> {
                         Log.d(TAG, "$code")
                     }
@@ -102,7 +106,6 @@ class PostDetailViewModel : ViewModel() {
                     val imageBytes = response.body()
                     _mediaData.postValue(imageBytes)
                 } else {
-                    // 응답이 실패한 경우 처리하는 코드 작성
                     val body = response.errorBody()?.string()
                     val data = GsonBuilder().create().fromJson(body, MyError::class.java)
                     _toastMessage.postValue(data.error.toString())
@@ -150,47 +153,39 @@ class PostDetailViewModel : ViewModel() {
         })
     }
 
-    private val _commentGetData = MutableLiveData<CommentGetResponse?>()
-    val commentGetData : MutableLiveData<CommentGetResponse?> = _commentGetData
-
-    ///// 댓글 조회
-    fun commentGet(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) { //comment?postId=1&page=0&size=6'
+    ///// 게시물 상세 조회
+    fun postDelete(postId: Int) {
 
         _loading.postValue(true)
 
-        getCommentAPI(postId, parentId, username, page, size)
+        postDeleteAPI(postId)
     }
 
-    private fun getCommentAPI(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) {
-        RetrofitClient.getApiService().getComment(postId, parentId, username, page, size).enqueue(object :
-            Callback<MyResponse<CommentGetResponse>> {
+    private fun postDeleteAPI(postId: Int) {
+        RetrofitClient.getApiService().patchPostDelete(postId).enqueue(object :
+            Callback<MyResponse<String>> {
             override fun onResponse(
-                call: Call<MyResponse<CommentGetResponse>>,
-                response: Response<MyResponse<CommentGetResponse>>
+                call: Call<MyResponse<String>>,
+                response: Response<MyResponse<String>>
             ) {
                 _loading.postValue(false)
 
                 val code = response.code()
-                Log.d("aaaaa", "$code $postId")
                 when (code) {
-                    200 -> { // 댓글 조회 성공
-                        val data = response.body()?.data
-                        Log.d(CommentViewModel.TAG, data.toString())
-                        if(data != null){
-                            data.parentId = parentId
-                            _commentGetData.postValue(data)
-                        }
+                    200 -> { // 게시글 삭제 성공
+                        _postDeleteSuccess.postValue(true)
+                        _toastMessage.postValue(DELETE_COMPLETE)
+                    }
+                    400 -> {// 존재 하지 않는 게시글
+                        _postDeleteSuccess.postValue(false)
                     }
                     401 -> _logout.postValue(true)
-                    400 -> {// 존재하지 않는 댓글
-                        _commentGetData.postValue(null)
-                    }
                     else -> {
-                        Log.d(CommentViewModel.TAG, "$code")
+                        Log.d(TAG, "$code")
                     }
                 }
             }
-            override fun onFailure(call: Call<MyResponse<CommentGetResponse>>, t: Throwable) {
+            override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(ContentValues.TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }

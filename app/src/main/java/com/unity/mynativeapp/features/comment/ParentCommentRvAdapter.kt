@@ -93,7 +93,7 @@ class ParentCommentRvAdapter(
 
             binding.root.setOnCreateContextMenuListener(this@ParentCommentRvAdapter)
 
-            binding.root.setOnLongClickListener {
+            binding.root.setOnLongClickListener {// 롱클릭
                 longClickPos = adapterPosition
                 false
             }
@@ -178,25 +178,32 @@ class ParentCommentRvAdapter(
         view: View?,
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
-        val writeChildCommentItem = menu?.add(Menu.NONE, 1001, 1, "답글 달기")
+
         val commentAccuseItem = menu?.add(Menu.NONE, 1002, 2, "댓글 신고")
         val memberInfoItem = menu?.add(Menu.NONE, 1003, 3, "회원 정보")
 
         if(longClickPos != -1){
-            writeChildCommentItem?.setOnMenuItemClickListener {
-                if(parentList[longClickPos].commentId == null){
-                    val intent = Intent(context, CommentActivity::class.java)
-                    intent.putExtra("postId", postId)
-                    context.startActivity(intent)
-                }else{
-                    bindingList[longClickPos].root.background = ColorDrawable(context.getColor(R.color.main_red_dark))
-                    commentListener.writeChildComment(parentList[longClickPos].commentId!!)
-                }
 
-                true
+            if(parentList[longClickPos].childCount == -1){ // 대댓글의 롱클릭 메뉴
+
+            }else{ // 부모댓글의 롱클릭 메뉴
+                val writeChildCommentItem = menu?.add(Menu.NONE, 1001, 1, "답글 달기")
+
+                // 답글 달기 클릭
+                writeChildCommentItem?.setOnMenuItemClickListener {
+                    if(parentList[longClickPos].commentId == null){ // 게시글 상세 화면의 댓글 메뉴에서 "답글 달기" 클릭한 경우
+                        val intent = Intent(context, CommentActivity::class.java)
+                        intent.putExtra("postId", postId)
+                        intent.putExtra("parentId", parentList[longClickPos].commentId) // 대댓글 달기 위해 부모 댓글의 id 전달
+                        context.startActivity(intent)
+                    }else{ // 댓글 화면의 댓글 메뉴에서 "답글 달기"를 클릭한 경우
+                        bindingList[longClickPos].root.background = ColorDrawable(context.getColor(R.color.main_red_dark))
+                        commentListener.writeChildComment(parentList[longClickPos].commentId!!)
+                    }
+
+                    true
+                }
             }
         }
-
     }
-
 }

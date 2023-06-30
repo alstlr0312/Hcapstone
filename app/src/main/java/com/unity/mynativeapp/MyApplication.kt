@@ -9,11 +9,11 @@ class MyApplication: Application() {
     companion object {
         lateinit var prefUtil: PreferenceUtil
         var bodyPartHashMap = HashMap<String, String>()
-        var bodyPartToKoHashMap = HashMap<String, String>()
-        var postTypeHashMap = HashMap<String, String>()
-        var postTypeToKoHashMap = HashMap<String, String>()
-        var workOutCategoryHashMap = HashMap<String, String>()
-        var workOutCategoryToKoHashMap = HashMap<String, String>()
+        var bodyPartKorHashMap = HashMap<String, String>()
+        var postCategoryHashMap = HashMap<String, String>()
+        var postCategoryKorHashMap = HashMap<String, String>()
+        var postExerciseTypeHashMap = HashMap<String, String>()
+        var postExerciseTypeKorHashMap = HashMap<String, String>()
     }
 
     override fun onCreate() {
@@ -28,39 +28,39 @@ class MyApplication: Application() {
         bodyPartHashMap[getString(R.string.exercise_triceps)] = "TRICEP"
         bodyPartHashMap[getString(R.string.exercise_cardio)] = "BACK"
 
-        bodyPartToKoHashMap["BACK"] = getString(R.string.exercise_back)
-        bodyPartToKoHashMap["CHEST"] = getString(R.string.exercise_chest)
-        bodyPartToKoHashMap["SHOULDER"] = getString(R.string.exercise_shoulder)
-        bodyPartToKoHashMap["LEG"] = getString(R.string.exercise_legs)
-        bodyPartToKoHashMap["ABS"] = getString(R.string.exercise_abs)
-        bodyPartToKoHashMap["BICEP"] = getString(R.string.exercise_biceps)
-        bodyPartToKoHashMap["TRICEP"] = getString(R.string.exercise_triceps)
-        bodyPartToKoHashMap["CARDIO"] = getString(R.string.exercise_cardio)
+        bodyPartKorHashMap["BACK"] = getString(R.string.exercise_back)
+        bodyPartKorHashMap["CHEST"] = getString(R.string.exercise_chest)
+        bodyPartKorHashMap["SHOULDER"] = getString(R.string.exercise_shoulder)
+        bodyPartKorHashMap["LEG"] = getString(R.string.exercise_legs)
+        bodyPartKorHashMap["ABS"] = getString(R.string.exercise_abs)
+        bodyPartKorHashMap["BICEP"] = getString(R.string.exercise_biceps)
+        bodyPartKorHashMap["TRICEP"] = getString(R.string.exercise_triceps)
+        bodyPartKorHashMap["CARDIO"] = getString(R.string.exercise_cardio)
 
-        postTypeToKoHashMap["Q_AND_A"] = getString(R.string.q_and_a)
-        postTypeToKoHashMap["KNOWLEDGE"] = getString(R.string.knowledge_sharing)
-        postTypeToKoHashMap["SHOW_OFF"] = getString(R.string.show_off)
-        postTypeToKoHashMap["COMPETITION"] = getString(R.string.assess)
-        postTypeToKoHashMap["FREE"] = getString(R.string.free)
+        postCategoryKorHashMap["Q_AND_A"] = getString(R.string.q_and_a)
+        postCategoryKorHashMap["KNOWLEDGE"] = getString(R.string.knowledge_sharing)
+        postCategoryKorHashMap["SHOW_OFF"] = getString(R.string.show_off)
+        postCategoryKorHashMap["COMPETITION"] = getString(R.string.assess)
+        postCategoryKorHashMap["FREE"] = getString(R.string.free)
 
-        postTypeHashMap[getString(R.string.q_and_a)] = "Q_AND_A"
-        postTypeHashMap[getString(R.string.knowledge_sharing)] = "KNOWLEDGE"
-        postTypeHashMap[getString(R.string.show_off)] = "SHOW_OFF"
-        postTypeHashMap[getString(R.string.assess)] = "COMPETITION"
-        postTypeHashMap[getString(R.string.free)] = "FREE"
+        postCategoryHashMap[getString(R.string.q_and_a)] = "Q_AND_A"
+        postCategoryHashMap[getString(R.string.knowledge_sharing)] = "KNOWLEDGE"
+        postCategoryHashMap[getString(R.string.show_off)] = "SHOW_OFF"
+        postCategoryHashMap[getString(R.string.assess)] = "COMPETITION"
+        postCategoryHashMap[getString(R.string.free)] = "FREE"
 
 
-        workOutCategoryToKoHashMap["HEALTH"] = getString(R.string.health)
-        workOutCategoryToKoHashMap["PILATES"] = getString(R.string.pilates)
-        workOutCategoryToKoHashMap["YOGA"] = getString(R.string.yoga)
-        workOutCategoryToKoHashMap["JOGGING"] = getString(R.string.jogging)
-        workOutCategoryToKoHashMap["ETC"] = getString(R.string.etc)
+        postExerciseTypeKorHashMap["HEALTH"] = getString(R.string.health)
+        postExerciseTypeKorHashMap["PILATES"] = getString(R.string.pilates)
+        postExerciseTypeKorHashMap["YOGA"] = getString(R.string.yoga)
+        postExerciseTypeKorHashMap["JOGGING"] = getString(R.string.jogging)
+        postExerciseTypeKorHashMap["ETC"] = getString(R.string.etc)
 
-        workOutCategoryHashMap[getString(R.string.health)] = "HEALTH"
-        workOutCategoryHashMap[getString(R.string.pilates)] = "PILATES"
-        workOutCategoryHashMap[getString(R.string.yoga)] = "YOGA"
-        workOutCategoryHashMap[getString(R.string.jogging)] = "JOGGING"
-        workOutCategoryHashMap[getString(R.string.etc)] = "ETC"
+        postExerciseTypeHashMap[getString(R.string.health)] = "HEALTH"
+        postExerciseTypeHashMap[getString(R.string.pilates)] = "PILATES"
+        postExerciseTypeHashMap[getString(R.string.yoga)] = "YOGA"
+        postExerciseTypeHashMap[getString(R.string.jogging)] = "JOGGING"
+        postExerciseTypeHashMap[getString(R.string.etc)] = "ETC"
 
         super.onCreate()
     }

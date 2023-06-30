@@ -5,24 +5,20 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
-import com.unity.mynativeapp.model.DiaryWriteRequest
-import com.unity.mynativeapp.model.MediaRvItem
+import com.unity.mynativeapp.model.*
 import com.unity.mynativeapp.network.util.LoadingDialog
-import com.unity.mynativeapp.network.util.MEDIA_EDIT_REMOVE_PATH
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -40,12 +36,11 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
     private lateinit var exerciseDate: String               // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter          // 미디어 Rv 어댑터
-    //lateinit var mediaAdapter2: DiaryMediaRvAdapter2        // 미디어 Rv 어댑터
     private var firstStart = true
-    private var status = -1 // 0(read), 1(write)
     private var diaryId = -1
-    private var isEditing = false
-    private val saveMediaRealPath = arrayListOf<String>()
+    private var tempMediaPathArr = arrayListOf<String>()
+    private var oldData: DiaryResponse? = null
+    var edited = false
 
     var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
@@ -80,53 +75,31 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
     private fun setView(){
 
+
         // 다이어리 날짜 설정
         val formatDate = intent.getStringExtra("formatDate").toString()
         binding.tvDate.text = formatDate
         exerciseDate = intent.getStringExtra("exerciseDate").toString()
 
-        // 화면 모드
-        status = intent.getIntExtra("mode", -1)
-
+        // 오늘의 운동 리사이클러 뷰
         exerciseAdapter = DiaryExerciseRvAdapter(this)
         binding.recyclerViewTodaysExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTodaysExercise.adapter = exerciseAdapter
 
+        // 미디어 리사이클러 뷰
         mediaAdapter = DiaryMediaRvAdapter(this)
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
-
-        if(status == 0) {
-            setReadView()
-            viewModel.diaryDetail(exerciseDate) // 다이어리 상세 조회 요청
-        }else if(status == 1){
-            setWriteView()
-        } else{
-            Log.d(TAG, "$status")
+        diaryId = intent.getIntExtra("diaryId", -1)
+        if(diaryId != -1){ // 다이어리 상세 조회 요청
+            viewModel.diaryDetail(exerciseDate)
         }
-
     }
 
-    private fun setReadView(){ // 일지 정보가 있을 경우 -> 일지 조회 화면 (read)
-        binding.ivEdit.visibility = View.VISIBLE            // 수정 아이콘 보이기
-        binding.ivSave.visibility = View.INVISIBLE          // 저장 아이콘 숨기기
-        binding.btnAddExercise.visibility = View.INVISIBLE  // 추가 버튼 숨기기
-        binding.btnAddMedia.visibility = View.INVISIBLE     //
-        binding.edtMemo.hint = ""
-        binding.edtMemo.isEnabled = false                   // 메모 수정 불가능
-    }
 
-    private fun setWriteView(){ // 일지 정보가 없거나 수정 버튼을 클릭한 경우 (Write)
-        binding.ivSave.visibility = View.VISIBLE                // 저장 아이콘 보이기
-        binding.ivEdit.visibility = View.GONE                   // 수정 아이콘 숨기기
-        binding.btnAddExercise.visibility = View.VISIBLE        // 추가 버튼 보이기
-        binding.btnAddMedia.visibility = View.VISIBLE           //
-        binding.edtMemo.isEnabled = true                        // 메모 수정 가능
 
-        if(binding.edtMemo.text.toString() == "")
-            binding.edtMemo.hint = getString(R.string.please_input)
-    }
+
 
 
     private fun setUiEvent(){
@@ -140,8 +113,8 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
         // 미디어 추가
         binding.btnAddMedia.setOnClickListener {
-            if(mediaAdapter.itemCount == 4){
-                Toast.makeText(this, getString(R.string.you_can_register_four_medias), Toast.LENGTH_SHORT).show()
+            if(mediaAdapter.itemCount == 6){
+                Toast.makeText(this, getString(R.string.you_can_register_six_medias), Toast.LENGTH_SHORT).show()
             }else{
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.setDataAndType(MediaStore.AUTHORITY_URI, "image/* video/*")
@@ -149,20 +122,18 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             }
         }
 
+        mediaAdapter.registerAdapterDataObserver(object: AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                edited = true
+            }
+        })
 
-        // 수정 아이콘 클릭
-        binding.ivEdit.setOnClickListener {
-            isEditing = true
-            setWriteView()
-
-        }
-
-        // 저장 아이콘 클릭
-        binding.ivSave.setOnClickListener {
+        // 뒤로 가기
+        binding.btnBack.setOnClickListener {
 
             if(exerciseAdapter.itemCount != 0) {
                 // 운동일지 작성 or 수정 요청
-
 
                 // 운동
                 val jsonRequest = DiaryWriteRequest(
@@ -180,13 +151,18 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 val mediaList = mediaAdapter.getMediaList()
                 val imageList: ArrayList<MultipartBody.Part> = ArrayList()
 
-                if(isEditing){ // 다이어리 수정
+                if(diaryId != -1){ // 다이어리 수정
+
+                    // 수정 데이터 있는지 확인
+                    if(!edited && oldData?.review == binding.edtMemo.text.toString()){
+                        finish()
+                    }
                     for(i in mediaList.indices){
                         val bitmap = mediaList[i].bitmap
                         val uri = mediaList[i].uri
                         var file = File("")
                         if(bitmap != null){
-                            val realPath = saveMedia(bitmap, "remove$i")
+                            val realPath = saveMedia(bitmap, "temp${i}")
                             file = File(realPath)
                         }else if(uri != null){
                             file = File(getRealPathFromUri(uri))
@@ -196,6 +172,8 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                         imageList.add(uploadFile)
                     }
                     viewModel.diaryEdit(exdata, imageList, diaryId)
+
+
                 }else{ // 다이어리 작성
                     for (element in mediaList) {
                         if(element.uri != null){
@@ -208,18 +186,18 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                     viewModel.diaryWrite(exdata, imageList) // 다이어리 작성 요청
                 }
             }else{
-                Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
+                finish()
+                //Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
             }
-        }
 
-        // 뒤로 가기
-        binding.btnBack.setOnClickListener {
-            finish()
         }
 
     }
 
-
+    override fun finish() {
+        super.finish()
+        deleteMediaFile()
+    }
 
     fun createPartFromString(stringData: String): RequestBody {
         return stringData.toRequestBody("application/json".toMediaTypeOrNull())
@@ -259,16 +237,17 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         viewModel.diaryData.observe(this) { data ->
 
             if (data == null){  // 다이어리 상세조회 실패
-                setWriteView()
+                //setWriteView()
             }else{ // 다이어리 상세조회 성공
 
-                setReadView()   // 읽기 모드
+                //setReadView()   // 읽기 모드
+                oldData = data
 
                 diaryId = data.diaryId
                 binding.edtMemo.setText(data.review)
 
-                for(x in data.exerciseInfo){
-
+                for(item in data.exerciseInfo){
+                    /*
                     val exerciseName = x.exerciseName
                     val reps = x.reps
                     val exSetCount = x.exSetCount
@@ -279,6 +258,9 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
                     exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName, reps, exSetCount,
                         isCardio, cardioTime, bodyPart, finished))
+
+                     */
+                    exerciseAdapter.addItem(item)
                 }
 
                 for(x in data.mediaList){
@@ -293,6 +275,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 val byteArray = data.bytes()
                 val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
                 mediaAdapter.addItem(MediaRvItem(3, null, bitmap))
+                edited = false
             }
         }
 
@@ -301,18 +284,17 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
             if(!isSuccess) return@observe
 
-            setReadView()
+            finish()
         }
 
         // 다이어리 수정
         viewModel.diaryEditSuccess.observe(this) { isSuccess ->
 
-            removeDirFromGallery(MEDIA_EDIT_REMOVE_PATH)
+
 
             if(!isSuccess){ return@observe }
 
-            setReadView()
-            isEditing = false
+            finish()
 
         }
     }
@@ -323,35 +305,36 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
 
 
-    // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 갤러리에 임시 저장
-    private fun saveMedia(bitmap: Bitmap, imgName: String): String {
-        val saveDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + MEDIA_EDIT_REMOVE_PATH
-        val file = File(saveDir)
-        if (!file.exists()) {
-            file.mkdir()
-        }
-        val tempFile = File(saveDir, "$imgName.png")
-        var output: FileOutputStream?
+    // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
+    private fun saveMedia(bitmap: Bitmap, name: String): String {
+        val tempFile = File(cacheDir, "$name.jpg")
 
         try {
             tempFile.createNewFile()
-            output = FileOutputStream(tempFile)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
-            output.close()
-        }catch (e: Exception) {
-            showCustomToast(e.message.toString())
+
+            val out = FileOutputStream(tempFile)
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+
+            out.close()
+        } catch (e: FileNotFoundException) {
+            Log.e(TAG, "FileNotFoundException : " + e.message)
+        } catch (e: IOException) {
+            Log.e(TAG, "IOException : " + e.message)
         }
+        tempMediaPathArr.add(tempFile.path)
         return tempFile.absolutePath
     }
 
-    // 임시로 저장 해놓은 이미지의 디렉터리 삭제
-    private fun removeDirFromGallery(dirName: String){ // 미디어 삭제
-        val storagePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).path + dirName
-        val file = File(storagePath)
-        try{
-            if(file.isDirectory){
+    // 임시로 저장 해놓은 이미지 삭제
+    private fun deleteMediaFile(){ // 임시 미디어 삭제
+        for(path in tempMediaPathArr){
+            val file = File(path)
+            if(file.exists()){
+                Log.d(TAG, "file name: ${path}")
                 file.delete()
             }
-        }catch (e: Exception){}
+        }
     }
+
 }

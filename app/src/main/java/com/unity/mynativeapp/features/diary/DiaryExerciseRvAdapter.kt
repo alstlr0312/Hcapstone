@@ -9,17 +9,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.MyApplication.Companion.bodyPartHashMap
-import com.unity.mynativeapp.MyApplication.Companion.bodyPartToKoHashMap
+import com.unity.mynativeapp.MyApplication.Companion.bodyPartKorHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
+import com.unity.mynativeapp.model.ExerciseItem
 import com.unity.mynativeapp.network.util.DeleteDialog
 
 
 class DiaryExerciseRvAdapter(var context: Context)
     : RecyclerView.Adapter<DiaryExerciseRvAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<DiaryExerciseRvItem>()
+    private var itemList = mutableListOf<ExerciseItem>()
     private var bindingList = mutableListOf<ItemRvDiaryExerciseBinding>()
 
     inner class ViewHolder(val binding: ItemRvDiaryExerciseBinding): RecyclerView.ViewHolder(binding.root){
@@ -27,7 +27,7 @@ class DiaryExerciseRvAdapter(var context: Context)
         init{
             bindingList.add(binding)
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.delete_exercise))
+                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_exercise))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -46,10 +46,10 @@ class DiaryExerciseRvAdapter(var context: Context)
                 return@OnLongClickListener true
             }
         }
-        fun bind(item: DiaryExerciseRvItem){
+        fun bind(item: ExerciseItem){
 
             binding.checkbox.isChecked = item.finished
-            val part = bodyPartToKoHashMap[item.bodyPart]
+            val part = bodyPartKorHashMap[item.bodyPart]
             if(part != null){
                 item.bodyPart = part
             }
@@ -82,6 +82,7 @@ class DiaryExerciseRvAdapter(var context: Context)
 
             binding.checkbox.setOnClickListener {
                 itemList[adapterPosition].finished = binding.checkbox.isChecked
+                diaryActivity.edited = true
             }
 
 
@@ -100,26 +101,19 @@ class DiaryExerciseRvAdapter(var context: Context)
         return itemList.size
     }
 
-    fun getListFormView(nList: MutableList<DiaryExerciseRvItem>){
+    fun getListFormView(nList: MutableList<ExerciseItem>){
         itemList = nList
     }
 
-    fun addItem(item: DiaryExerciseRvItem){
+    fun addItem(item: ExerciseItem){
         itemList.add(item)
         notifyDataSetChanged()
     }
 
-    fun checkBoxIsClickable(b: Boolean){
-        if(itemCount != 0){
-            for(item in bindingList){
-                item.checkbox.isEnabled = b
-            }
-            notifyDataSetChanged()
-        }
-    }
 
-    fun getExerciseList(): List<DiaryExerciseRvItem> {
-        var dataList = mutableListOf<DiaryExerciseRvItem>()
+
+    fun getExerciseList(): List<ExerciseItem> {
+        var dataList = mutableListOf<ExerciseItem>()
         for(i in itemList){
             var item = i
             item.bodyPart = bodyPartHashMap[i.bodyPart].toString()

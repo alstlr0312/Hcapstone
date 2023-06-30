@@ -107,9 +107,7 @@ class DiaryViewModel: ViewModel() {
                     200 -> { // 다이어리 상세조회 성공
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
-                        data?.let {
-                            _diaryData.postValue(data)
-                        }
+                        _diaryData.postValue(data)
                     }
                     400 -> {//  실패
                         val body = response.errorBody()?.string()
@@ -158,7 +156,7 @@ class DiaryViewModel: ViewModel() {
 
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
+                Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
 
             }
@@ -172,7 +170,7 @@ class DiaryViewModel: ViewModel() {
     }
 
     private fun patchDiaryEditAPI(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
-        RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto,files).enqueue(object :
+        RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto, files).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
                 _loading.postValue(false)

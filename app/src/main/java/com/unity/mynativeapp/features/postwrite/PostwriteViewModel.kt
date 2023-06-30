@@ -4,9 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.network.*
+import com.unity.mynativeapp.network.util.POST_EDIT_COMPLETE
 
-import com.unity.mynativeapp.network.MyResponse
-import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.network.util.POST_WRITE_COMPLETE
 
 import okhttp3.MultipartBody
@@ -14,6 +15,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Dictionary
 
 class PostWriteViewModel: ViewModel() {
 
@@ -29,7 +31,53 @@ class PostWriteViewModel: ViewModel() {
     private val _postWriteSuccess = MutableLiveData<Boolean>()
     val postWriteSuccess: LiveData<Boolean> = _postWriteSuccess
 
+    // 게시글 수정
+    fun postEdit(postId: Int, postDto: RequestBody, files: MutableList<MultipartBody.Part>) {
 
+        _loading.postValue(true)
+
+        postEditApi(postId, postDto, files)
+    }
+
+    private fun postEditApi(postId: Int, postDto: RequestBody, files: MutableList<MultipartBody.Part>) {
+        RetrofitClient.getApiService().postPatchEdit(postId, postDto, files).enqueue(object :
+            Callback<MyResponse<String>> {
+            override fun onResponse(
+                call: Call<MyResponse<String>>,
+                response: Response<MyResponse<String>>
+            ) {
+                _loading.postValue(false)
+
+                val code = response.code()
+                when(code) {
+                    200 -> { // 게시글 수정 성공
+                        val data = response.body()?.data
+                        _toastMessage.postValue(POST_EDIT_COMPLETE)
+                        _postWriteSuccess.postValue(true)
+                    }
+                    401 -> {
+                        Log.d(TAG, "$code 존재하지 않는 유저")
+                        _logout.postValue(true)
+                    }
+                    400 -> {
+                        val body = response.errorBody()?.string()
+                        val data = GsonBuilder().create().fromJson(body, MyErrorList::class.java)
+                        _toastMessage.postValue(data.error?.get(0)?.error.toString())
+                    }
+                    415 -> Log.d(TAG, "$code 잘못된 Content-Type")
+                    500 -> Log.d(TAG, "$code 파일 입출력 오류")
+                    else -> Log.d(TAG, "$code")
+                }
+            }
+            override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+
+            }
+        })
+    }
+
+    // 게시글 작성
     fun postWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
 
         _loading.postValue(true)
@@ -57,7 +105,12 @@ class PostWriteViewModel: ViewModel() {
                         Log.d(TAG, "$code 존재하지 않는 유저")
                         _logout.postValue(true)
                     }
-                    400 -> Log.d(TAG, "$code   ")
+                    400 -> {
+                        val body = response.errorBody()?.string()
+                        val data = GsonBuilder().create().fromJson(body, MyErrorList::class.java)
+                        Log.d(TAG, "$code  ${data.error.toString()}")
+                        _toastMessage.postValue(data.error?.get(0)?.error.toString())
+                    }
                     415 -> Log.d(TAG, "$code 잘못된 Content-Type")
                     500 -> Log.d(TAG, "$code 파일 입출력 오류")
                     else -> Log.d(TAG, "$code")
@@ -73,7 +126,6 @@ class PostWriteViewModel: ViewModel() {
             }
         })
     }
-
     companion object {
         const val TAG = "PostWriteViewModel"
     }

@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
 import com.unity.mynativeapp.model.DiaryExerciseRvItem
+import com.unity.mynativeapp.model.ExerciseItem
 import com.unity.mynativeapp.network.util.hideKeyboard
 
 class AddExerciseActivity : AppCompatActivity() {
@@ -76,7 +77,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         val bodyPart = getString(R.string.exercise_cardio)
 
                         diaryActivity.exerciseAdapter.addItem(
-                            DiaryExerciseRvItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
+                            ExerciseItem(exerciseName, reps, exSetCount, isCardio, cardioTime, bodyPart, false)
                         )
                         finish()
                     }
@@ -93,7 +94,7 @@ class AddExerciseActivity : AppCompatActivity() {
                         Toast.makeText(this, getString(R.string.please_input_exercise_count), Toast.LENGTH_SHORT).show()
                     }else{
                         diaryActivity.exerciseAdapter.addItem(
-                            DiaryExerciseRvItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
+                            ExerciseItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio, null, bodyPart, false)
                         )
                         finish()
                     }

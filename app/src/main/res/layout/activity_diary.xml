@@ -107,7 +107,6 @@
                 app:tint="@color/main_red"
                 android:background="@android:color/transparent"
                 android:layout_marginStart="10dp"
-                android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="@id/tv_todays_exercise"
                 app:layout_constraintStart_toEndOf="@id/tv_todays_exercise"
                 app:layout_constraintBottom_toBottomOf="@id/tv_todays_exercise"/>
@@ -145,7 +144,6 @@
                 app:tint="@color/main_red"
                 android:background="@android:color/transparent"
                 android:layout_marginStart="10dp"
-                android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="@id/tv_gallery"
                 app:layout_constraintStart_toEndOf="@id/tv_gallery"
                 app:layout_constraintBottom_toBottomOf="@id/tv_gallery"/>
@@ -180,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/main_gray"
                 android:background="@drawable/shape_bg_memo"
-                android:text=""
+                android:hint="@string/please_input"
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:padding="10dp"

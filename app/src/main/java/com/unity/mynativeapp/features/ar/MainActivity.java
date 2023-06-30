@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.features.ar;
+/*package com.unity.mynativeapp.features.ar;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -86,3 +86,4 @@ public class MainActivity extends AppCompatActivity {
         finishAffinity();
     }
 }
+*/
