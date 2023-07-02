@@ -1,11 +1,13 @@
 package com.unity.mynativeapp.features.mypage
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.databinding.ItemRvMypageBinding
+import com.unity.mynativeapp.features.mypage.myposts.MyPostsActivity
 import com.unity.mynativeapp.model.MyPageRvItem
 
 class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem>): RecyclerView.Adapter<MyPageAdapter.ViewHolder>(){
@@ -22,6 +24,15 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
                 binding.tvCount.visibility = View.INVISIBLE
             }else{
                 binding.tvCount.visibility = View.VISIBLE
+            }
+
+            binding.root.setOnClickListener {
+                when(adapterPosition){
+                    0 -> { // 게시글
+                        context.startActivity(Intent(context, MyPostsActivity::class.java))
+                    }
+
+                }
             }
         }
     }

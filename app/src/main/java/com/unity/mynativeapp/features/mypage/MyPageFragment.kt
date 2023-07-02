@@ -52,9 +52,8 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
     }
 
     private fun setUiEvent(){
-//        binding.appbarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-//            binding.rvMypage.alpha = (appBarLayout.totalScrollRange + verticalOffset).toFloat() / appBarLayout.totalScrollRange
-//        }
+
+
     }
 
     private fun subscribeUI() {
