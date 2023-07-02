@@ -1,27 +1,40 @@
 package com.unity.mynativeapp.network
 
 import com.unity.mynativeapp.model.*
-import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.net.URL
 
 interface RetrofitService {
 
+	// 이메일 인증
 	@POST("email")
-	fun email(@Body CheckRequest: CheckRequest): Call<MyResponse<CheckData>>
+	fun email(@Body CheckRequest: CheckRequest): Call<MyResponse<CheckResponse>>
 
+	// 로그인
 	@POST("signin")
 	fun login(@Body loginRequest: LoginRequest): Call<MyResponse<LoginData>>
 
+	// 회원가입
 	@POST("signup")
 	fun signup(
 		@Query("code") code: String,
 		@Body signUpRequest: SignUpRequest
 	) : Call<MyResponse<String>>
+
+	// 아이디 찾기
+	@GET("find/id")
+	fun getFindId(
+		@Query("code") code: String
+	): Call<MyResponse<String>>
+
+	// 비밀번호 찾기
+	@PATCH("find/pw")
+	fun patchFindPw(
+		@Query("code") code: String
+	): Call<MyResponse<String>>
 
 	// 토큰 재발급
 	@GET("/diary")
@@ -83,6 +96,7 @@ interface RetrofitService {
 	fun getPost(
 		@Query("postType") postType: String?,
 		@Query("woryOutCategory") woryOutCategory: String?,
+		@Query("username") username: String?,
 		@Query("page") page: Int?,
 		@Query("size") size: Int?
 	) : Call<MyResponse<PostResponse>>

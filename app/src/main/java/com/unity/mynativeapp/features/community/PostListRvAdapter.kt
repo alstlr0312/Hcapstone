@@ -47,7 +47,7 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
 
             binding.root.setOnClickListener {
                 val intent = Intent(context, PostDetailActivity::class.java)
-                intent.putExtra("num",item.postId)
+                intent.putExtra("postId",item.postId)
                 context.startActivity(intent)
             }
         }
@@ -64,11 +64,6 @@ class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAd
 
     override fun getItemCount(): Int {
         return itemList.size
-    }
-
-    fun getListFromView(nList: MutableList<PostItem>){
-        itemList = nList
-        notifyDataSetChanged()
     }
 
     fun addItem(item: PostItem){

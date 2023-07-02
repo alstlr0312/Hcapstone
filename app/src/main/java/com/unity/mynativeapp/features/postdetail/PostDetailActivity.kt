@@ -51,8 +51,8 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        postId = intent.getIntExtra("num", -1)
-        viewModel.getPostDetail(postId)
+        postId = intent.getIntExtra("postId", -1)
+        if(postId != -1) viewModel.getPostDetail(postId)
 
         setView()
         setUiEvent()

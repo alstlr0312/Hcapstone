@@ -36,7 +36,6 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
 
     private fun setView(){
 
-
         // 게시물 댓글 리사이클러뷰 (댓글 3개)
         commentRvAdapter = ParentCommentRvAdapter(this, this)
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
@@ -86,9 +85,6 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
                 }
             }
         )
-
-
-
     }
 
     private fun subscribeUI(){
@@ -104,7 +100,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             showCustomToast(it)
         }
 
-        // 댓글 작성
+        // 댓글 작성 성공
         viewModel.commentWriteSuccess.observe(this){
             if(!it) return@observe
 
@@ -116,19 +112,22 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         }
 
         // 댓글 조회
-        viewModel.commentGetData.observe(this) {data->
+        viewModel.commentGetData.observe(this) {data ->
             if(data != null && data.commentListDto.isNotEmpty()) {
                 binding.tvNoComment.visibility = View.GONE
 
-                if(data.parentId == null){ // 부모 댓글
-                    commentRvAdapter.removeAllItem()
+                commentRvAdapter.removeAllItem()
 
-                    for(comment in data.commentListDto){
+                for(comment in data.commentListDto){ // 모든 댓글에 대해
+
+                    if(comment.childCount != -1){ // 부모 댓글이라면
                         commentRvAdapter.addItem(comment)
+                    }else{ // 자식 댓글 이라면
+                        // 부모 id로
+                        //commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
                     }
-                }else{ // 자식 댓글
-                    commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
                 }
+
             }else{
                 binding.tvNoComment.visibility = View.VISIBLE
             }

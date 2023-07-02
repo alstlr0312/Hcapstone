@@ -70,7 +70,7 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
                         }
 
                         binding.tvFilter.text = btnStr
-                        viewModel.community(postType, workOutCategory, currentPage, pageSize)
+                        viewModel.community(postType, workOutCategory, null, currentPage, pageSize)
                     }
                 }
             }
@@ -135,7 +135,7 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
     override fun onResume() {
         super.onResume()
         postingRvAdapter.removeAllItem()
-        viewModel.community(postType, workOutCategory, currentPage, pageSize)
+        viewModel.community(postType, workOutCategory, null, currentPage, pageSize)
     }
 
 }
