@@ -57,9 +57,11 @@ class SignUpActivity : AppCompatActivity(){
             val pwCheck = binding.edtPasswordConfirm.text.toString()
             val name = binding.edtUsername.text.toString()
             val email = binding.edtEmail.text.toString()
+            var field: String? = binding.edtAddress.text.toString()
+            if (field == "") field = null
             val code = binding.edtAuthenticateCode.text.toString()
 
-            viewModel.signup(id, pw, pwCheck, email, name, code)
+            viewModel.signup(id, pw, pwCheck, email, name, field, code)
         }
 
         binding.btnBack.setOnClickListener {

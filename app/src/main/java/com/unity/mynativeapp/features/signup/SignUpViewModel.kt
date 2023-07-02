@@ -13,11 +13,9 @@ import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.network.util.*
 
-import kotlinx.coroutines.NonDisposableHandle.parent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.regex.Pattern
 
 class SignUpViewModel : ViewModel() {
 
@@ -33,7 +31,6 @@ class SignUpViewModel : ViewModel() {
 	private val _signupSuccess = MutableLiveData<Boolean>(false)
 	val signupSuccess: LiveData<Boolean> = _signupSuccess
 
-
 	private var checkCode = ""
 	fun check(email: String) {
 
@@ -42,8 +39,8 @@ class SignUpViewModel : ViewModel() {
 	}
 
 	private fun postCheckAPI(email: String) {
-		RetrofitClient.getApiService().email(CheckRequest(email)).enqueue(object : Callback<MyResponse<CheckData>> {
-			override fun onResponse(call: Call<MyResponse<CheckData>>, response: Response<MyResponse<CheckData>>) {
+		RetrofitClient.getApiService().email(CheckRequest(email)).enqueue(object : Callback<MyResponse<CheckResponse>> {
+			override fun onResponse(call: Call<MyResponse<CheckResponse>>, response: Response<MyResponse<CheckResponse>>) {
 				_loading.postValue(false)
 				val code = response.code()
 				if (code == 200) {
@@ -59,14 +56,14 @@ class SignUpViewModel : ViewModel() {
 			}
 
 
-			override fun onFailure(call: Call<MyResponse<CheckData>>, t: Throwable) {
+			override fun onFailure(call: Call<MyResponse<CheckResponse>>, t: Throwable) {
 				Log.e(TAG, "Error: ${t.message}")
 				_loading.postValue(false)
 			}
 		})
 	}
 
-	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String, code: String) {
+	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String, field: String?, code: String) {
 		if (id.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return
@@ -97,7 +94,7 @@ class SignUpViewModel : ViewModel() {
 			return
 		}
 
-		RetrofitClient.getApiService().signup(checkCode, SignUpRequest(id, password, nickname, email)).enqueue(object : Callback<MyResponse<String>> {
+		RetrofitClient.getApiService().signup(checkCode, SignUpRequest(id, password, nickname, email, field)).enqueue(object : Callback<MyResponse<String>> {
 			override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
 				_loading.postValue(false)
 

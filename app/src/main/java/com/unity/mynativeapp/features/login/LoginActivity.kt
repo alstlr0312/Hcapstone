@@ -3,9 +3,12 @@ package com.unity.mynativeapp.features.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
+import com.unity.mynativeapp.features.login.find.FindActivity
 import com.unity.mynativeapp.features.signup.SignUpActivity
 
 
@@ -27,12 +30,26 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
         binding.btnLogin.setOnClickListener {
             val email = binding.edtId.text.toString()
             val password = binding.edtPassword.text.toString()
-
+            MyApplication.prefUtil.setString("username", "yerim")
             viewModel.login(email, password)
         }
 
+        // 회원가입
         binding.tvSignUp.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
+        }
+
+        // 아이디 찾기
+        binding.tvFindId.setOnClickListener {
+            val intent = Intent(this, FindActivity::class.java)
+            intent.putExtra("find", "id")
+            startActivity(intent)
+        }
+        // 비밀번호 찾기
+        binding.tvFindPassword.setOnClickListener {
+            val intent = Intent(this, FindActivity::class.java)
+            intent.putExtra("find", "pw")
+            startActivity(intent)
         }
 
         binding.layoutMain.setOnClickListener {
