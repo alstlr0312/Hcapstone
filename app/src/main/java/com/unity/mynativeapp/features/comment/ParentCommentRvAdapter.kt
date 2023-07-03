@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.PopupMenu
@@ -77,7 +78,7 @@ class ParentCommentRvAdapter(
                 childCommentAdapterList.add(childCommentAdapter)
 
                 var childNum = commentItem.childCount
-                if(childNum > 0) {
+                if(childNum > 0) { // 부모 댓글에 자식 댓글이 있다면 자식 댓글 조회 요청
                     commentListener.childCommentGetListener(commentItem.commentId)
                 }
 
@@ -94,6 +95,7 @@ class ParentCommentRvAdapter(
             binding.root.setOnCreateContextMenuListener(this@ParentCommentRvAdapter)
 
             binding.root.setOnLongClickListener {// 롱클릭
+                Log.d("longClick", "item.commendId: ${commentItem.commentId}, adapterPosition: $adapterPosition")
                 longClickPos = adapterPosition
                 false
             }

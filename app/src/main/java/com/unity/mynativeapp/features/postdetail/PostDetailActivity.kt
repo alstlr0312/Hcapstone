@@ -231,8 +231,8 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
             }
         }
+        */
 
-         */
     }
 
     override fun onResume() {

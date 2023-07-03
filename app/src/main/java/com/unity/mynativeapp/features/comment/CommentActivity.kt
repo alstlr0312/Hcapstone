@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityCommentBinding
+import com.unity.mynativeapp.model.CommentData
 import com.unity.mynativeapp.model.CommentWriteRequest
 import com.unity.mynativeapp.model.OnCommentClick
 import com.unity.mynativeapp.util.KeyboardVisibilityUtil
@@ -42,6 +43,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         binding.rvPostComment.adapter = commentRvAdapter
         commentRvAdapter.setPostId(postId)
 
+        // 댓글 조회 요청
         viewModel.commentGet(postId, null, null, null, null)
 
         binding.edtAddComment.requestFocus()
@@ -65,6 +67,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
                     binding.edtAddComment.text.toString(),
                     focusParentId
                 ))
+
             }
         }
 
@@ -104,7 +107,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         viewModel.commentWriteSuccess.observe(this){
             if(!it) return@observe
 
-            viewModel.commentGet(postId, null, null, null, null) // 댓글 다시 전체 조회
+            viewModel.commentGet(postId, focusParentId, null, null, null) // 댓글 다시 전체 조회
 
             hideKeyBoard()
             binding.edtAddComment.setText("")
@@ -116,17 +119,18 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             if(data != null && data.commentListDto.isNotEmpty()) {
                 binding.tvNoComment.visibility = View.GONE
 
-                commentRvAdapter.removeAllItem()
-
-                for(comment in data.commentListDto){ // 모든 댓글에 대해
-
-                    if(comment.childCount != -1){ // 부모 댓글이라면
-                        commentRvAdapter.addItem(comment)
-                    }else{ // 자식 댓글 이라면
-                        // 부모 id로
-                        //commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
+                //
+                if(data.parentId == null){
+                    commentRvAdapter.removeAllItem()
+                    for(comment in data.commentListDto){ // 모든 댓글에 대해
+                        if(comment.childCount != -1){ // 부모 댓글이라면
+                            commentRvAdapter.addItem(comment)
+                        }
                     }
+                }else{ // 자식 댓글만 조회한 경우
+                    commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
                 }
+
 
             }else{
                 binding.tvNoComment.visibility = View.VISIBLE
@@ -142,11 +146,9 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-    }
 
-    override fun childCommentGetListener(parentId: Int) {
+
+    override fun childCommentGetListener(parentId: Int) { // 자식 댓글 조회 요청
         viewModel.commentGet(postId, parentId, null, null, null)
     }
 

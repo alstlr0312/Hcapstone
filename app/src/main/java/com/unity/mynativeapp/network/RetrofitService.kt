@@ -121,7 +121,7 @@ interface RetrofitService {
 	fun postPatchEdit(
 		@Path("postId") postId: Int,
 		@Part("writePostDto") writePostDto: RequestBody,
-		@Part imageFile: MutableList<MultipartBody.Part>
+		@Part imageFile: MutableList<MultipartBody.Part> // files
 	): Call<MyResponse<String>>
 
 	@PATCH("/post/delete/{postId}")

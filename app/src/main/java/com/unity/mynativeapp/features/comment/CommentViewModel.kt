@@ -155,7 +155,7 @@ class CommentViewModel : ViewModel() {
 
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
+                Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })
@@ -163,6 +163,6 @@ class CommentViewModel : ViewModel() {
 
 
     companion object {
-        const val TAG = "PostDetailViewModel"
+        const val TAG = "CommentViewModel"
     }
 }
