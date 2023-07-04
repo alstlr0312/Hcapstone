@@ -136,8 +136,8 @@ class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
             val email = binding.edtEmail.text.toString()
             val pw = binding.edtPassword.text.toString()
             if(pwCheck[0] && pwCheck[1]){
-                //viewModel.findPw(FindPwRequest(email, pw))
-                showCustomToast("비밀번호 변경 요청")
+                viewModel.findPw(FindPwRequest(email, pw))
+                //showCustomToast("비밀번호 변경 요청")
             }else{
                 showCustomToast(PW_FORMAT_ERROR)
             }
