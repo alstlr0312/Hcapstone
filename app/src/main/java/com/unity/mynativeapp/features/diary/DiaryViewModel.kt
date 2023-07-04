@@ -164,7 +164,7 @@ class DiaryViewModel: ViewModel() {
     }
 
     // 다이어리 수정
-    fun diaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
+    fun diaryEdit(diaryId: Int, diaryDto: RequestBody, files: MutableList<MultipartBody.Part>) {
         _loading.postValue(true)
         patchDiaryEditAPI(diaryDto,files, diaryId)
     }

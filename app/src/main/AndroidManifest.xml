@@ -26,9 +26,11 @@
             android:name=".features.mypage.myposts.MyPostsActivity"
             android:exported="false" />
         <activity
-            android:name=".features.login.find.FindActivity"
+            android:name=".features.login.find.FindIdActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".features.login.find.FindPwActivity"
+            android:exported="false"/>
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="uyhy60cpcq" />

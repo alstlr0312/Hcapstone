@@ -27,7 +27,8 @@
     <string name="please_input_password">비밀번호를 입력해주세요.</string>
     <string name="please_input_nickname">닉네임을 입력해주세요.</string>
     <string name="please_input_email">이메일을 입력해주세요.</string>
-    <string name="email_authenticate">이메일 인증하기</string>
+    <string name="email_authenticate">이메일 인증</string>
+    <string name="complete_email_authenticate">이메일 인증 완료</string>
     <string name="authenticate">인증</string>
     <string name="input_authenticate_code">인증코드 입력</string>
     <string name="request_authenticate_code">인증코드 요청</string>
@@ -38,6 +39,8 @@
     <string name="password_not_same">비밀번호가 일치하지 않습니다.</string>
     <string name="complete_sign_up">회원가입을 완료하였습니다.</string>
     <string name="success_sign_in">로그인 성공</string>
+    <string name="change_password">비밀번호 변경</string>
+    <string name="change">변경하기</string>
     <string name="health_dairy">운동 일지</string>
     <string name="aerobic">유산소</string>
     <string name="anaerobic">무산소</string>

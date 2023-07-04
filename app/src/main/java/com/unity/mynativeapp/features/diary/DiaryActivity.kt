@@ -145,7 +145,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 val gson = GsonBuilder().serializeNulls().create()
                 val requestBodyString = gson.toJson(jsonRequest).toString()
                 val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
-                val exdata = createPartFromString(requestBodyWithoutBackslashes)
+                val diaryData = createPartFromString(requestBodyWithoutBackslashes)
 
                 // 미디어
                 val mediaList = mediaAdapter.getMediaList()
@@ -171,7 +171,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                         val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
                         imageList.add(uploadFile)
                     }
-                    viewModel.diaryEdit(exdata, imageList, diaryId)
+                    viewModel.diaryEdit(diaryId, diaryData, imageList)
 
 
                 }else{ // 다이어리 작성
@@ -183,7 +183,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                             imageList.add(uploadFile)
                         }
                     }
-                    viewModel.diaryWrite(exdata, imageList) // 다이어리 작성 요청
+                    viewModel.diaryWrite(diaryData, imageList) // 다이어리 작성 요청
                 }
             }else{
                 finish()

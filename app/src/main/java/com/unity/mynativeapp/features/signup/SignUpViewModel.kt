@@ -39,8 +39,8 @@ class SignUpViewModel : ViewModel() {
 	}
 
 	private fun postCheckAPI(email: String) {
-		RetrofitClient.getApiService().email(CheckRequest(email)).enqueue(object : Callback<MyResponse<CheckResponse>> {
-			override fun onResponse(call: Call<MyResponse<CheckResponse>>, response: Response<MyResponse<CheckResponse>>) {
+		RetrofitClient.getApiService().emailCode(EmailCodeRequest(email)).enqueue(object : Callback<MyResponse<EmailCodeResponse>> {
+			override fun onResponse(call: Call<MyResponse<EmailCodeResponse>>, response: Response<MyResponse<EmailCodeResponse>>) {
 				_loading.postValue(false)
 				val code = response.code()
 				if (code == 200) {
@@ -56,7 +56,7 @@ class SignUpViewModel : ViewModel() {
 			}
 
 
-			override fun onFailure(call: Call<MyResponse<CheckResponse>>, t: Throwable) {
+			override fun onFailure(call: Call<MyResponse<EmailCodeResponse>>, t: Throwable) {
 				Log.e(TAG, "Error: ${t.message}")
 				_loading.postValue(false)
 			}
@@ -64,6 +64,9 @@ class SignUpViewModel : ViewModel() {
 	}
 
 	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String, field: String?, code: String) {
+
+		_loading.postValue(true)
+
 		if (id.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return

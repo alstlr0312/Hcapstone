@@ -8,13 +8,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
-import com.unity.mynativeapp.databinding.ActivityFindBinding
+import com.unity.mynativeapp.databinding.ActivityFindIdBinding
 
-class FindActivity : BaseActivity<ActivityFindBinding>(
-    ActivityFindBinding::inflate) {
+class FindIdActivity : BaseActivity<ActivityFindIdBinding>(
+    ActivityFindIdBinding::inflate) {
     private val viewModel by viewModels<FindViewModel>()
-
-    private var find = ""
 
     val emailPattern = android.util.Patterns.EMAIL_ADDRESS
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,12 +24,6 @@ class FindActivity : BaseActivity<ActivityFindBinding>(
     }
 
     private fun setView(){
-        find = intent.getStringExtra("find")!!
-        if(find == "id"){ // 아이디 찾기
-            binding.tvTitle.text = getString(R.string.find_id) // 아이디 찾기
-        }else{ // 비밀번호 찾기
-            binding.tvTitle.text = getString(R.string.find_password) // 비밀번호 찾기
-        }
 
         binding.layoutEmail.visibility = View.VISIBLE
         binding.layoutCode.visibility = View.INVISIBLE
@@ -40,8 +32,6 @@ class FindActivity : BaseActivity<ActivityFindBinding>(
         binding.tvWarningEmail.visibility = View.GONE
         binding.btnEmailAuthenticate.background = getDrawable(R.drawable.shape_btn_gray_unenabled)
         binding.btnEmailAuthenticate.isEnabled = false
-
-
 
     }
 
@@ -76,16 +66,13 @@ class FindActivity : BaseActivity<ActivityFindBinding>(
         // 인증코드 요청 이벤트
         binding.btnEmailAuthenticate.setOnClickListener {
             val email = binding.edtEmail.text.toString()
-            viewModel.emailCheck(email)
+            viewModel.emailCode(email)
         }
 
         // 찾기 버튼 이벤트
         binding.btnFind.setOnClickListener {
             val code = binding.edtAuthenticateCode.text.toString()
-
-            if(find == "id") viewModel.findId(code) // 아이디 찾기 요청
-            else if (find=="pw") viewModel.findPw(code) // 비밀번호 찾기 요청
-
+            viewModel.findId(code) // 아이디 찾기 요청
         }
 
         binding.btnBack.setOnClickListener {
@@ -101,18 +88,15 @@ class FindActivity : BaseActivity<ActivityFindBinding>(
             if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
         }
 
-        // 이메일 인증코드 요청 성공
-        viewModel.checkSuccess.observe(this){ isSuccess ->
-            if(isSuccess){
+        // 이메일 인증코드 요청
+        viewModel.getEmailCodeSuccess.observe(this){ isSuccess ->
+            if(isSuccess){ // 성공
                 binding.layoutEmail.visibility = View.INVISIBLE
                 binding.layoutCode.visibility = View.VISIBLE
                 binding.tvNotificationSend.text = getString(R.string.please_input_email_code)
                 binding.tvNotificationSend.visibility = View.VISIBLE
 
-                if(find == "id") binding.btnFind.text = getString(R.string.find_id)
-                else if(find == "pw") binding.btnFind.text = getString(R.string.find_password)
-
-            }else{
+            }else{ // 실패
                 binding.layoutEmail.visibility = View.VISIBLE
                 binding.layoutCode.visibility = View.INVISIBLE
             }
@@ -126,9 +110,6 @@ class FindActivity : BaseActivity<ActivityFindBinding>(
             binding.btnFind.isEnabled = false
             binding.btnFind.background = getDrawable(R.drawable.shape_btn_gray_unenabled)
 
-            if(find == "id") binding.tvFind.text = "조회된 아이디"
-            else if(find == "pw") binding.tvFind.text = "임시 비밀번호"
-
             binding.layoutGetId.visibility = View.VISIBLE
             binding.tvGetId.text = data
         }
@@ -136,7 +117,6 @@ class FindActivity : BaseActivity<ActivityFindBinding>(
         // 찾기 실패
         viewModel.findError.observe(this){ error ->
             if(error == null) return@observe
-
             binding.tvNotificationSend.text = error
         }
 

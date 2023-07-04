@@ -9,9 +9,15 @@ import retrofit2.http.*
 
 interface RetrofitService {
 
-	// 이메일 인증
+	// 이메일 인증 코드
 	@POST("email")
-	fun email(@Body CheckRequest: CheckRequest): Call<MyResponse<CheckResponse>>
+	fun emailCode(@Body codeRequest: EmailCodeRequest): Call<MyResponse<EmailCodeResponse>>
+
+	// 이메일 인증 코드 확인
+	@POST("email/check")
+	fun emailCheck(
+		@Query("code") code: String
+	): Call<MyResponse<String>>
 
 	// 로그인
 	@POST("signin")
@@ -30,10 +36,10 @@ interface RetrofitService {
 		@Query("code") code: String
 	): Call<MyResponse<String>>
 
-	// 비밀번호 찾기
+	// 비밀번호 찾기(비밀번호 변경)
 	@PATCH("find/pw")
 	fun patchFindPw(
-		@Query("code") code: String
+		@Body findPwRequest: FindPwRequest
 	): Call<MyResponse<String>>
 
 	// 토큰 재발급
