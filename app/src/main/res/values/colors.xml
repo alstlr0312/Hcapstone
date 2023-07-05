@@ -4,7 +4,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorAccent">#AE2828</color>
+    <color name="colorAccent">#AA3030</color>
+    <color name="colorPrimary">#AA3030</color>
 
     <color name="main_black">#272727</color>
     <color name="main_black_dark">#202020</color>

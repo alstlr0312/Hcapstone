@@ -53,27 +53,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
 
-            <ImageView
-                android:id="@+id/iv_exercise_diary"
-                android:layout_width="163dp"
-                android:layout_height="40dp"
+            <TextView
+                android:id="@+id/tv_exercise_diary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exercise_diary"
+                style="@style/TitleTextStyle"
                 android:layout_marginTop="@dimen/fab_margin"
-                android:src="@drawable/txt_exercise_diary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-            <TextView
-                android:id="@+id/tv_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2022"
-                android:textColor="@color/main_red_light"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_exercise_diary" />
+
 
             <LinearLayout
                 android:id="@+id/layout_set_month"
@@ -81,8 +72,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:layout_marginTop="@dimen/fab_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_year"
+                app:layout_constraintTop_toBottomOf="@id/tv_exercise_diary"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <ImageView
@@ -93,14 +85,22 @@
                     app:tint="@color/main_red_light"/>
 
                 <TextView
+                    android:id="@+id/tv_year"
+                    style="@style/SmallBoldTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:layout_gravity="bottom"
+                    android:text="20xx" />
+
+                <TextView
                     android:id="@+id/tv_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
-                    android:textColor="@color/main_red_light"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:layout_marginHorizontal="40dp"/>
+                    android:layout_gravity="bottom"
+                    android:layout_marginHorizontal="@dimen/fab_margin"
+                    style="@style/TitleTextStyle"/>
 
                 <ImageView
                     android:id="@+id/iv_next_month"
@@ -130,9 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_sunday"
-                    android:textSize="14sp"
-                    android:textColor="@color/main_red_light"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
                 <TextView
                     android:id="@+id/tv_monday"
@@ -140,9 +138,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_monday"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
                 <TextView
                     android:id="@+id/tv_tuesday"
@@ -150,9 +147,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_tuesday"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
                 <TextView
                     android:id="@+id/tv_wednesday"
@@ -160,9 +156,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_wednesday"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
                 <TextView
                     android:id="@+id/tv_thursday"
@@ -170,9 +165,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_thursday"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
                 <TextView
                     android:id="@+id/tv_friday"
@@ -180,9 +174,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_friday"
-                    android:textSize="14sp"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
                 <TextView
                     android:id="@+id/tv_saturday"
@@ -190,9 +183,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/calendar_saturday"
-                    android:textSize="14sp"
                     android:textColor="@color/blue"
-                    android:textStyle="bold"/>
+                    style="@style/SmallBoldTextStyle"/>
 
             </LinearLayout>
 
@@ -210,11 +202,12 @@
                 app:layout_constraintTop_toBottomOf="@id/layout_week"/>
 
 
-            <ImageView
-                android:id="@+id/iv_monthly_progress"
-                android:layout_width="230dp"
+            <TextView
+                android:id="@+id/tv_monthly_progress"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/txt_monthly_progress"
+                android:text="@string/monthly_progress"
+                style="@style/TitleTextStyle"
                 android:layout_marginTop="40dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recyclerView_calendar"
@@ -228,13 +221,166 @@
                 android:progress="20"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_marginHorizontal="60dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:background="@drawable/shape_edge_red_rounded"
                 android:progressDrawable="@drawable/progress_bar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_monthly_progress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_monthly_progress"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_exercise_routine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exercise_routine_recommend"
+                style="@style/TitleTextStyle"
+                android:layout_marginTop="50dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progress_bar_monthly"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_exercise_routine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_exercise_routine"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_exercise_purpose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="운동 목적"
+                    style="@style/BoldTextStyle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <RadioGroup
+                    android:id="@+id/rg_purpose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toEndOf="@id/tv_exercise_purpose"
+                    app:layout_constraintTop_toTopOf="@id/tv_exercise_purpose"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_exercise_purpose">
+                    <RadioButton
+                        android:id="@+id/rb_muscle_gain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="근육 강화"
+                        android:checked="true"
+                        style="@style/SmallBoldTextStyle"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/main_gray"/>
+                    <RadioButton
+                        android:id="@+id/rb_loosing_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="체중 감량"
+                        style="@style/SmallBoldTextStyle"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/main_gray"/>
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/tv_height_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="키∙몸무게"
+                    style="@style/BoldTextStyle"
+                    android:layout_marginTop="45dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_exercise_purpose"/>
+
+                <NumberPicker
+                    android:id="@+id/npicker_height"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:selectionDividerHeight="0dp"
+                    android:layout_marginHorizontal="@dimen/fab_margin"
+                    app:layout_constraintStart_toEndOf="@id/tv_height_weight"
+                    app:layout_constraintTop_toTopOf="@id/tv_height_weight"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_height_weight"
+                    />
+                <TextView
+                    android:id="@+id/tv_cm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="cm"
+                    style="@style/SmallBoldTextStyle"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toEndOf="@id/npicker_height"
+                    app:layout_constraintTop_toTopOf="@id/npicker_height"
+                    app:layout_constraintBottom_toBottomOf="@id/npicker_height"/>
+                <NumberPicker
+                    android:id="@+id/npicker_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:selectionDividerHeight="0dp"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    app:layout_constraintStart_toEndOf="@id/tv_cm"
+                    app:layout_constraintTop_toTopOf="@id/npicker_height"
+                    app:layout_constraintBottom_toBottomOf="@id/npicker_height"
+                    />
+                <TextView
+                    android:id="@+id/tv_kg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="kg"
+                    style="@style/SmallBoldTextStyle"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toEndOf="@id/npicker_weight"
+                    app:layout_constraintTop_toTopOf="@id/npicker_weight"
+                    app:layout_constraintBottom_toBottomOf="@id/npicker_weight"/>
+
+                <TextView
+                    android:id="@+id/tv_division"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분할"
+                    style="@style/BoldTextStyle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/npicker_division"
+                    app:layout_constraintBottom_toBottomOf="@id/npicker_division"/>
+                <NumberPicker
+                    android:id="@+id/npicker_division"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:selectionDividerHeight="0dp"
+                    app:layout_constraintStart_toStartOf="@id/npicker_height"
+                    app:layout_constraintTop_toBottomOf="@id/npicker_height"
+                    />
+                <TextView
+                    android:id="@+id/tv_routine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="일"
+                    style="@style/SmallBoldTextStyle"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toEndOf="@id/npicker_division"
+                    app:layout_constraintTop_toTopOf="@id/npicker_division"
+                    app:layout_constraintBottom_toBottomOf="@id/npicker_division"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/sel_btn_red_pressed"
+                    android:text="루틴 추천 받기"
+                    style="@style/BoldTextStyle"
+                    android:textColor="@color/white"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/npicker_division"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
