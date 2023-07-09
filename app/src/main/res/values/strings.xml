@@ -10,9 +10,9 @@
     <string name="action_settings">Settings</string>
     <string name="game_view_content_description">Game view</string>
 
-    <string name="exercise_diary">운동 다이어리</string>
-    <string name="monthly_progress">이번 달 진행 상황</string>
-    <string name="exercise_routine_recommend">운동 루틴 추천</string>
+    <string name="exercise_diary">\'s 운동일지</string>
+    <string name="monthly_progress">이번 달 운동 진행률</string>
+    <string name="exercise_routine_diet_recommend">운동 루틴&amp;식단 추천</string>
     <string name="exercise_community">운동 커뮤니티</string>
     <string name="exercise_posting">운동 게시글 작성</string>
 
@@ -73,6 +73,9 @@
     <string name="saturday">토요일</string>
     <string name="sunday">일요일</string>
 
+
+    <!-- 홈 -->
+
     <string name="diary">일지</string>
     <string name="exercise">운동</string>
     <string name="todays_exercise">오늘의 운동</string>
@@ -82,7 +85,7 @@
     <string name="gallery">갤러리</string>
     <string name="add">추가</string>
     <string name="please_input">입력해주세요...</string>
-
+    <string name="recommendation">추천</string>
     <string name="todays_challenge">오늘의 도전</string>
     <string name="hour">시간</string>
     <string name="register">등록하기</string>
@@ -116,7 +119,24 @@
     <string name="you_want_delete_media">미디어를 삭제하시겠습니까?</string>
     <string name="you_want_delete_post">게시글을 삭제하시겠습니까?</string>
 
-
+    <string name="routine">루틴</string>
+    <string name="exercise_routine">운동 루틴</string>
+    <string name="diet_food">다이어트 식단</string>
+    <string name="recommend_todays_food">오늘의 식단 추천</string>
+    <string name="recommend_routine">운동 루틴 추천</string>
+    <string name="todays_food">오늘의 식단</string>
+    <string name="food">식단</string>
+    <string name="get_routine">루틴 추천 받기</string>
+    <string name="get_diet_food">식단 추천 받기</string>
+    <string name="exercise_purpose">운동 목적</string>
+    <string name="muscle_gain">근육 강화</string>
+    <string name="loosing_weight">체중 감량</string>
+    <string name="height_weight">키∙몸무게</string>
+    <string name="division">분할</string>
+    <string name="day">일</string>
+    <string name="cm">cm</string>
+    <string name="kg">kg</string>
+    <string name="recommend_result">추천 결과</string>
     <!-- 커뮤니티 -->
     <string name="now">방금</string>
     <string name="total">전체</string>

@@ -39,13 +39,19 @@
     <style name="NormalTextStyle">
         <item name = "android:textSize">@dimen/normal_text_size</item>
         <item name = "android:textColor">@color/colorPrimary</item>
-        <item name = "android:fontFamily">@font/sunflower_medium</item>
+        <item name = "android:fontFamily">@font/sunflower_light</item>
     </style>
 
     <style name="SmallBoldTextStyle">
         <item name = "android:textSize">@dimen/small_text_size</item>
         <item name = "android:textColor">@color/colorPrimary</item>
-        <item name = "android:fontFamily">@font/sunflower_medium</item>
+        <item name = "android:fontFamily">@font/sunflower_bold</item>
+    </style>
+
+    <style name="SmallTextStyle">
+        <item name = "android:textSize">@dimen/small_text_size</item>
+        <item name = "android:textColor">@color/colorPrimary</item>
+        <item name = "android:fontFamily">@font/sunflower_light</item>
     </style>
 
     <style name="BoldTextStyle">

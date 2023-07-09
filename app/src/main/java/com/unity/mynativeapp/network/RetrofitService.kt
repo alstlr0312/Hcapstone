@@ -176,4 +176,17 @@ interface RetrofitService {
 		@Query("offset") offset: Int,
 		@Query("limit") limit: Int
 	): Call<MyResponse<MapResponse>>
+
+
+	// 운동 루틴 추천
+	@POST("/api/routines")
+	fun postRoutines(
+		@Body routineRequest: RoutineRequest
+	): Call<MyResponse<String>>
+
+	// 식단 추천
+	@POST("/api/diet")
+	fun postDietFood(
+		@Body dietFoodRequest: DietFoodRequest
+	): Call<MyResponse<String>>
 }

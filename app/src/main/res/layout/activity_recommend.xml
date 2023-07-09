@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_gradient_black"
+    tools:context=".features.home.recommend.RecommendActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/layout_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_black">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginVertical="13dp"
+                android:src="@drawable/logo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/ic_close"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_red"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_recommend_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recommendation"
+                android:layout_margin="@dimen/fab_margin"
+                android:textColor="@color/white"
+                style="@style/TitleTextStyle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_recommend_set"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_recommend_type"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_exercise_purpose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/exercise_purpose"
+                    style="@style/BoldTextStyle"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <RadioGroup
+                    android:id="@+id/rg_purpose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toEndOf="@id/tv_exercise_purpose"
+                    app:layout_constraintTop_toTopOf="@id/tv_exercise_purpose"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_exercise_purpose">
+                    <RadioButton
+                        android:id="@+id/rb_muscle_gain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/muscle_gain"
+                        android:checked="true"
+                        style="@style/SmallBoldTextStyle"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/main_gray"/>
+                    <RadioButton
+                        android:id="@+id/rb_loosing_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/loosing_weight"
+                        style="@style/SmallBoldTextStyle"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/main_gray"/>
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/tv_height_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/height_weight"
+                    style="@style/BoldTextStyle"
+                    android:layout_marginTop="45dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rg_purpose"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_height_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    app:layout_constraintStart_toEndOf="@id/tv_height_weight"
+                    app:layout_constraintTop_toTopOf="@id/tv_height_weight"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_height_weight">
+
+
+                    <NumberPicker
+                        android:id="@+id/npicker_height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="90dp"
+                        android:selectionDividerHeight="0dp"/>
+                    <TextView
+                        android:id="@+id/tv_cm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cm"
+                        style="@style/SmallBoldTextStyle"
+                        android:textColor="@color/white"/>
+                    <NumberPicker
+                        android:id="@+id/npicker_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="90dp"
+                        android:selectionDividerHeight="0dp"
+                        android:layout_marginStart="@dimen/fab_margin"/>
+                    <TextView
+                        android:id="@+id/tv_kg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/kg"
+                        style="@style/SmallBoldTextStyle"
+                        android:textColor="@color/white"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_division"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_height_weight">
+                    <TextView
+                        android:id="@+id/tv_division"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/division"
+                        style="@style/BoldTextStyle"/>
+                    <NumberPicker
+                        android:id="@+id/npicker_division"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="45dp"
+                        android:selectionDividerHeight="0dp"/>
+                    <TextView
+                        android:id="@+id/tv_routine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/day"
+                        style="@style/SmallBoldTextStyle"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_eaten_food"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_height_weight">
+                    <TextView
+                        android:id="@+id/tv_eaten_food"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="오늘 먹은 음식"
+                        style="@style/BoldTextStyle"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                    <ImageView
+                        android:id="@+id/btn_add_food"
+                        android:layout_width="@dimen/icon_small_size"
+                        android:layout_height="@dimen/icon_small_size"
+                        android:src="@drawable/ic_add_rectangle"
+                        app:tint="@color/main_red"
+                        android:layout_marginStart="3dp"
+                        app:layout_constraintStart_toEndOf="@id/tv_eaten_food"
+                        app:layout_constraintTop_toTopOf="@id/tv_eaten_food"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_eaten_food"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_eaten_food"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="10dp"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_eaten_food"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_recommend"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:background="@drawable/sel_btn_red_pressed"
+                android:text="@string/get_routine"
+                style="@style/BoldTextStyle"
+                android:textColor="@color/main_gray_light"
+                android:layout_marginVertical="30dp"
+                android:layout_marginHorizontal="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_recommend_set"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <LinearLayout
+                android:id="@+id/layout_recommend_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="30dp"
+                android:layout_marginHorizontal="@dimen/fab_margin"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_recommend"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recommend_result"
+                    android:textColor="@color/white"
+                    style="@style/TitleTextStyle"/>
+
+                <TextView
+                    android:id="@+id/tv_recommend_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:lineSpacingExtra="10dp"
+                    android:overScrollMode="always"
+                    android:isScrollContainer="true"
+                    android:text="추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천
+결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추
+천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천
+결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추
+천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과추천 결과
+추천 결과추천 결과
+"
+                    android:textColor="@color/main_gray_light"
+                    android:background="@drawable/shape_edge_red_rounded"
+                    android:padding="10dp"
+                    style="@style/NormalTextStyle"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

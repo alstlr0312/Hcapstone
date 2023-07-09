@@ -23,6 +23,9 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
+            android:name=".features.home.recommend.RecommendActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.mypage.myposts.MyPostsActivity"
             android:exported="false" />
         <activity
@@ -30,7 +33,8 @@
             android:exported="false" />
         <activity
             android:name=".features.login.find.FindPwActivity"
-            android:exported="false"/>
+            android:exported="false" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="uyhy60cpcq" />

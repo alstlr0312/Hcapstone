@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    android:gravity="center"
+    android:background="@drawable/shape_edge_red_rounded_10">
+
+    <EditText
+        android:id="@+id/edtText"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:hint="음식 입력"
+        android:layout_margin="10dp"
+        android:textColorHint="@color/main_gray_light2"
+        android:textColor="@color/white"
+        style="@style/SmallTextStyle"/>
+
+    <ImageView
+        android:id="@+id/iv_cancel"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_close"
+        app:tint="@color/main_red"/>
+
+</LinearLayout>

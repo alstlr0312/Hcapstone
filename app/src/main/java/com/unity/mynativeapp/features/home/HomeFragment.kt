@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
+import com.unity.mynativeapp.databinding.ActivityRecommendBinding
 
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
+import com.unity.mynativeapp.features.home.recommend.RecommendActivity
 
 import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.network.util.LoadingDialog
@@ -59,27 +61,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         subscribeUI()
 
 
-        with(binding.npickerHeight){
-            wrapSelectorWheel = false // 순환 막기
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS // editText 해
-            minValue = 130; maxValue = 200; value = 165 // 값
-            textColor = Color.WHITE
-            textSize = 46f
-        }
-        with(binding.npickerWeight){
-            wrapSelectorWheel = false // 순환 막기
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS // editText 해
-            minValue = 35; maxValue = 150; value = 60 // 값
-            textColor = Color.WHITE
-            textSize = 46f
-        }
-        with(binding.npickerDivision){
-            wrapSelectorWheel = false // 순환 막기
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS // editText 해
-            minValue = 2; maxValue = 5; value = 2 // 값
-            textColor = Color.WHITE
-            textSize = 46f
-        }
     }
 
     override fun onResume() {
@@ -111,6 +92,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
             if(selectedDate.year==todayDate.year && selectedDate.monthValue==todayDate.monthValue)
                 selectedDate = todayDate
             setCalenderView()
+        }
+
+        // 추천 받기 화면으로 이동
+        binding.btnRecommend.setOnClickListener {
+            var recommendStr = ""
+            when(binding.rgPurpose.checkedRadioButtonId){
+                R.id.rb_routine -> { // 운동 루틴 추천
+                    recommendStr = "routine"
+                }
+                R.id.rb_food -> { // 식단 추천
+                    recommendStr = "food"
+                }
+            }
+
+            if(recommendStr != ""){
+                val intent = Intent(requireContext(), RecommendActivity::class.java)
+                intent.putExtra("recommend", recommendStr)
+                startActivity(intent)
+            }
+
         }
     }
 
