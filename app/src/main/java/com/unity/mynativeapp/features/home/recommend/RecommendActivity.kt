@@ -15,7 +15,7 @@ import com.unity.mynativeapp.model.RoutineRequest
 
 class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecommendBinding::inflate) {
 
-    var recommendStr = ""
+    var recommendType = ""
     lateinit var foodAdapter: FoodRvAdapter
     private val viewModel by viewModels<RecommendViewModel>()
 
@@ -52,8 +52,8 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
 
         binding.layoutRecommendResult.visibility = View.GONE
 
-        recommendStr = intent.getStringExtra("recommend").toString()
-        when(recommendStr){
+        recommendType = intent.getStringExtra("recommend").toString()
+        when(recommendType){
             "routine" -> {
                 binding.tvRecommendType.text = getString(R.string.recommend_routine)
                 binding.btnRecommend.text = getString(R.string.get_routine)
@@ -92,7 +92,7 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
                 R.id.rb_loosing_weight -> {purpose = "LOOSING_WEIGHT"}
             }
 
-            when(recommendStr){
+            when(recommendType){
                 "routine" -> {
                     viewModel.recommendRoutine(
                         RoutineRequest(
@@ -147,6 +147,38 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
             }
             binding.layoutRecommendResult.visibility = View.VISIBLE
             binding.tvRecommendResult.text = data
+
+            /*
+            when(recommendType) {
+                "routine" -> {
+                    //var result = "1일: 바벨스쿼트 - 10회 3세트 - 40kg 2일: 덤벨 벤치프레스 - 10회 3세트 - 10kg 3일: 바벨 데드리프트 - 3세트 8회 반복 - 50kg 참고: 이것은 샘플 운동 루틴일 뿐이다."
+                    var result = data
+                    val divisions = binding.npickerDivision.value
+                    var resultArr = arrayListOf<String>()
+                    for(i in 0 until divisions){
+                        val splitArr = result!!.split("${i+1}일: ", limit = 2)
+                        if(i > 0) {
+                            resultArr.add(splitArr[0]+"\n")
+                        }
+                        resultArr.add("${i+1}일:\n")
+                        result = splitArr[1]
+                    }
+                    val splitArr2 = result!!.split("참고: ", limit = 2)
+                    resultArr.add(splitArr2[0]+"\n")
+                    resultArr.add("참고: \n")
+                    resultArr.add(splitArr2[1])
+                    var printResult = ""
+                    for(str in resultArr){
+                        printResult += str
+                    }
+                    binding.tvRecommendResult.text = printResult
+                }
+                "food" -> {
+                    binding.tvRecommendResult.text = data
+                }
+            }
+
+             */
         }
     }
 

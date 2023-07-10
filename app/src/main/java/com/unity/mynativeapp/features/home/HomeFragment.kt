@@ -50,6 +50,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         todayDate = LocalDate.now()
         selectedDate = todayDate
 
+        binding.tvUsername.text = MyApplication.prefUtil.getString("username", "")
+
         calenderRvAdapter = CalenderRvAdapter(requireContext(), this)
         binding.recyclerViewCalendar.layoutManager = GridLayoutManager(context, 7)
         binding.recyclerViewCalendar.adapter = calenderRvAdapter

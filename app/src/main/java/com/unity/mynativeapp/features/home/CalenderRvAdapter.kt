@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
@@ -38,24 +38,26 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
             // 선택한 날짜 focus
             if(item.isSelectedDay == true){
                 selectedDayBinding = binding
-                binding.layoutDay.background = getDrawable(context, R.color.main_gray)
+                binding.layoutDay.background = getDrawable(context, R.color.main_red_bg)
+                binding.tvDailyPercentage.setTextColor(getColor(context, R.color.main_gray_light))
             }else{
                 if(item.exerciseDate == null){
                     binding.layoutDay.background = ColorDrawable(Color.TRANSPARENT)
                 }else{
                     binding.layoutDay.background = getDrawable(context, R.drawable.shape_edge_gray)
                 }
+                binding.tvDailyPercentage.setTextColor(getColor(context, R.color.main_red))
             }
 
             // 일일 운동 수행 퍼센트
             if(item.dailyPercentage != -1){ // 작성한 일지가 있음
                 binding.tvDailyPercentage.visibility = View.VISIBLE
                 binding.tvDailyPercentage.text = item.dailyPercentage.toString() + "%"
-                binding.tvDiary.visibility = View.VISIBLE
+               // binding.tvDiary.visibility = View.VISIBLE
 
             }else{ // 작성한 일지가 없음
                 binding.tvDailyPercentage.visibility = View.GONE
-                binding.tvDiary.visibility = View.GONE
+                //binding.tvDiary.visibility = View.GONE
             }
 
             binding.layoutDay.setOnClickListener {
@@ -71,13 +73,15 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
 
                         context.startActivity(intent)
                     }else{ // 선택 되지 않은 날짜를 클릭했다면 ui 변경
+                        binding.tvDailyPercentage.setTextColor(getColor(context, R.color.main_gray_light))
 
                         itemList[selectedDayIdx].isSelectedDay = false
                         item.isSelectedDay = true
                         selectedDayIdx = this.adapterPosition
 
                         selectedDayBinding.layoutDay.background = getDrawable(context, R.drawable.shape_edge_gray)
-                        binding.layoutDay.background = getDrawable(context, R.color.main_gray)
+                        selectedDayBinding.tvDailyPercentage.setTextColor(getColor(context, R.color.main_red))
+                        binding.layoutDay.background = getDrawable(context, R.color.main_red_bg)
                         selectedDayBinding = binding
 
 

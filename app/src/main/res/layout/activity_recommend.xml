@@ -220,8 +220,8 @@
                         android:layout_width="@dimen/icon_small_size"
                         android:layout_height="@dimen/icon_small_size"
                         android:src="@drawable/ic_add_rectangle"
-                        app:tint="@color/main_red"
-                        android:layout_marginStart="3dp"
+                        app:tint="@color/main_gray_light"
+                        android:layout_marginStart="5dp"
                         app:layout_constraintStart_toEndOf="@id/tv_eaten_food"
                         app:layout_constraintTop_toTopOf="@id/tv_eaten_food"
                         app:layout_constraintBottom_toBottomOf="@id/tv_eaten_food"/>

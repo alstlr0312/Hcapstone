@@ -24,6 +24,7 @@
 
     <color name="calender_diary_color">#7E0000</color>
     <color name="memo_bg">#D1D1D1</color>
+    <color name="main_red_bg">#92D36868</color>
 
     <color name="list_item_bg">#373737</color>
     <color name="transparent">#00FFFFFF</color>

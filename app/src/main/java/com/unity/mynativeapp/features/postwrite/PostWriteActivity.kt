@@ -119,7 +119,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
             }
         }
 
-        binding.ivBack.setOnClickListener { finish() }
+        binding.ivClose.setOnClickListener { finish() }
 
         binding.btnPosting.setOnClickListener {//게시글 등록 또는 수정
             var category = binding.spinnerPostCategory.selectedItem.toString()
