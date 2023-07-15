@@ -60,6 +60,46 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
                 binding.layoutDivision.visibility = View.VISIBLE
                 binding.layoutEatenFood.visibility = View.GONE
 
+                var result = "1일: 1. 스쿼트 - 3세트 - 8회 - 50kg 2. 벤치 프레스 - 3세트 - 8회 - 40kg 3. 벤트오버 로우 - 3세트 - 8회 - 30kg 2일: 1. 데드리프트 - 3세트 - 8회 - 50kg 2. 숄더 프레스 - 3세트 - 8회 - 20kg 3. 바이셉 컬 - 3세트 - 8회 - 15kg 3일차: 1. 런지 - 3세트 - 다리당 8회 - 40 kg 2. 랫 풀다운 - 3세트 - 8회 - 35kg 3. 트라이셉 딥 - 3세트 - 8회 - 체중 참고: 이것은 샘플 루틴일 뿐이며 모든 사람에게 적합하지 않을 수 있습니다. 특정 목표와 능력에 맞는 프로그램을 사용자 지정하려면 피트니스 전문가 또는 개인 트레이너와 상담하는 것이 중요합니다."
+                val divisions = 3
+                val splitArr = result.split(":", "참고", "냉각") as MutableList<String>
+                var printResult = ""
+                printResult += "[1일]\n"
+                for(i in 1..divisions){
+                    var str = ""
+                    if(i != divisions){
+                        val str1 = splitArr[i]
+                        str = splitArr[i].substring(0, str1.length-3)
+                    }else{
+                        str = splitArr[i]
+                    }
+                    Log.d("SplitArray", str)
+                    var split2Arr: MutableList<String>
+                    if(str.contains("1.")){
+                        printResult += "1."
+                        split2Arr = str.split("1.", limit = 2) as MutableList<String>
+                        for(j in 2..divisions){
+                            split2Arr = split2Arr[1].split("${j}.", limit = 2) as MutableList<String>
+                            printResult += "${split2Arr[0]}\n"
+                            printResult += "${j}."
+                        }
+                        printResult += "${split2Arr[1]}\n"
+
+                    }else if(str.contains("운동 1")){
+                        printResult += "운동 1"
+                        split2Arr = str.split("운동 1", limit = 2) as MutableList<String>
+                        for(j in 2..divisions){
+                            split2Arr = split2Arr[1].split("운동 ${j}", limit = 2) as MutableList<String>
+                            printResult += "${split2Arr[0]}\n"
+                            printResult += "운동 ${j}"
+                        }
+                        printResult += "${split2Arr[1]}\n"
+                    }
+                    if(i != divisions) printResult += "\n[${i+1}일]\n"
+
+                }
+                binding.tvRecommendResult.text = printResult
+                binding.layoutRecommendResult.visibility = View.VISIBLE
             }
             "food" -> {
                 binding.tvRecommendType.text = getString(R.string.recommend_todays_food)
@@ -148,37 +188,66 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
             binding.layoutRecommendResult.visibility = View.VISIBLE
             binding.tvRecommendResult.text = data
 
-            /*
+
             when(recommendType) {
                 "routine" -> {
                     //var result = "1일: 바벨스쿼트 - 10회 3세트 - 40kg 2일: 덤벨 벤치프레스 - 10회 3세트 - 10kg 3일: 바벨 데드리프트 - 3세트 8회 반복 - 50kg 참고: 이것은 샘플 운동 루틴일 뿐이다."
                     var result = data
                     val divisions = binding.npickerDivision.value
-                    var resultArr = arrayListOf<String>()
-                    for(i in 0 until divisions){
-                        val splitArr = result!!.split("${i+1}일: ", limit = 2)
-                        if(i > 0) {
-                            resultArr.add(splitArr[0]+"\n")
-                        }
-                        resultArr.add("${i+1}일:\n")
-                        result = splitArr[1]
-                    }
-                    val splitArr2 = result!!.split("참고: ", limit = 2)
-                    resultArr.add(splitArr2[0]+"\n")
-                    resultArr.add("참고: \n")
-                    resultArr.add(splitArr2[1])
+                    val splitArr = result.split(":", "참고", "냉각") as MutableList<String>
                     var printResult = ""
-                    for(str in resultArr){
-                        printResult += str
+                    printResult += "[1일]\n"
+                    for(i in 1..divisions){
+                        var str = ""
+                        if(i != divisions){
+                            val str1 = splitArr[i]
+                            str = splitArr[i].substring(0, str1.length-3)
+                        }else{
+                            str = splitArr[i]
+                        }
+                        Log.d("SplitArray", str)
+                        var split2Arr: MutableList<String>
+                        if(str.contains("1.")){
+                            printResult += "1."
+                            split2Arr = str.split("1.", limit = 2) as MutableList<String>
+                            for(j in 2..divisions){
+                                split2Arr = split2Arr[1].split("${j}.", limit = 2) as MutableList<String>
+                                printResult += "${split2Arr[0]}\n"
+                                printResult += "${j}."
+                            }
+                            printResult += "${split2Arr[1]}\n"
+
+                        }else if(str.contains("운동 1")){
+                            printResult += "운동 1"
+                            split2Arr = str.split("운동 1", limit = 2) as MutableList<String>
+                            for(j in 2..divisions){
+                                split2Arr = split2Arr[1].split("운동 ${j}", limit = 2) as MutableList<String>
+                                printResult += "${split2Arr[0]}\n"
+                                printResult += "운동 ${j}"
+                            }
+                            printResult += "${split2Arr[1]}\n"
+                        }
+                        if(i != divisions) printResult += "\n[${i+1}일]\n"
+
                     }
                     binding.tvRecommendResult.text = printResult
                 }
                 "food" -> {
-                    binding.tvRecommendResult.text = data
+                    val splitArr = data.split("탄수화물:", "단백질:", "지방:", limit=4) as MutableList<String>
+                    var printResult = "각 음식 300g 기준으로 섭취한 영양소는 총:\n"
+                    for(str in splitArr){
+                        Log.d("SplitArray", str)
+                    }
+                    printResult += "탄수화물:${splitArr[1]}\n"
+                    printResult += "단백질:${splitArr[2]}\n"
+                    val split2Arr = splitArr[3].split(" ", limit=3) as MutableList<String>
+                    printResult += "지방: ${split2Arr[1]} 입니다.\n${split2Arr[2]}"
+
+                    binding.tvRecommendResult.text = printResult
                 }
             }
 
-             */
+
         }
     }
 
