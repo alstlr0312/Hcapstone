@@ -1,12 +1,15 @@
 package com.unity.mynativeapp.features.diary
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -57,7 +60,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -95,13 +97,17 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         if(diaryId != -1){ // 다이어리 상세 조회 요청
             viewModel.diaryDetail(exerciseDate)
         }
+
+        //muscleFrontView = MuscleView(binding.viewMuscleFront.context, 0)
+        //muscleBackView = MuscleView(binding.viewMuscleBack.context, 0)
+
     }
 
 
 
 
 
-
+    @SuppressLint("ClickableViewAccessibility")
     private fun setUiEvent(){
 
         // 운동 추가
@@ -192,7 +198,76 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
         }
 
+        // 근육 버튼 이벤트
+        // 신체 앞면
+        binding.layoutMuscleFront.setOnTouchListener { _, event ->
+            when(event.action){ // 260x554
+                MotionEvent.ACTION_DOWN -> {
+                    val x = event.x; val y = event.y
+                    binding.tvFrontMuscleName.visibility = View.VISIBLE
+
+                    if (x in 160.0..290.0 && y in 190.0..250.0){ // 가슴
+                        Log.d("MuscleView","MuscleView ($x, $y): 대흉근(가슴)")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_chest)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_chest)
+                    }else if((x in 90.0..150.0 || x in 290.0..350.0) && y in 170.0..250.0){ // 어깨
+                        Log.d("MuscleView","MuscleView ($x, $y): 삼각근(어깨)")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_shoulder)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_shoulder)
+
+                    }else if((x in 70.0..150.0 || x in 290.0..370.0) && y in 240.0..340.0){ // 이두근
+                        Log.d("MuscleView","MuscleView ($x, $y): 이두근")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_biceps)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_biceps)
+
+                    }else if((x in 40.0..120.0 || x in 320.0..400.0) && y in 310.0..450.0){ // 전완근
+                        Log.d("MuscleView","MuscleView ($x, $y): 전완근")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_forearms)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_forearms)
+
+                    }else if(x in 170.0..270.0 && y in 270.0..470.0){ // 복부근
+                        Log.d("MuscleView","MuscleView ($x, $y): 복부")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_abs)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_abs)
+
+                    }else if(x in 120.0..320.0 && y in 450.0..650.0){ // 허벅지
+                        Log.d("MuscleView","MuscleView ($x, $y): 대퇴근(허벅지)")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_thighs)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_thighs)
+
+                    }else if(x in 130.0..310.0 && y in 670.0..830.0){ // 종아리
+                        Log.d("MuscleView","MuscleView ($x, $y): 비복근(종아리)")
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_calves)
+                        binding.tvFrontMuscleName.text = getString(R.string.muscle_calves)
+
+                    }else{
+                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_body)
+                        binding.tvFrontMuscleName.visibility = View.GONE
+
+                    }
+
+                }
+            }
+            return@setOnTouchListener true
+        }
+
+        // 신체 앞면
+        binding.layoutMuscleBack.setOnTouchListener { _, event ->
+            when(event.action){
+                MotionEvent.ACTION_DOWN -> {
+                    val x = event.x; val y = event.y
+                    Log.d("MuscleView","MuscleView ($x, $y): 가슴")
+
+                    if (x in 40.0..110.0 && y in 40.0..70.0){ // 가슴
+                        Log.d("MuscleView","MuscleView ($x, $y): 가슴")
+                    }
+                }
+            }
+            return@setOnTouchListener true
+        }
     }
+
+
 
     override fun finish() {
         super.finish()

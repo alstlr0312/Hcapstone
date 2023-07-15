@@ -192,4 +192,14 @@
     <string name="setting">설정</string>
     <string name="my_post">내 게시글</string>
     <string name="my_comment">내 댓글</string>
+
+
+    <!-- 신체 근육 -->
+    <string name="muscle_chest">대흉근(가슴)</string>
+    <string name="muscle_shoulder">삼각근(어깨)</string>
+    <string name="muscle_biceps">이두근</string>
+    <string name="muscle_forearms">전완근</string>
+    <string name="muscle_abs">복부</string>
+    <string name="muscle_thighs">대퇴근(허벅지)</string>
+    <string name="muscle_calves">비복근(종아리)</string>
 </resources>
