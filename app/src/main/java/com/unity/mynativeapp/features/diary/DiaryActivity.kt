@@ -205,42 +205,44 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 MotionEvent.ACTION_DOWN -> {
                     val x = event.x; val y = event.y
                     binding.tvFrontMuscleName.visibility = View.VISIBLE
-
-                    if (x in 160.0..290.0 && y in 190.0..250.0){ // 가슴
+                    //240
+                    if (x in 160.0..320.0 && y in 200.0..275.0){ // 가슴
                         Log.d("MuscleView","MuscleView ($x, $y): 대흉근(가슴)")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_chest)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_chest)
-                    }else if((x in 90.0..150.0 || x in 290.0..350.0) && y in 170.0..250.0){ // 어깨
+                    }else if((x in 90.0..160.0 || x in 320.0..390.0) && y in 170.0..250.0){ // 어깨
                         Log.d("MuscleView","MuscleView ($x, $y): 삼각근(어깨)")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_shoulder)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_shoulder)
 
-                    }else if((x in 70.0..150.0 || x in 290.0..370.0) && y in 240.0..340.0){ // 이두근
+                    }else if((x in 80.0..155.0 || x in 325.0..400.0) && y in 250.0..340.0){ // 이두근
                         Log.d("MuscleView","MuscleView ($x, $y): 이두근")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_biceps)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_biceps)
 
-                    }else if((x in 40.0..120.0 || x in 320.0..400.0) && y in 310.0..450.0){ // 전완근
+                    }else if((x in 50.0..140.0 || x in 340.0..420.0) && y in 340.0..470.0){ // 전완근
                         Log.d("MuscleView","MuscleView ($x, $y): 전완근")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_forearms)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_forearms)
 
-                    }else if(x in 170.0..270.0 && y in 270.0..470.0){ // 복부근
+                    }else if(x in 170.0..310.0 && y in 290.0..470.0){ // 복부근
                         Log.d("MuscleView","MuscleView ($x, $y): 복부")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_abs)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_abs)
 
-                    }else if(x in 120.0..320.0 && y in 450.0..650.0){ // 허벅지
+                    }else if(x in 130.0..350.0 && y in 470.0..670.0){ // 허벅지
                         Log.d("MuscleView","MuscleView ($x, $y): 대퇴근(허벅지)")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_thighs)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_thighs)
 
-                    }else if(x in 130.0..310.0 && y in 670.0..830.0){ // 종아리
+                    }else if(x in 130.0..350.0 && y in 670.0..840.0){ // 종아리
                         Log.d("MuscleView","MuscleView ($x, $y): 비복근(종아리)")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_calves)
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_calves)
 
                     }else{
+                        Log.d("MuscleView","MuscleView ($x, $y): 밖")
+
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_body)
                         binding.tvFrontMuscleName.visibility = View.GONE
 
