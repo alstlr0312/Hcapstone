@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.features.ar
+package com.unity.mynativeapp.features.map
 
 import android.content.ContentValues
 import android.util.Log
@@ -6,10 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.unity.mynativeapp.model.MapResponse
-import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +19,9 @@ class MapModel : ViewModel() {
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
+
+    private val _logout = MutableLiveData<Boolean>(false)
+    val logout: LiveData<Boolean> = _logout
 
     private val _getMapSuccess = MutableLiveData<Boolean>()
     val getMapSuccess: LiveData<Boolean> = _getMapSuccess
@@ -59,14 +60,14 @@ class MapModel : ViewModel() {
                     400 -> {
                         _mapData.postValue(null)
                     }
-
+                    401 -> {// refresh 토큰 만료
+                        _logout.postValue(true)
+                    }
                     else -> {
                         Log.d(ContentValues.TAG, "$code")
                     }
                 }
             }
-
-
             override fun onFailure(call: Call<MyResponse<MapResponse>>, t: Throwable) {
                 Log.e(ContentValues.TAG, "Error: ${t.message}")
                 _loading.postValue(false)

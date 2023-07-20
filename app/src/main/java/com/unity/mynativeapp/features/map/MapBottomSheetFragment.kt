@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.features.ar
+package com.unity.mynativeapp.features.map
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,9 +22,13 @@ class MapBottomSheetFragment(param: Overlay.OnClickListener) : BottomSheetDialog
         val name = bundle?.getString("name")
         val status = bundle?.getString("status")
         val Address = bundle?.getString("Address")
+        val tel = bundle?.getString("tel")
         binding!!.infoAddress.setText(Address)
         binding!!.infoName.setText(name)
         binding!!.infoStatus.setText(status)
+        if(tel != "null"){
+            binding!!.infoTel.text = tel
+        }
         return binding!!.root
     }
 

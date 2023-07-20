@@ -202,9 +202,8 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
                     }
                     printResult += "탄수화물:${splitArr[1]}\n"
                     printResult += "단백질:${splitArr[2]}\n"
-                    val split2Arr = splitArr[3].split(" ", limit=3) as MutableList<String>
-                    printResult += "지방: ${split2Arr[1]} 입니다.\n${split2Arr[2]}"
-
+                    val splitArr2 = splitArr[3].split(".", limit=2)
+                    printResult += "지방:${splitArr2[0]}입니다.\n${splitArr2[1]}"
                     binding.tvRecommendResult.text = printResult
                 }
             }

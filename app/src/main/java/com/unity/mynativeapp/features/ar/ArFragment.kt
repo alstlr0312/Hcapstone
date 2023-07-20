@@ -27,11 +27,6 @@ class ArFragment : Fragment() {
             //intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             //startActivityForResult(intent, 1)
         }
-        binding.Map.setOnClickListener {
-            isUnityLoaded = true
-            val nextIntent = Intent(context, MapActivity::class.java)
-            startActivity(nextIntent)
-        }
         return binding.root
     }
 }

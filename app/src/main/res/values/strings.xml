@@ -195,11 +195,17 @@
 
 
     <!-- 신체 근육 -->
-    <string name="muscle_chest">대흉근(가슴)</string>
-    <string name="muscle_shoulder">삼각근(어깨)</string>
+    <string name="muscle_chest">대흉근</string>
+    <string name="muscle_shoulder">삼각근</string>
     <string name="muscle_biceps">이두근</string>
     <string name="muscle_forearms">전완근</string>
-    <string name="muscle_abs">복부</string>
-    <string name="muscle_thighs">대퇴근(허벅지)</string>
-    <string name="muscle_calves">비복근(종아리)</string>
+    <string name="muscle_abs">복부근</string>
+    <string name="muscle_quadriceps">대퇴사두근</string>
+    <string name="muscle_calves">비복근</string>
+
+    <string name="muscle_trapezius">승모근</string>
+    <string name="muscle_lat">광배근</string>
+    <string name="muscle_triceps">삼두근</string>
+    <string name="muscle_glutes">대둔근</string>
+    <string name="muscle_hamstrings">햄스트링</string>
 </resources>

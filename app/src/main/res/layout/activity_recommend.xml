@@ -281,6 +281,7 @@
                     android:overScrollMode="always"
                     android:isScrollContainer="true"
                     android:text=""
+                    android:clickable="true"
                     android:textColor="@color/main_gray_light"
                     android:background="@drawable/shape_edge_red_rounded"
                     android:padding="10dp"

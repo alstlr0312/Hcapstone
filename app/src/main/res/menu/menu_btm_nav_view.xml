@@ -23,6 +23,13 @@
         android:icon="@drawable/sel_nav_ar"
         />
     <item
+        android:id="@+id/menuMap"
+        android:title="AR"
+        android:enabled="true"
+        android:visible="true"
+        android:icon="@drawable/sel_nav_map"
+        />
+    <item
         android:id="@+id/menuMypage"
         android:title="마이페이지"
         android:enabled="true"
