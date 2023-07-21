@@ -242,7 +242,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                     }else{
                         Log.d("MuscleView","MuscleView ($x, $y): 밖")
                         binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_body)
-                        binding.tvFrontMuscleName.visibility = View.GONE
+                        binding.tvFrontMuscleName.visibility = View.INVISIBLE
 
                     }
 
@@ -293,7 +293,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                     }else{
                         Log.d("MuscleView","MuscleView ($x, $y): 밖")
                         binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_body)
-                        binding.tvBackMuscleName.visibility = View.GONE
+                        binding.tvBackMuscleName.visibility = View.INVISIBLE
                     }
                 }
             }
