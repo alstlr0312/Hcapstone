@@ -23,6 +23,7 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
     private val viewModel by viewModels<MyPageViewModel>()
     private lateinit var myPageAdapter: MyPageAdapter
+    lateinit var userName: String
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

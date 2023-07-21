@@ -28,18 +28,24 @@
     <string name="password">비밀번호</string>
     <string name="login">로그인</string>
     <string name="sign_up">회원가입</string>
+    <string name="nickname">닉네임</string>
+    <string name="address">주소</string>
+    <string name="field">활동 지역</string>
     <string name="input_id">아이디 입력</string>
     <string name="input_password">비밀번호 입력</string>
     <string name="input_password_confirm">비밀번호 확인</string>
     <string name="input_nickname">닉네임 입력</string>
-    <string name="input_address">주소 입력</string>
+    <string name="input_address">주소 입력(ex.서울시)</string>
     <string name="input_email">이메일 입력</string>
+    <string name="input_field">활동 지역 입력(ex.서울시)</string>
     <string name="find_id">아이디 찾기</string>
     <string name="find_password">비밀번호 찾기</string>
     <string name="please_input_id">아이디를 입력해주세요.</string>
     <string name="please_input_password">비밀번호를 입력해주세요.</string>
     <string name="please_input_nickname">닉네임을 입력해주세요.</string>
     <string name="please_input_email">이메일을 입력해주세요.</string>
+    <string name="please_input_address">주소를 입력해주세요.(ex.서울시)</string>
+    <string name="please_input_field">활동 지역을 입력해주세요.(ex.서울시)</string>
     <string name="email_authenticate">이메일 인증</string>
     <string name="complete_email_authenticate">이메일 인증 완료</string>
     <string name="authenticate">인증</string>
@@ -208,4 +214,5 @@
     <string name="muscle_triceps">삼두근</string>
     <string name="muscle_glutes">대둔근</string>
     <string name="muscle_hamstrings">햄스트링</string>
+    <string name="save">저장</string>
 </resources>

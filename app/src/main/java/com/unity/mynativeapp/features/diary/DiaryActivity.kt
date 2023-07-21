@@ -64,7 +64,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         super.onCreate(savedInstanceState)
 
         diaryActivity = this
-        loadingDialog = LoadingDialog(this)
+        //loadingDialog = LoadingDialog(this)
 
 
         setView()
@@ -152,7 +152,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 val requestBodyString = gson.toJson(jsonRequest).toString()
                 val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
                 val diaryData = createPartFromString(requestBodyWithoutBackslashes)
-
                 // 미디어
                 val mediaList = mediaAdapter.getMediaList()
                 val imageList: ArrayList<MultipartBody.Part> = ArrayList()
@@ -336,7 +335,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         }
 
         viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) loadingDialog.show() else loadingDialog.dismiss()
+            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
         }
 
         viewModel.logout.observe(this) { logout ->

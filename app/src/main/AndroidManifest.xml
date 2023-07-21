@@ -23,6 +23,9 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
+            android:name=".features.mypage.editprofile.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.home.recommend.RecommendActivity"
             android:exported="false" />
         <activity

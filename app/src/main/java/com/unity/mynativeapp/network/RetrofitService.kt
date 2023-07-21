@@ -168,7 +168,20 @@ interface RetrofitService {
 		@Query("username") username: String
 	): Call<MyResponse<MemberPageResponse>>
 
+	// 회원 정보 수정 전, 비밀 번호 검사
+	@POST("member/password/check")
+	fun postPasswordCheck(
+		@Body password: String
+	): Call<MyResponse<Int>>
 
+	// 회원 정보 수정
+	@PATCH("/member/edit")
+	fun patchMemberInfoEdit(
+		@Part("editMemberDto") editMemberDto: RequestBody,
+		@Part("file") file: RequestBody?
+	): Call<MyResponse<String>>
+
+	////////////// 지도 /////////////////
 	//지도 체육관 가져오기
 	@GET("/api/exercise/seoul")
 	fun getMap(
@@ -178,6 +191,7 @@ interface RetrofitService {
 	): Call<MyResponse<MapResponse>>
 
 
+	//////////// GPT ////////////////
 	// 운동 루틴 추천
 	@POST("/api/routines")
 	fun postRoutines(

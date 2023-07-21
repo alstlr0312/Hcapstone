@@ -15,20 +15,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MyPageViewModel: ViewModel() {
-    private val _toastMessage = MutableLiveData<String>()
+open class MyPageViewModel: ViewModel() {
+    val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    private val _loading = MutableLiveData<Boolean>()
+    val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _myPageData = MutableLiveData<MemberPageResponse?>()
+    val _myPageData = MutableLiveData<MemberPageResponse?>()
     val myPageData: LiveData<MemberPageResponse?> = _myPageData
 
-    private val _mediaData = MutableLiveData<ResponseBody?>()
+    val _mediaData = MutableLiveData<ResponseBody?>()
     val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
-    private val _logout = MutableLiveData<Boolean>(false)
+    val _logout = MutableLiveData<Boolean>(false)
     val logout: LiveData<Boolean> = _logout
     fun myPageInfo(date: String) {
 

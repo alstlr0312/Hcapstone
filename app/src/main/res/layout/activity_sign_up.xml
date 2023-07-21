@@ -280,7 +280,7 @@
                 android:text=""
                 android:textSize="16sp"
                 android:textColor="@color/white"
-                android:hint="주소 입력(선택 사항)"
+                android:hint="@string/input_field"
                 android:inputType="text"
                 android:textColorHint="@color/main_gray"
                 android:paddingHorizontal="14dp"

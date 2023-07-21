@@ -5,6 +5,8 @@ const val ID_PATTERN_ERROR = "아이디는 5~20자 입니다."
 
 const val PW_EMPTY_ERROR = "비밀번호를 입력해주세요."
 const val NICKNAME_EMPTY_ERROR = "닉네임을 입력해주세요."
+const val NICKNAME_PATTERN_ERROR = "닉네임은 20글자까지 작성 가능합니다."
+
 const val EMAIL_EMPTY_ERROR = "이메일을 입력해주세요."
 
 const val PW_PATTERN_ERROR = "비밀번호는 영문 대 소문자, 숫자, 특수문자를 사용하세요."

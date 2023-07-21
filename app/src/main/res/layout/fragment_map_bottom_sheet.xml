@@ -4,76 +4,88 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/shape_edge_gray"
-    android:padding="@dimen/fab_margin"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/info_name"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="상호명"
-        android:textColor="@color/black"
-        style="@style/TitleTextStyle"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_edge_gray_rounded"
+        android:padding="@dimen/fab_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-        android:id="@+id/info_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="주소"
-        android:textColor="@color/main_gray"
-        style="@style/NormalTextStyle"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/info_name"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <LinearLayout
-        android:id="@+id/layout_tel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center|start"
-        android:layout_marginTop="@dimen/fab_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/info_address"
-        app:layout_constraintEnd_toStartOf="@id/info_status"
-        >
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_tel"
-            android:layout_width="@dimen/icon_small_size"
-            android:layout_height="@dimen/icon_small_size"
-            android:src="@drawable/ic_telephone"
-            app:tint="@color/main_gray_light2"/>
         <TextView
-            android:id="@+id/info_tel"
+            android:id="@+id/info_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="상호명"
+            android:textColor="@color/black"
+            style="@style/TitleTextStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/info_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="주소"
+            android:textColor="@color/main_gray"
+            style="@style/NormalTextStyle"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/info_name"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <LinearLayout
+            android:id="@+id/layout_tel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center|start"
+            android:layout_marginTop="@dimen/fab_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/info_address"
+            app:layout_constraintEnd_toStartOf="@id/info_status"
+            >
+
+            <ImageView
+                android:id="@+id/iv_tel"
+                android:layout_width="@dimen/icon_small_size"
+                android:layout_height="@dimen/icon_small_size"
+                android:src="@drawable/ic_telephone"
+                app:tint="@color/main_gray_light2"/>
+            <TextView
+                android:id="@+id/info_tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02-0000-0000"
+                android:textColor="@color/main_gray_light2"
+                style="@style/NormalTextStyle"
+                android:layout_marginStart="5dp"
+                />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/info_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="02-0000-0000"
-            android:textColor="@color/main_gray_light2"
+            android:text="영업중"
+            android:textColor="@color/main_red_light"
             style="@style/NormalTextStyle"
-            android:layout_marginStart="5dp"
-            />
+            android:layout_marginTop="@dimen/fab_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/info_address" />
 
-    </LinearLayout>
-    <TextView
-        android:id="@+id/info_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="영업중"
-        android:textColor="@color/main_red_light"
-        style="@style/NormalTextStyle"
-        android:layout_marginTop="@dimen/fab_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/info_address" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
