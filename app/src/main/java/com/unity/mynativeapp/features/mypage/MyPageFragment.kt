@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentMypageBinding
@@ -41,6 +42,9 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
         }else{
             showCustomToast("username is null")
         }
+
+
+
     }
 
     private fun getRvItemList(): MutableList<MyPageRvItem>{

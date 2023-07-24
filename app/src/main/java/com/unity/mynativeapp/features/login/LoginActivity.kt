@@ -2,13 +2,23 @@ package com.unity.mynativeapp.features.login
 
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityLoginBinding
+import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.login.find.FindIdActivity
 import com.unity.mynativeapp.features.login.find.FindPwActivity
 import com.unity.mynativeapp.features.signup.SignUpActivity
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBinding>(
@@ -18,12 +28,19 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_profile_photo_base)
+
+
+
         // viewModel의 Data를 Observe하는 이벤트 모음 함수
         subscribeUI()
 
         // UI Event를 정리한 함수
         setUiEvent()
+
     }
+
 
     private fun setUiEvent() {
         binding.btnLogin.setOnClickListener {

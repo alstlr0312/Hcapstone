@@ -1,6 +1,8 @@
 package com.unity.mynativeapp.features.signup
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -10,16 +12,22 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.util.Util
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
 import com.unity.mynativeapp.features.BaseActivity
+import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.hideKeyboard
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONObject
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -194,12 +202,40 @@ class SignUpActivity : AppCompatActivity(){
                 binding.edtAuthenticateCode.setText("")
                 return@observe
             }
+            // 기본 프로필 이미지 -> 캐시에 저장
+            saveBaseProfileImg()
+
+            // 활동 지역
+            if(binding.edtAddress.text.toString().isNotEmpty()){
+                MyApplication.prefUtil.setString("field", binding.edtAddress.text.toString())
+            }
             finish()
 
         }
 
     }
+    private fun saveBaseProfileImg() {
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_profile_photo_base)
 
+        val tempFile = File(cacheDir, "profileImage.jpg")
+
+        try {
+            tempFile.createNewFile()
+
+            val out = FileOutputStream(tempFile)
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+
+            out.close()
+        } catch (e: FileNotFoundException) {
+            Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
+        } catch (e: IOException) {
+            Log.e(DiaryActivity.TAG, "IOException : " + e.message)
+        }
+
+        MyApplication.prefUtil.setString("profileImgPath", tempFile.absolutePath)
+
+    }
 
 
 

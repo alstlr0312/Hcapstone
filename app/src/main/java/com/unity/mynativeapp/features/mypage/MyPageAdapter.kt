@@ -1,11 +1,13 @@
 package com.unity.mynativeapp.features.mypage
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.ItemRvMypageBinding
 import com.unity.mynativeapp.features.mypage.myposts.MyPostsActivity
 import com.unity.mynativeapp.features.mypage.editprofile.ProfileActivity
@@ -36,7 +38,10 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
 
                     }
                     2 -> { // 프로필 수정
-                        context.startActivity(Intent(context, ProfileActivity::class.java))
+                        val intent = Intent(context, ProfileActivity::class.java)
+                        intent.putExtra("username", MyApplication.prefUtil.getString("username", ""))
+                        intent.putExtra("field", MyApplication.prefUtil.getString("field", ""))
+                        context.startActivity(intent)
                     }
                     3 -> { // 설정
 

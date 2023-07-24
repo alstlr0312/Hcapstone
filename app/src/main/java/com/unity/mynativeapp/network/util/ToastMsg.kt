@@ -9,7 +9,8 @@ const val NICKNAME_PATTERN_ERROR = "닉네임은 20글자까지 작성 가능합
 
 const val EMAIL_EMPTY_ERROR = "이메일을 입력해주세요."
 
-const val PW_PATTERN_ERROR = "비밀번호는 영문 대 소문자, 숫자, 특수문자를 사용하세요."
+const val FIELD_EMPTY_ERROR = "활동 지역을 입력해 주세요."
+const val PW_PATTERN_ERROR = "비밀번호는 영문 대 소문자, 숫자, 특수문자(\$@\$!%*?&)를 사용하세요. 비밀번호는 8~20자 입니다."
 const val PW_NOT_SAME_ERROR = "비밀번호가 일치하지 않습니다."
 const val PW_FORMAT_ERROR = "비밀번호를 알맞게 입력해주세요."
 

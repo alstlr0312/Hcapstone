@@ -207,43 +207,69 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                     //240
                     if (x in 160.0..320.0 && y in 200.0..275.0){ // 가슴
                         Log.d("MuscleView","MuscleView ($x, $y): 대흉근(가슴)")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_chest)
+                        if(binding.ivFrontChest.visibility == View.VISIBLE){
+                            binding.ivFrontChest.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontChest.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_chest)
                     }else if((x in 90.0..160.0 || x in 320.0..390.0) && y in 170.0..250.0){ // 어깨
                         Log.d("MuscleView","MuscleView ($x, $y): 삼각근(어깨)")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_shoulder)
+                        if(binding.ivFrontShoulder.visibility == View.VISIBLE){
+                            binding.ivFrontShoulder.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontShoulder.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_shoulder)
 
                     }else if((x in 80.0..155.0 || x in 325.0..400.0) && y in 250.0..340.0){ // 이두근
                         Log.d("MuscleView","MuscleView ($x, $y): 이두근")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_biceps)
+                        if(binding.ivFrontBiceps.visibility == View.VISIBLE){
+                            binding.ivFrontBiceps.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontBiceps.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_biceps)
 
                     }else if((x in 50.0..140.0 || x in 340.0..420.0) && y in 340.0..470.0){ // 전완근
                         Log.d("MuscleView","MuscleView ($x, $y): 전완근")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_forearms)
+                        if(binding.ivFrontForearms.visibility == View.VISIBLE){
+                            binding.ivFrontForearms.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontForearms.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_forearms)
 
                     }else if(x in 170.0..310.0 && y in 290.0..470.0){ // 복부근
                         Log.d("MuscleView","MuscleView ($x, $y): 복부")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_abs)
+                        if(binding.ivFrontAbs.visibility == View.VISIBLE){
+                            binding.ivFrontAbs.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontAbs.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_abs)
 
                     }else if(x in 130.0..350.0 && y in 470.0..670.0){ // 허벅지
                         Log.d("MuscleView","MuscleView ($x, $y): 대퇴근(허벅지)")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_quadriceps)
+                        if(binding.ivFrontQuadriceps.visibility == View.VISIBLE){
+                            binding.ivFrontQuadriceps.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontQuadriceps.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_quadriceps)
 
                     }else if(x in 130.0..350.0 && y in 670.0..840.0){ // 종아리
                         Log.d("MuscleView","MuscleView ($x, $y): 비복근(종아리)")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_calves)
+                        if(binding.ivFrontCalves.visibility == View.VISIBLE){
+                            binding.ivFrontCalves.visibility = View.INVISIBLE
+                        }else{
+                            binding.ivFrontCalves.visibility = View.VISIBLE
+                        }
                         binding.tvFrontMuscleName.text = getString(R.string.muscle_calves)
 
                     }else{
                         Log.d("MuscleView","MuscleView ($x, $y): 밖")
-                        binding.ivFrontMuscle.setImageResource(R.drawable.img_muscle_front_body)
-                        binding.tvFrontMuscleName.visibility = View.INVISIBLE
-
+                        //binding.tvFrontMuscleName.visibility = View.INVISIBLE
                     }
 
                 }
@@ -356,19 +382,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 binding.edtMemo.setText(data.review)
 
                 for(item in data.exerciseInfo){
-                    /*
-                    val exerciseName = x.exerciseName
-                    val reps = x.reps
-                    val exSetCount = x.exSetCount
-                    val isCardio = x.cardio
-                    val cardioTime = x.cardioTime
-                    var bodyPart = x.bodyPart
-                    val finished = x.finished
-
-                    exerciseAdapter.addItem(DiaryExerciseRvItem(exerciseName, reps, exSetCount,
-                        isCardio, cardioTime, bodyPart, finished))
-
-                     */
                     exerciseAdapter.addItem(item)
                 }
 
