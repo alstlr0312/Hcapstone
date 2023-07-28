@@ -24,10 +24,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.URL
 
 class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWriteBinding::inflate) {
 
@@ -100,7 +99,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
             binding.btnPosting.text = getString(R.string.editing)
             for(path in postFilePathList){
                 val bitmap = BitmapFactory.decodeFile(path);
-                mediaAdapter.addItem(MediaRvItem(3, null, bitmap))
+                //mediaAdapter.addItem(MediaRvItem(3, null, bitmap, null))
             }
             deleteMediaFile()
 
@@ -145,15 +144,14 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
 
             if(editing){ // 게시글 수정
                 for(i in mediaList.indices){
-                    val bitmap = mediaList[i].bitmap
                     val uri = mediaList[i].uri
-                    var file = File("")
-                    if(bitmap != null){
-                        val realPath = saveMedia(bitmap, "temp${i}")
-                        file = File(realPath)
+                    val url = mediaList[i].url
+                    var file: File = if(url != null){
+                        val realPath = saveMedia(url)
+                        File(realPath)
                     }else if(uri != null){
-                        file = File(getRealPathFromUri(uri))
-                    }
+                        File(getRealPathFromUri(uri))
+                    }else{return@setOnClickListener}
                     val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
                     val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
                     imageList.add(uploadFile)
@@ -196,14 +194,21 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         }
     }
     // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
-    private fun saveMedia(bitmap: Bitmap, name: String): String {
-        val tempFile = File(cacheDir, "$name.jpg")
+    private fun saveMedia(url: String): String {
+        val fileName = url.substringAfter("/")
+        val tempFile = File(cacheDir, "$fileName")
 
         try {
+            // convert url to bitmap
+            val connection: HttpURLConnection = URL(url).openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.inputStream
+            val bitmap = BitmapFactory.decodeStream(input)
+
+            // save bitmap image into cache
             tempFile.createNewFile()
-
             val out = FileOutputStream(tempFile)
-
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
 
             out.close()

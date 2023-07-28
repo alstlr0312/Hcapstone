@@ -6,5 +6,5 @@ import android.net.Uri
 data class MediaRvItem(
     val viewType : Int, // image or video
     val uri: Uri?,
-    val bitmap: Bitmap?
+    val url: String?
     )

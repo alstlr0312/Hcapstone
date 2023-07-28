@@ -3,11 +3,9 @@ package com.unity.mynativeapp.features.postdetail
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.View.OnCreateContextMenuListener
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -24,15 +22,13 @@ import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.CommentData
-import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.model.OnCommentClick
 import com.unity.mynativeapp.model.PostWriteRequest
-import com.unity.mynativeapp.network.util.DeleteDialog
+import com.unity.mynativeapp.network.util.SimpleDialog
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.Serializable
 
 
 class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate),
@@ -237,10 +233,13 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
     override fun onResume() {
         super.onResume()
-        if(!firstStart){
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
+        }else{
             overridePendingTransition(R.drawable.anim_slide_in_left, R.drawable.anim_slide_out_right)
         }
-        firstStart = false
+
     }
 
     override fun onRestart() {
@@ -292,7 +291,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             }
             R.id.menuDeletePost -> { // 내 게시글 삭제
                 // alert dialog
-                var dialog = DeleteDialog(this, getString(R.string.you_want_delete_post))
+                var dialog = SimpleDialog(this, getString(R.string.you_want_delete_post))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)

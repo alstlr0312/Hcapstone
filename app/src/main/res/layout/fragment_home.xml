@@ -28,8 +28,8 @@
                 android:layout_marginVertical="12dp">
                 <ImageView
                     android:id="@+id/iv_logo"
-                    android:layout_width="35dp"
-                    android:layout_height="18dp"
+                    android:layout_width="@dimen/logo_width"
+                    android:layout_height="@dimen/logo_height"
                     android:src="@drawable/logo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

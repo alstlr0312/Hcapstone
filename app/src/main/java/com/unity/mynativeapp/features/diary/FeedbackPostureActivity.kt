@@ -6,51 +6,43 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.CheckBox
 import android.widget.ImageView
-import android.widget.SeekBar
-import android.widget.Toast
+import androidx.activity.viewModels
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
-import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
-import com.unity.mynativeapp.model.ExerciseItem
-import com.unity.mynativeapp.network.util.*
+import com.unity.mynativeapp.databinding.ActivityFeedbackPostureBinding
+import com.unity.mynativeapp.network.util.MUSCLE_SELECT_MAX
 
-class AddExerciseActivity : BaseActivity<ActivityAddExerciseBinding>(ActivityAddExerciseBinding::inflate) {
-    lateinit var date: String   // 다이어리 날짜
-    private var isCardio: Boolean? = null    // 유산소 or 무산소 여부
+class FeedbackPostureActivity : BaseActivity<ActivityFeedbackPostureBinding>(ActivityFeedbackPostureBinding::inflate) {
+    private val viewModel by viewModels<DiaryViewModel>()
     private var selectedMuscleList = mutableListOf<String>()
     private var bodyParts = ""
-
+    private var firstStart = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setView()
-        setListener()
+        setUiEvent()
+        subscribeUI()
     }
 
     private fun setView(){
-        date = intent.getStringExtra("date").toString() // 다이어리 날짜
+
+        binding.tvExerciseName.text = intent.getStringExtra("exerciseName").toString()
+
+        val bodyParts = intent.getStringExtra("bodyPart").toString()
+        if(bodyParts.isNotEmpty()){
+            selectedMuscleList = bodyParts.split(", ") as MutableList<String>
+        }
+        binding.tvSelectedMuscle.text = bodyParts
+        setInitMuscleView()
+
+
+        binding.layoutFeedbackResult.visibility = View.GONE
     }
+
     @SuppressLint("ClickableViewAccessibility")
-
-    private fun setListener(){
-
-        // 유산소 시간 설정 seekbar
-        binding.seekBarCardioTime.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                var time = p1 * 30 // 30분 간격
-                binding.tvCardioTime.text = "${time} " + getString(R.string.minute)
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-            }
-        })
-
+    private fun setUiEvent(){
         // 무산소
         // 근육 버튼 이벤트
         // 신체 앞면
@@ -126,98 +118,60 @@ class AddExerciseActivity : BaseActivity<ActivityAddExerciseBinding>(ActivityAdd
             return@setOnTouchListener true
         }
 
-        // 등록하기
-        binding.btnRegister.setOnClickListener {
-
-            if(isCardio == null){
-                showCustomToast(SELECT_CARDIO_WEIGHT)
-            }else{
-                if(isCardio!!){ // 유산소
-                    val cardioTime = binding.seekBarCardioTime.progress * 30
-                    val exerciseName = binding.edtCardioExerciseName.text.toString()
-                    val reps = null
-                    val exSetCount = null
-                    val bodyPart = getString(R.string.exercise_cardio)
-
-                    if(cardioTime == 0){
-                        showCustomToast(SELECT_CARDIO_TIME)
-                        return@setOnClickListener
-                    }
-                    if(exerciseName.isEmpty()){
-                        showCustomToast(INPUT_EXERCISE_NAME)
-                        return@setOnClickListener
-                    }
-                    diaryActivity.exerciseAdapter.addItem(
-                        ExerciseItem(exerciseName, reps, exSetCount, isCardio!!, cardioTime, bodyPart, false)
-                    )
-                    finish()
-
-                }else{ // 무산소
-                    val exerciseName = binding.edtWeightExerciseName.text.toString()
-                    val reps = binding.edtReps.text.toString()
-                    val exSetCount = binding.edtSets.text.toString()
-
-                    if(bodyParts.isEmpty()){
-                        showCustomToast(SELECT_WEIGHT_PART)
-                        return@setOnClickListener
-                    }
-                    if(reps.isEmpty() || exSetCount.isEmpty() || reps.toInt() == 0 || exSetCount.toInt() == 0){
-                        showCustomToast(INPUT_WEIGHT_COUNT)
-                        return@setOnClickListener
-                    }
-                    diaryActivity.exerciseAdapter.addItem(
-                        ExerciseItem(exerciseName, reps.toInt(), exSetCount.toInt(), isCardio!!, null, bodyParts, false)
-                    )
-                    finish()
-                }
-
-            }
+        // 운동 자극 피드백 받기
+        binding.btnFeedback.setOnClickListener {
+            viewModel.postureFeedback(binding.tvExerciseName.text.toString(), binding.tvSelectedMuscle.text.toString())
         }
 
-
-        // 키보드 숨기기
-        binding.layoutActivity.setOnClickListener {
-            this.hideKeyboard()
-        }
-
-        // 닫기
         binding.ivClose.setOnClickListener {
             finish()
         }
     }
 
+    private fun subscribeUI() {
+        viewModel.toastMessage.observe(this) { message ->
+            showCustomToast(message)
+        }
 
+        viewModel.loading.observe(this) { isLoading ->
+            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
+        }
 
-    fun onCheckboxClicked(view: View) {
-        if (view is CheckBox) {
-            val checked: Boolean = view.isChecked
+        viewModel.logout.observe(this) { logout ->
+            if (logout) logout()
+        }
 
-            when (view.id) {
-                R.id.cb_cardio -> { // 유산소
-                    if (checked) {
-                        binding.layoutCardio.visibility = View.VISIBLE
-                        binding.edtCardioExerciseName.text = null
-                        binding.seekBarCardioTime.progress = 0
-                        binding.layoutWeightTraining.visibility = View.GONE
-                        binding.cbWeight.isChecked = false
-                        isCardio = true
-                    } else {
-                        binding.layoutCardio.visibility = View.GONE
-                    }
+        // 피드백 결과
+        viewModel.postureFeedbackData.observe(this) { data ->
+            if(data == null) return@observe
+            binding.tvResult.text = data.toString()
+            binding.layoutFeedbackResult.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setInitMuscleView(){
+        for(muscle in selectedMuscleList){
+            when(muscle){
+                getString(R.string.muscle_chest) -> { binding.ivFrontChest.visibility = View.VISIBLE }
+                getString(R.string.muscle_shoulder) -> {
+                    binding.ivFrontShoulder.visibility = View.VISIBLE
+                    binding.ivBackShoulder.visibility = View.VISIBLE
                 }
-                else -> { // 무산소
-                    if (checked) {
-                        binding.layoutWeightTraining.visibility = View.VISIBLE
-                        binding.edtWeightExerciseName.text = null
-                        binding.edtReps.text = null
-                        binding.edtSets.text = null
-                        binding.layoutCardio.visibility = View.GONE
-                        binding.cbCardio.isChecked = false
-                        isCardio = false
-                    } else {
-                        binding.layoutWeightTraining.visibility = View.GONE
-                    }
+                getString(R.string.muscle_biceps) -> { binding.ivFrontBiceps.visibility = View.VISIBLE }
+                getString(R.string.muscle_forearms) -> {
+                    binding.ivFrontForearms.visibility = View.VISIBLE
+                    binding.ivFrontForearms.visibility = View.VISIBLE
                 }
+                getString(R.string.muscle_abs) -> { binding.ivFrontAbs.visibility = View.VISIBLE }
+                getString(R.string.muscle_quadriceps) -> { binding.ivFrontQuadriceps.visibility = View.VISIBLE }
+                getString(R.string.muscle_calves) -> {
+                    binding.ivFrontCalves.visibility = View.VISIBLE
+                    binding.ivBackCalves.visibility = View.VISIBLE }
+                getString(R.string.muscle_trap) -> { binding.ivBackTrap.visibility = View.VISIBLE }
+                getString(R.string.muscle_lat) -> { binding.ivBackLat.visibility = View.VISIBLE }
+                getString(R.string.muscle_glutes) -> { binding.ivBackGlutes.visibility = View.VISIBLE }
+                getString(R.string.muscle_triceps) -> { binding.ivBackTriceps.visibility = View.VISIBLE }
+                getString(R.string.muscle_hamstrings) -> { binding.ivBackHamstrings.visibility = View.VISIBLE }
             }
         }
     }
@@ -269,6 +223,7 @@ class AddExerciseActivity : BaseActivity<ActivityAddExerciseBinding>(ActivityAdd
             }
         }
 
+
         bodyParts = ""
         for(i in selectedMuscleList.indices){
             bodyParts += if(i == 0){
@@ -281,4 +236,13 @@ class AddExerciseActivity : BaseActivity<ActivityAddExerciseBinding>(ActivityAdd
         binding.tvSelectedMuscle.text = bodyParts
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
+        }else{
+            overridePendingTransition(R.drawable.anim_slide_in_left, R.drawable.anim_slide_out_right)
+        }
+    }
 }

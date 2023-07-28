@@ -1,41 +1,49 @@
 package com.unity.mynativeapp.features.diary
 
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.*
-import com.unity.mynativeapp.network.util.LoadingDialog
+import com.unity.mynativeapp.network.util.SimpleDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
+import java.net.URL
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 lateinit var diaryActivity: DiaryActivity
 class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate){
     private val viewModel by viewModels<DiaryViewModel>()
-
     private lateinit var exerciseDate: String               // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터
     lateinit var mediaAdapter: DiaryMediaRvAdapter          // 미디어 Rv 어댑터
@@ -93,21 +101,14 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
+        // 다이어리 상세 조회 요청
         diaryId = intent.getIntExtra("diaryId", -1)
-        if(diaryId != -1){ // 다이어리 상세 조회 요청
+        if(diaryId != -1){
             viewModel.diaryDetail(exerciseDate)
         }
 
-        //muscleFrontView = MuscleView(binding.viewMuscleFront.context, 0)
-        //muscleBackView = MuscleView(binding.viewMuscleBack.context, 0)
-
     }
 
-
-
-
-
-    @SuppressLint("ClickableViewAccessibility")
     private fun setUiEvent(){
 
         // 운동 추가
@@ -135,213 +136,114 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             }
         })
 
+        exerciseAdapter.registerAdapterDataObserver(object: AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                edited = true
+            }
+        })
+
         // 뒤로 가기
         binding.btnBack.setOnClickListener {
+            diaryRequest()
+        }
+    }
 
-            if(exerciseAdapter.itemCount != 0) {
-                // 운동일지 작성 or 수정 요청
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        diaryRequest()
+    }
 
-                // 운동
-                val jsonRequest = DiaryWriteRequest(
-                    exerciseAdapter.getExerciseList(),
-                    binding.edtMemo.text.toString(),
-                    exerciseDate
-                )
+    private fun diaryRequest(){
+        if(exerciseAdapter.itemCount != 0) {
+            // 운동일지 작성 or 수정 요청
 
-                val gson = GsonBuilder().serializeNulls().create()
-                val requestBodyString = gson.toJson(jsonRequest).toString()
-                val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
-                val diaryData = createPartFromString(requestBodyWithoutBackslashes)
-                // 미디어
-                val mediaList = mediaAdapter.getMediaList()
-                val imageList: ArrayList<MultipartBody.Part> = ArrayList()
+            // 운동
+            val jsonRequest = DiaryWriteRequest(
+                exerciseAdapter.getExerciseList(),
+                binding.edtMemo.text.toString(),
+                exerciseDate
+            )
 
-                if(diaryId != -1){ // 다이어리 수정
+            val gson = GsonBuilder().serializeNulls().create()
+            val requestBodyString = gson.toJson(jsonRequest).toString()
+            val requestBodyWithoutBackslashes = requestBodyString.replace("\\", "")
+            val diaryData = createPartFromString(requestBodyWithoutBackslashes)
 
-                    // 수정 데이터 있는지 확인
-                    if(!edited && oldData?.review == binding.edtMemo.text.toString()){
-                        finish()
-                    }
-                    for(i in mediaList.indices){
-                        val bitmap = mediaList[i].bitmap
-                        val uri = mediaList[i].uri
-                        var file = File("")
-                        if(bitmap != null){
-                            val realPath = saveMedia(bitmap, "temp${i}")
-                            file = File(realPath)
-                        }else if(uri != null){
-                            file = File(getRealPathFromUri(uri))
+            // 미디어
+            val mediaList = mediaAdapter.getMediaList()
+            val imageList: ArrayList<MultipartBody.Part> = ArrayList()
+
+            if(diaryId != -1){ // 다이어리 수정
+                // 수정 데이터 있는지 확인
+                if(!edited && oldData?.review == binding.edtMemo.text.toString()){
+                    finish()
+                }
+                for(i in mediaList.indices){
+                    val uri = mediaList[i].uri
+                    val url = mediaList[i].url
+                    var file: File? = null
+                    if(url != null){
+                        saveMedia(url, "image${i}") { filePath ->
+                            if(filePath != null){
+                                file = File(filePath)
+                            }else {
+                                file = null
+                            }
                         }
+                    }else if(uri != null){
+                        file = File(getRealPathFromUri(uri))
+                    }else{return}
+                    if(file != null){
+                        val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),
+                            file!!
+                        )
+                        val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file!!.name, requestFile)
+                        imageList.add(uploadFile)
+                    }
+                }
+                viewModel.diaryEdit(diaryId, diaryData, imageList)
+
+            }else{ // 다이어리 작성
+                for (element in mediaList) {
+                    if(element.uri != null){
+                        val file = File(getRealPathFromUri(element.uri))
                         val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
                         val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
                         imageList.add(uploadFile)
                     }
-                    viewModel.diaryEdit(diaryId, diaryData, imageList)
-
-
-                }else{ // 다이어리 작성
-                    for (element in mediaList) {
-                        if(element.uri != null){
-                            val file = File(getRealPathFromUri(element.uri))
-                            val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-                            val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
-                            imageList.add(uploadFile)
-                        }
-                    }
-                    viewModel.diaryWrite(diaryData, imageList) // 다이어리 작성 요청
                 }
-            }else{
+                viewModel.diaryWrite(diaryData, imageList) // 다이어리 작성 요청
+            }
+        }else{
+            var dialog = SimpleDialog(
+                this,
+                getString(R.string.cancel_write),
+                getString(R.string.no_save_without_exercise)
+            )
+            dialog.show()
+
+            var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
+            var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
+
+            btnYes.setOnClickListener {
+                dialog.dismiss()
                 finish()
-                //Toast.makeText(this, "오늘의 운동을 추가해 주세요", Toast.LENGTH_SHORT).show()
             }
-
+            btnNo.setOnClickListener {
+                dialog.dismiss()
+            }
         }
 
-        // 근육 버튼 이벤트
-        // 신체 앞면
-        binding.layoutMuscleFront.setOnTouchListener { _, event ->
-            when(event.action){ // 260x554
-                MotionEvent.ACTION_DOWN -> {
-                    val x = event.x; val y = event.y
-                    binding.tvFrontMuscleName.visibility = View.VISIBLE
-                    //240
-                    if (x in 160.0..320.0 && y in 200.0..275.0){ // 가슴
-                        Log.d("MuscleView","MuscleView ($x, $y): 대흉근(가슴)")
-                        if(binding.ivFrontChest.visibility == View.VISIBLE){
-                            binding.ivFrontChest.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontChest.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_chest)
-                    }else if((x in 90.0..160.0 || x in 320.0..390.0) && y in 170.0..250.0){ // 어깨
-                        Log.d("MuscleView","MuscleView ($x, $y): 삼각근(어깨)")
-                        if(binding.ivFrontShoulder.visibility == View.VISIBLE){
-                            binding.ivFrontShoulder.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontShoulder.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_shoulder)
-
-                    }else if((x in 80.0..155.0 || x in 325.0..400.0) && y in 250.0..340.0){ // 이두근
-                        Log.d("MuscleView","MuscleView ($x, $y): 이두근")
-                        if(binding.ivFrontBiceps.visibility == View.VISIBLE){
-                            binding.ivFrontBiceps.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontBiceps.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_biceps)
-
-                    }else if((x in 50.0..140.0 || x in 340.0..420.0) && y in 340.0..470.0){ // 전완근
-                        Log.d("MuscleView","MuscleView ($x, $y): 전완근")
-                        if(binding.ivFrontForearms.visibility == View.VISIBLE){
-                            binding.ivFrontForearms.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontForearms.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_forearms)
-
-                    }else if(x in 170.0..310.0 && y in 290.0..470.0){ // 복부근
-                        Log.d("MuscleView","MuscleView ($x, $y): 복부")
-                        if(binding.ivFrontAbs.visibility == View.VISIBLE){
-                            binding.ivFrontAbs.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontAbs.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_abs)
-
-                    }else if(x in 130.0..350.0 && y in 470.0..670.0){ // 허벅지
-                        Log.d("MuscleView","MuscleView ($x, $y): 대퇴근(허벅지)")
-                        if(binding.ivFrontQuadriceps.visibility == View.VISIBLE){
-                            binding.ivFrontQuadriceps.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontQuadriceps.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_quadriceps)
-
-                    }else if(x in 130.0..350.0 && y in 670.0..840.0){ // 종아리
-                        Log.d("MuscleView","MuscleView ($x, $y): 비복근(종아리)")
-                        if(binding.ivFrontCalves.visibility == View.VISIBLE){
-                            binding.ivFrontCalves.visibility = View.INVISIBLE
-                        }else{
-                            binding.ivFrontCalves.visibility = View.VISIBLE
-                        }
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_calves)
-
-                    }else{
-                        Log.d("MuscleView","MuscleView ($x, $y): 밖")
-                        //binding.tvFrontMuscleName.visibility = View.INVISIBLE
-                    }
-
-                }
-            }
-            return@setOnTouchListener true
-        }
-
-        // 신체 앞면
-        binding.layoutMuscleBack.setOnTouchListener { _, event ->
-            when(event.action){
-                MotionEvent.ACTION_DOWN -> {
-                    val x = event.x; val y = event.y
-                    binding.tvBackMuscleName.visibility = View.VISIBLE
-
-                    if (x in 190.0..280.0 && y in 130.0..270.0){ // 승모근
-                        Log.d("MuscleView","MuscleView ($x, $y): 승모근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_trapezius)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_trapezius)
-                    }else if (x in 170.0..310.0 && y in 300.0..380.0){ // 광배근
-                        Log.d("MuscleView","MuscleView ($x, $y): 광배근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_lat)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_lat)
-                    }else if (x in 180.0..310.0 && y in 440.0..520.0){ // 대둔근
-                        Log.d("MuscleView","MuscleView ($x, $y): 대둔근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_glutes)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_glutes)
-                    }else if ((x in 90.0..160.0 || x in 320.0..390.0) && y in 190.0..260.0){ // 삼각근
-                        Log.d("MuscleView","MuscleView ($x, $y): 삼각근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_shoulder)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_shoulder)
-                    }else if ((x in 70.0..150.0 || x in 330.0..410.0) && y in 270.0..340.0){ // 삼두근
-                        Log.d("MuscleView","MuscleView ($x, $y): 삼두근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_triceps)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_triceps)
-                    }else if ((x in 65.0..130.0 || x in 350.0..415.0) && y in 350.0..455.0){ // 전완근
-                        Log.d("MuscleView","MuscleView ($x, $y): 전완근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_forearms)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_forearms)
-                    }else if (x in 140.0..400.0 && y in 530.0..690.0){ // 햄스트링
-                        Log.d("MuscleView","MuscleView ($x, $y): 햄스트링")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_hamstrings)
-                        binding.tvBackMuscleName.text = getString(R.string.muscle_hamstrings)
-                    }else if (x in 140.0..400.0 && y in 710.0..850.0){ // 비복근
-                        Log.d("MuscleView","MuscleView ($x, $y): 비복근")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_calves)
-                        binding.tvFrontMuscleName.text = getString(R.string.muscle_calves)
-                    }else{
-                        Log.d("MuscleView","MuscleView ($x, $y): 밖")
-                        binding.ivBackMuscle.setImageResource(R.drawable.img_muscle_back_body)
-                        binding.tvBackMuscleName.visibility = View.INVISIBLE
-                    }
-                }
-            }
-            return@setOnTouchListener true
-        }
     }
 
 
 
-    override fun finish() {
-        super.finish()
-        deleteMediaFile()
-    }
 
     fun createPartFromString(stringData: String): RequestBody {
         return stringData.toRequestBody("application/json".toMediaTypeOrNull())
     }
 
-    override fun onRestart() {
-        super.onRestart()
-
-    }
 
 
     override fun onResume() {
@@ -349,9 +251,9 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         if(firstStart){
             overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
             firstStart = false
+        }else{
+            overridePendingTransition(R.drawable.anim_slide_in_left, R.drawable.anim_slide_out_right)
         }
-
-        exerciseAdapter.notifyDataSetChanged()
 
     }
 
@@ -373,6 +275,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
             if (data == null){  // 다이어리 상세조회 실패
                 //setWriteView()
+                diaryId = -1
             }else{ // 다이어리 상세조회 성공
 
                 //setReadView()   // 읽기 모드
@@ -384,20 +287,16 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 for(item in data.exerciseInfo){
                     exerciseAdapter.addItem(item)
                 }
-
-                for(x in data.mediaList){
-                    val lastSegment = x.substringAfterLast("/").toInt()
-                    viewModel.media(lastSegment)
+                for(media in data.mediaList){
+                    mediaAdapter.addItem(MediaRvItem(3, null, media))
                 }
-            }
-        }
 
-        viewModel.mediaData.observe(this) { data ->
-            if (data != null) {
-                val byteArray = data.bytes()
-                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                mediaAdapter.addItem(MediaRvItem(3, null, bitmap))
                 edited = false
+
+//                for(x in data.mediaList){
+//                    val lastSegment = x.substringAfterLast("/").toInt()
+//                    viewModel.media(lastSegment)
+//                }
             }
         }
 
@@ -406,7 +305,8 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
             if(!isSuccess) return@observe
 
-            finish()
+            deleteMediaFile()
+
         }
 
         // 다이어리 수정
@@ -416,7 +316,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
             if(!isSuccess){ return@observe }
 
-            finish()
+            deleteMediaFile()
 
         }
     }
@@ -428,24 +328,34 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
 
     // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
-    private fun saveMedia(bitmap: Bitmap, name: String): String {
-        val tempFile = File(cacheDir, "$name.jpg")
+    private fun saveMedia(imageUrl: String, fileName: String, callback: (String?) -> Unit) {
 
-        try {
-            tempFile.createNewFile()
+        Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?){
+                    val file = File(cacheDir,
+                        "${getString(R.string.app_name)}_${SimpleDateFormat("yyyyMMddhhmmss").format(Date(System.currentTimeMillis()))}.jpg")
+                    try {
+                        file.createNewFile()
+                        FileOutputStream(file).use { outputStream ->
+                            resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                        }
+                        Log.d("fileName", file.path)
+                        tempMediaPathArr.add(file.path)
+                        callback(file.path)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        callback(null)
+                    }
 
-            val out = FileOutputStream(tempFile)
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-
-            out.close()
-        } catch (e: FileNotFoundException) {
-            Log.e(TAG, "FileNotFoundException : " + e.message)
-        } catch (e: IOException) {
-            Log.e(TAG, "IOException : " + e.message)
-        }
-        tempMediaPathArr.add(tempFile.path)
-        return tempFile.absolutePath
+                }
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // Do nothing
+                }
+            })
     }
 
     // 임시로 저장 해놓은 이미지 삭제
@@ -457,6 +367,8 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 file.delete()
             }
         }
+        finish()
     }
+
 
 }

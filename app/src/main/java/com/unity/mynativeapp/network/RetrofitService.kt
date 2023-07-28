@@ -203,4 +203,10 @@ interface RetrofitService {
 	fun postDietFood(
 		@Body dietFoodRequest: DietFoodRequest
 	): Call<MyResponse<String>>
+
+	///////// 운동 자극 피드백 ///////
+	@POST("/api/posture")
+	fun postFeedbackPosture(
+		@Body feedbackPostureRequest: FeedbackPostureRequest
+	): Call<MyResponse<String>>
 }

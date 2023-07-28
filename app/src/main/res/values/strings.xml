@@ -61,8 +61,8 @@
     <string name="change_password">비밀번호 변경</string>
     <string name="change">변경하기</string>
     <string name="health_dairy">운동 일지</string>
-    <string name="aerobic">유산소</string>
-    <string name="anaerobic">무산소</string>
+    <string name="cardio">유산소</string>
+    <string name="weight">무산소</string>
     <string name="calendar_monday">월</string>
     <string name="calendar_tuesday">화</string>
     <string name="calendar_wednesday">수</string>
@@ -104,8 +104,9 @@
     <string name="exercise_abs">복근</string>
     <string name="exercise_cardio">유산소</string>
     <string name="etc">기타</string>
-    <string name="exercise_detail_weight_training">상세 입력 (ex.스쿼드)</string>
-    <string name="exercise_detail_cardio">상세 입력 (ex.런닝)</string>
+    <string name="exercise_name">운동 이름</string>
+    <string name="exercise_name_weight_training">ex.스쿼드</string>
+    <string name="exercise_name_cardio">ex.런닝</string>
     <string name="time">시간</string>
     <string name="minute">분</string>
     <string name="reps">회/1세트</string>
@@ -114,9 +115,6 @@
     <string name="read_more">더보기</string>
     <string name="read_less">닫기</string>
 
-    <string name="please_select_exercise_you_want_register">등록할 운동을 선택해 주세요.</string>
-    <string name="please_set_cardio_time">유산소 시간을 설정해 주세요.</string>
-    <string name="please_input_exercise_count">운동 횟수를 입력해 주세요.</string>
     <string name="cancel">취소</string>
     <string name="confirm">확인</string>
     <string name="you_can_register_six_medias">최대 6개까지 등록할 수 있습니다.</string>
@@ -202,18 +200,26 @@
 
     <!-- 신체 근육 -->
     <string name="muscle_chest">대흉근</string>
-    <string name="muscle_shoulder">삼각근</string>
+    <string name="muscle_shoulder">어깨</string>
     <string name="muscle_biceps">이두근</string>
     <string name="muscle_forearms">전완근</string>
-    <string name="muscle_abs">복부근</string>
+    <string name="muscle_abs">복근</string>
     <string name="muscle_quadriceps">대퇴사두근</string>
     <string name="muscle_calves">비복근</string>
 
-    <string name="muscle_trapezius">승모근</string>
+    <string name="muscle_trap">승모근</string>
     <string name="muscle_lat">광배근</string>
     <string name="muscle_triceps">삼두근</string>
     <string name="muscle_glutes">대둔근</string>
     <string name="muscle_hamstrings">햄스트링</string>
+
+
     <string name="save">저장</string>
     <string name="identification">본인 확인</string>
+    <string name="select_body_part">운동할 부위를 선택해 주세요. (최대 3개)</string>
+    <string name="exercise_posture_feedback">운동 자극 피드백</string>
+    <string name="exercise_posture_feedback_explain">운동 후 자극 부위를 선택하여 피드백을 받아보세요!</string>
+    <string name="get_feedback">피드백 받기</string>
+    <string name="no_save_without_exercise">오늘의 운동을 추가하지 않으면 저장되지 않습니다.</string>
+    <string name="cancel_write">작성을 취소하시겠습니까?</string>
 </resources>

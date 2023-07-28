@@ -2,6 +2,7 @@ package com.unity.mynativeapp.features.diary
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,20 +14,20 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.MediaRvItem
-import com.unity.mynativeapp.network.util.DeleteDialog
-
+import com.unity.mynativeapp.network.util.SimpleDialog
+import retrofit2.http.Url
+import java.net.URL
 
 
 class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private var itemList = mutableListOf<MediaRvItem>()
     private var pathList = mutableListOf<String>()
-
     // 다이어리 작성할 때 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_media))
+                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -36,6 +37,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                     itemList.removeAt(adapterPosition)
                     dialog.dismiss()
                     notifyDataSetChanged()
+
                 }
                 btnNo.setOnClickListener {
                     dialog.dismiss()
@@ -67,11 +69,11 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    // 다이어리 상세조회할 때 받아서 출력하는 미디어 타입 -> bitmap
+    // 다이어리 상세조회할 때 받아서 출력하는 미디어 타입 -> URL
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_media))
+                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -89,18 +91,16 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                 return@OnLongClickListener true
             }
         }
-        fun bind_get(bitmapItem: MediaRvItem){
-            //val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            //binding.photo.setImageBitmap(bitmap)
+        fun bind_get(item: MediaRvItem){
 
-            bitmapItem.bitmap?.let{
-                when(bitmapItem.viewType){
+            item.url?.let{
+                when(item.viewType){
                     3 -> { // 사진
                         binding.iconPlay.visibility = View.GONE
                         binding.root.setOnClickListener {
                             val intent = Intent(context, MediaFullActivity::class.java)
-                            intent.putExtra("bitmap", bitmapItem.bitmap)
-                            intent.putExtra("viewType", bitmapItem.viewType)
+                            intent.putExtra("url", item.url)
+                            intent.putExtra("viewType", item.viewType)
                             context.startActivity(intent)
                         }
                     }
@@ -108,8 +108,6 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                         binding.iconPlay.visibility = View.VISIBLE
                     }
                 }
-
-
                 setImage(it, binding)
             }
 
@@ -128,17 +126,17 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is ViewHolder_post) itemList[position].uri?.let{holder.bind_post(itemList[position])}
-        else if(holder is ViewHolder_get) itemList[position].bitmap?.let{holder.bind_get(itemList[position])}
+        else if(holder is ViewHolder_get) itemList[position].url?.let{holder.bind_get(itemList[position])}
     }
 
     override fun getItemCount(): Int {
         return itemList.size
     }
 
-    fun addItem(media: MediaRvItem){
-
+    fun addItem(media: MediaRvItem) {
         itemList.add(media)
         notifyDataSetChanged()
+
     }
 
     fun getMediaList(): List<MediaRvItem>{
@@ -156,6 +154,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
     }
 
     private fun setImage(image: Any, binding: ItemRvMediaBinding){
+
         Glide.with(binding.photo)
             .load(image)
             .placeholder(R.drawable.shape_bg_black_rounded)

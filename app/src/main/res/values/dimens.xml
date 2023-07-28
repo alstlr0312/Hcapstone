@@ -6,4 +6,6 @@
     <dimen name="title_text_size">20sp</dimen>
     <dimen name="normal_text_size">16sp</dimen>
     <dimen name="small_text_size">13sp</dimen>
+    <dimen name="logo_width">35dp</dimen>
+    <dimen name="logo_height">18dp</dimen>
 </resources>

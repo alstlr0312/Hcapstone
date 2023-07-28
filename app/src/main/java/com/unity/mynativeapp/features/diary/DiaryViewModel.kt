@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.model.DiaryResponse
+import com.unity.mynativeapp.model.FeedbackPostureRequest
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -20,7 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.URL
 
-class DiaryViewModel: ViewModel() {
+open class DiaryViewModel: ViewModel() {
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
@@ -43,6 +44,11 @@ class DiaryViewModel: ViewModel() {
     private val _diaryEditSuccess = MutableLiveData<Boolean>()
     val diaryEditSuccess: LiveData<Boolean> = _diaryEditSuccess
 
+    private val _diaryDeleteData = MutableLiveData<Int?>()
+    val diaryDeleteData: LiveData<Int?> = _diaryDeleteData
+
+    private val _postureFeedbackData = MutableLiveData<String?>()
+    val postureFeedbackData: MutableLiveData<String?> = _postureFeedbackData
 
 
     // 다이어리 작성
@@ -112,7 +118,7 @@ class DiaryViewModel: ViewModel() {
                     400 -> {//  실패
                         val body = response.errorBody()?.string()
                         val data = GsonBuilder().create().fromJson(body, MyError::class.java)
-                        _toastMessage.postValue(data.error.toString())
+                        Log.d(TAG, data.error.toString())
                         _diaryData.postValue(null)
                     }
                     401 -> {
@@ -206,6 +212,45 @@ class DiaryViewModel: ViewModel() {
         })
     }
 
+    // 운동 자극 피드백
+    fun postureFeedback(exerciseName: String, bodyPart: String) {
+        _loading.postValue(true)
+        postPostureFeedback(FeedbackPostureRequest(exerciseName, bodyPart))
+    }
+    private fun postPostureFeedback(body: FeedbackPostureRequest) {
+        RetrofitClient.getApiService().postFeedbackPosture(body).enqueue(object :
+            Callback<MyResponse<String>> {
+            override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
+                _loading.postValue(false)
+
+                val code = response.code()
+                when(code){
+                    200 -> {// 운동 자극 피드백 요청 성공
+                        val data = response.body()?.data
+                        _postureFeedbackData.postValue(data)
+                    }
+                    401 -> {// 존재하지 않는 유저
+                        Log.d(TAG, "$code 존재하지 않는 유저")
+                        _logout.postValue(true)
+                    }
+
+                    else -> {
+                        val body = response.errorBody()?.string()
+                        val data = GsonBuilder().create().fromJson(body, MyError::class.java)
+                        _toastMessage.postValue(data.error.toString())
+                        Log.d(TAG, "$code: ${data.error.toString()}")
+                    }
+                }
+
+            }
+
+            override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+
+            }
+        })
+    }
 
 
     companion object {

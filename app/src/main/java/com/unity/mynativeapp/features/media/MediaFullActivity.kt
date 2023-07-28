@@ -12,7 +12,7 @@ import com.unity.mynativeapp.databinding.ActivityMediaFullBinding
 class MediaFullActivity : BaseActivity<ActivityMediaFullBinding>(ActivityMediaFullBinding::inflate) {
 
     private var viewType = 0
-    private var bitmap: Bitmap? = null
+    private var url: String? = null
     private var uri: Uri? = null
     private lateinit var mediaController: MediaController
 

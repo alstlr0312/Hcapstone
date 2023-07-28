@@ -13,7 +13,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.MediaRvItem
-import com.unity.mynativeapp.network.util.DeleteDialog
+import com.unity.mynativeapp.network.util.SimpleDialog
 
 
 class PostWriteMediaRvAdapter(val context: Context)
@@ -25,7 +25,7 @@ class PostWriteMediaRvAdapter(val context: Context)
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_media))
+                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -70,7 +70,7 @@ class PostWriteMediaRvAdapter(val context: Context)
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.you_want_delete_media))
+                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
                 var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
@@ -88,18 +88,18 @@ class PostWriteMediaRvAdapter(val context: Context)
                 return@OnLongClickListener true
             }
         }
-        fun bind_get(bitmapItem: MediaRvItem){
+        fun bind_get(item: MediaRvItem){
             //val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             //binding.photo.setImageBitmap(bitmap)
 
-            bitmapItem.bitmap?.let{
-                when(bitmapItem.viewType){
+            item.url?.let{
+                when(item.viewType){
                     3 -> { // 사진
                         binding.iconPlay.visibility = View.GONE
                         binding.root.setOnClickListener {
                             val intent = Intent(context, MediaFullActivity::class.java)
-                            intent.putExtra("bitmap", bitmapItem.bitmap)
-                            intent.putExtra("viewType", bitmapItem.viewType)
+                            intent.putExtra("url", item.url)
+                            intent.putExtra("viewType", item.viewType)
                             context.startActivity(intent)
                         }
                     }
@@ -107,8 +107,6 @@ class PostWriteMediaRvAdapter(val context: Context)
                         binding.iconPlay.visibility = View.VISIBLE
                     }
                 }
-
-
                 setImage(it, binding)
             }
 
@@ -126,7 +124,7 @@ class PostWriteMediaRvAdapter(val context: Context)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is PostWriteMediaRvAdapter.ViewHolder_post) itemList[position].uri?.let{holder.bind_post(itemList[position])}
-        else if(holder is PostWriteMediaRvAdapter.ViewHolder_get) itemList[position].bitmap?.let{holder.bind_get(itemList[position])}
+        else if(holder is PostWriteMediaRvAdapter.ViewHolder_get) itemList[position].url?.let{holder.bind_get(itemList[position])}
     }
 
     override fun getItemCount(): Int {

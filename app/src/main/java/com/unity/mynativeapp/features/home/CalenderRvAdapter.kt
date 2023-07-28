@@ -15,7 +15,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvCalenderBinding
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.model.CalenderRvItem
-import com.unity.mynativeapp.network.util.DeleteDialog
+import com.unity.mynativeapp.network.util.SimpleDialog
 import java.time.format.DateTimeFormatter
 
 
@@ -94,7 +94,7 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
 
                 if(item.exerciseDate != null){
                     if(item.isSelectedDay == true && item.dailyPercentage != -1) {
-                        var dialog = DeleteDialog(context, context.getString(R.string.delete_diary), item.exerciseDate.toString())
+                        var dialog = SimpleDialog(context, context.getString(R.string.delete_diary), item.exerciseDate.toString())
                         dialog.show()
 
                         var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)

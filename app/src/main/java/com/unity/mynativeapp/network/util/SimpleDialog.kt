@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.unity.mynativeapp.databinding.DialogDeleteBinding
+import com.unity.mynativeapp.databinding.DialogSimpleBinding
 
-class DeleteDialog(context: Context, val title: String, val headString: String = ""): Dialog(context) {
-    val binding by lazy {DialogDeleteBinding.inflate(layoutInflater)}
+class SimpleDialog(context: Context, val title: String, val headString: String = ""): Dialog(context) {
+    val binding by lazy { DialogSimpleBinding.inflate(layoutInflater)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
