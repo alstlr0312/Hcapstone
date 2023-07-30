@@ -175,10 +175,11 @@ interface RetrofitService {
 	): Call<MyResponse<Int>>
 
 	// 회원 정보 수정
+	@Multipart
 	@PATCH("/member/edit")
 	fun patchMemberInfoEdit(
 		@Part("editMemberDto") editMemberDto: RequestBody,
-		@Part("file") file: RequestBody?
+		@Part file: MultipartBody.Part?
 	): Call<MyResponse<String>>
 
 	////////////// 지도 /////////////////

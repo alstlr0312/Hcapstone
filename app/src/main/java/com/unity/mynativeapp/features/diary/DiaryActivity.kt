@@ -222,19 +222,12 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 getString(R.string.no_save_without_exercise)
             )
             dialog.show()
-
-            var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-            var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-            btnYes.setOnClickListener {
-                dialog.dismiss()
-                finish()
-            }
-            btnNo.setOnClickListener {
-                dialog.dismiss()
+            dialog.setOnDismissListener {
+                if(dialog.resultCode == 1){
+                    finish()
+                }
             }
         }
-
     }
 
 

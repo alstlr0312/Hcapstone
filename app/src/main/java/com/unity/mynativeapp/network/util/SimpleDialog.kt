@@ -11,7 +11,7 @@ import com.unity.mynativeapp.databinding.DialogSimpleBinding
 
 class SimpleDialog(context: Context, val title: String, val headString: String = ""): Dialog(context) {
     val binding by lazy { DialogSimpleBinding.inflate(layoutInflater)}
-
+    var resultCode = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCanceledOnTouchOutside(false)
@@ -27,6 +27,15 @@ class SimpleDialog(context: Context, val title: String, val headString: String =
             binding.tvHead.visibility = View.VISIBLE
         }else{
             binding.tvHead.visibility = View.GONE
+        }
+
+        binding.btnYes.setOnClickListener {
+            resultCode = 1
+            dismiss()
+        }
+        binding.btnNo.setOnClickListener {
+            resultCode = 0
+            dismiss()
         }
 
     }

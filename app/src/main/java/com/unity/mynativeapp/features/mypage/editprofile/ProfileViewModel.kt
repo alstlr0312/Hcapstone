@@ -1,16 +1,15 @@
 package com.unity.mynativeapp.features.mypage.editprofile
 
-import android.content.ContentValues.TAG
+import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.features.mypage.MyPageViewModel
 import com.unity.mynativeapp.model.EditProfileRequest
-import com.unity.mynativeapp.model.MemberPageResponse
-import com.unity.mynativeapp.model.PostResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -25,7 +24,7 @@ import retrofit2.Response
 import java.io.File
 import java.util.regex.Pattern
 
-class ProfileViewModel: MyPageViewModel() {
+class ProfileViewModel(val context: Context): MyPageViewModel() {
 
     // 비밀번호 검사 후 받은 아이디
     private val _getMemberId = MutableLiveData<Int?>()
@@ -47,7 +46,7 @@ class ProfileViewModel: MyPageViewModel() {
         _loading.postValue(true)
         RetrofitClient.getApiService().postPasswordCheck(password).enqueue(object : Callback<MyResponse<Int>> {
             override fun onResponse(call: Call<MyResponse<Int>>, response: Response<MyResponse<Int>>) {
-                _loading.postValue(false)
+
 
                 val code = response.code()
                 Log.d(TAG, code.toString())
@@ -60,13 +59,18 @@ class ProfileViewModel: MyPageViewModel() {
                         }
                     }
                     400 -> {
+                        _loading.postValue(false)
                         val body = response.errorBody()?.string()
                         val data = GsonBuilder().create().fromJson(body, MyError::class.java)
                         val error = data.error.toString()
                         _toastMessage.postValue(error)
                     }
-                    401 -> _logout.postValue(true)
+                    401 -> {
+                        _loading.postValue(false)
+                        _logout.postValue(true)
+                    }
                     else -> {
+                        _loading.postValue(false)
                         Log.d(TAG, "$code")
                     }
                 }
@@ -79,9 +83,9 @@ class ProfileViewModel: MyPageViewModel() {
 
     }
 
-    fun editProfile(username: String, password: String, field: String?, memberId: Int, profileImgUri: Uri?) {
+    fun editProfile(username: String, password: String, field: String?, memberId: Int, profileImgPath: String?) {
 
-        _loading.postValue(true)
+        //_loading.postValue(true)
 
         if (username.isEmpty()) {
             _toastMessage.postValue(NICKNAME_EMPTY_ERROR)
@@ -104,21 +108,24 @@ class ProfileViewModel: MyPageViewModel() {
         }
 
         // 프로필 정보
-        val editProfileDto = EditProfileRequest(username, password, field)
+        val editProfileDto = EditProfileRequest(username, password, field, memberId)
         val profileDtoBody = GsonBuilder().serializeNulls().create().toJson(editProfileDto).toString()
             .toRequestBody("application/json".toMediaTypeOrNull())
 
         // 프로필 이미지
-        var profileImgBody: RequestBody? = null
-        val profileImgFile = profileImgUri?.path?.let { File(it) }
+        var profileImgBody: MultipartBody.Part? = null
+        val profileImgFile = profileImgPath?.let { File(it)}
+        //Log.d("herehere", profileImgUri?.path.toString())
         profileImgFile?.let{
-            profileImgBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), it)
+            val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),
+                profileImgFile
+            )
+            profileImgBody = MultipartBody.Part.createFormData("files",  profileImgFile.name, requestFile)
         }
-        //val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
         editProfileAPI(profileDtoBody, profileImgBody)
     }
 
-    private fun editProfileAPI(editProfileDto: RequestBody, profileImgFile: RequestBody?) {
+    private fun editProfileAPI(editProfileDto: RequestBody, profileImgFile: MultipartBody.Part?) {
         RetrofitClient.getApiService().patchMemberInfoEdit(editProfileDto, profileImgFile).enqueue(object : Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
                 _loading.postValue(false)
@@ -156,6 +163,22 @@ class ProfileViewModel: MyPageViewModel() {
 
     companion object{
         val TAG = "ProfileViewModel"
+    }
+
+    private fun getRealPathFromUri(uri: Uri): String {
+        val buildName = Build.MANUFACTURER
+        if(buildName.equals("Xiaomi")){
+            return uri.path!!
+        }
+        var columnIndex = 0
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = context.contentResolver.query(uri, proj, null, null, null)
+        if(cursor!!.moveToFirst()){
+            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        }
+        val result = cursor.getString(columnIndex)
+        cursor.close()
+        return result
     }
 
 }

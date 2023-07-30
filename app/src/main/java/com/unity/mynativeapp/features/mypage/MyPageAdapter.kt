@@ -39,8 +39,8 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
                     }
                     2 -> { // 프로필 수정
                         val intent = Intent(context, ProfileActivity::class.java)
-                        intent.putExtra("username", MyApplication.prefUtil.getString("username", ""))
-                        intent.putExtra("field", MyApplication.prefUtil.getString("field", ""))
+                        //intent.putExtra("username", MyApplication.prefUtil.getString("username", ""))
+                        //intent.putExtra("field", MyApplication.prefUtil.getString("field", ""))
                         context.startActivity(intent)
                     }
                     3 -> { // 설정

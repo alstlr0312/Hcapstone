@@ -291,18 +291,13 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             }
             R.id.menuDeletePost -> { // 내 게시글 삭제
                 // alert dialog
-                var dialog = SimpleDialog(this, getString(R.string.you_want_delete_post))
+                val dialog = SimpleDialog(this, getString(R.string.you_want_delete_post))
                 dialog.show()
 
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    // 게시글 삭제 요청
-                    viewModel.postDelete(postId)
-                }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        viewModel.postDelete(postId)
+                    }
                 }
             }
             R.id.menuAccusePost -> { // 타인의 게시글 신고

@@ -25,19 +25,15 @@ class PostWriteMediaRvAdapter(val context: Context)
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    itemList.removeAt(adapterPosition)
-                    dialog.dismiss()
-                    notifyDataSetChanged()
-                }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        dialog.dismiss()
+                        notifyDataSetChanged()
+                    }
                 }
 
                 return@OnLongClickListener true
@@ -70,19 +66,15 @@ class PostWriteMediaRvAdapter(val context: Context)
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    itemList.removeAt(adapterPosition)
-                    dialog.dismiss()
-                    notifyDataSetChanged()
-                }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        dialog.dismiss()
+                        notifyDataSetChanged()
+                    }
                 }
 
                 return@OnLongClickListener true

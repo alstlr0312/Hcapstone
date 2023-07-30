@@ -202,40 +202,33 @@ class SignUpActivity : AppCompatActivity(){
                 binding.edtAuthenticateCode.setText("")
                 return@observe
             }
-            // 기본 프로필 이미지 -> 캐시에 저장
-            saveBaseProfileImg()
-
-            // 활동 지역
-            if(binding.edtAddress.text.toString().isNotEmpty()){
-                MyApplication.prefUtil.setString("field", binding.edtAddress.text.toString())
-            }
             finish()
 
         }
 
     }
-    private fun saveBaseProfileImg() {
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_profile_photo_base)
-
-        val tempFile = File(cacheDir, "profileImage.jpg")
-
-        try {
-            tempFile.createNewFile()
-
-            val out = FileOutputStream(tempFile)
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-
-            out.close()
-        } catch (e: FileNotFoundException) {
-            Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
-        } catch (e: IOException) {
-            Log.e(DiaryActivity.TAG, "IOException : " + e.message)
-        }
-
-        MyApplication.prefUtil.setString("profileImgPath", tempFile.absolutePath)
-
-    }
+//    private fun saveBaseProfileImg() {
+//        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_profile_photo_base)
+//
+//        val tempFile = File(cacheDir, "profileImage.jpg")
+//
+//        try {
+//            tempFile.createNewFile()
+//
+//            val out = FileOutputStream(tempFile)
+//
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+//
+//            out.close()
+//        } catch (e: FileNotFoundException) {
+//            Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
+//        } catch (e: IOException) {
+//            Log.e(DiaryActivity.TAG, "IOException : " + e.message)
+//        }
+//
+//        MyApplication.prefUtil.setString("profileImgPath", tempFile.absolutePath)
+//
+//    }
 
 
 

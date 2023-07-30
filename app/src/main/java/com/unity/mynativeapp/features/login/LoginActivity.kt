@@ -28,11 +28,6 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_profile_photo_base)
-
-
-
         // viewModel의 Data를 Observe하는 이벤트 모음 함수
         subscribeUI()
 

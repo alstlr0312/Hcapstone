@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
@@ -25,6 +27,17 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
     private val viewModel by viewModels<MyPageViewModel>()
     private lateinit var myPageAdapter: MyPageAdapter
     lateinit var userName: String
+
+    override fun onResume() {
+        super.onResume()
+        // 회원 정보 요청
+        val username = PreferenceUtil(requireContext()).getString("username", null)
+        if(username != null){
+            viewModel.myPageInfo(username)
+        }else{
+            showCustomToast("username is null")
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -32,19 +45,7 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
         binding.rvMypage.adapter = myPageAdapter
 
         setUiEvent()
-
         subscribeUI()
-
-
-        val username = PreferenceUtil(requireContext()).getString("username", null)
-        if(username != null){
-            viewModel.myPageInfo(username)
-        }else{
-            showCustomToast("username is null")
-        }
-
-
-
     }
 
     private fun getRvItemList(): MutableList<MyPageRvItem>{
@@ -79,15 +80,12 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
             if(data.profileImage != null){
                 MainScope().async {
-                    val lastSegment = data.profileImage.substringAfterLast("/").toInt()
-                    viewModel.media(lastSegment)
-                    viewModel.mediaData.observe(viewLifecycleOwner) { data2 ->
-                        if (data2 != null) {
-                            Log.d("bodyPartsdfasd",data2.toString())
-                            val bitmap = BitmapFactory.decodeByteArray(data2.bytes(), 0, data2.bytes().size)
-                            binding.ivProfileImg.setImageBitmap(bitmap)
-                        }
-                    }
+                    Glide.with(binding.ivProfileImg)
+                        .load(data.profileImage)
+                        .placeholder(R.color.main_black)
+                        .error(R.drawable.ic_profile_photo_base)
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(binding.ivProfileImg)
                 }
             }else{
                 binding.ivProfileImg.setImageResource(R.drawable.ic_profile_photo_base)

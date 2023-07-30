@@ -222,4 +222,6 @@
     <string name="get_feedback">피드백 받기</string>
     <string name="no_save_without_exercise">오늘의 운동을 추가하지 않으면 저장되지 않습니다.</string>
     <string name="cancel_write">작성을 취소하시겠습니까?</string>
+    <string name="change_to_base_img">기본 이미지로 변경</string>
+    <string name="select_img_in_gallery">앨범에서 사진 선택</string>
 </resources>

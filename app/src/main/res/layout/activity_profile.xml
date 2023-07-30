@@ -94,7 +94,7 @@
                     android:layout_height="@dimen/icon_size"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_edit_image"
-                    app:tint="@color/main_gray_light"/>
+                    app:tint="@color/main_red_light"/>
             </androidx.cardview.widget.CardView>
 
 

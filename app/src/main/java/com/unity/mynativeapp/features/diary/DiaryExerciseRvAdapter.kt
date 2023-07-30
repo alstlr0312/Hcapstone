@@ -27,20 +27,15 @@ class DiaryExerciseRvAdapter(var context: Context)
         init{
             bindingList.add(binding)
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_exercise))
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_exercise))
                 dialog.show()
 
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    itemList.removeAt(adapterPosition)
-                    bindingList.remove(binding)
-                    dialog.dismiss()
-                    notifyDataSetChanged()
-                }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        bindingList.remove(binding)
+                        notifyDataSetChanged()
+                    }
                 }
 
                 return@OnLongClickListener true

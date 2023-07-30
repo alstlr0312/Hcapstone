@@ -94,22 +94,12 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
 
                 if(item.exerciseDate != null){
                     if(item.isSelectedDay == true && item.dailyPercentage != -1) {
-                        var dialog = SimpleDialog(context, context.getString(R.string.delete_diary), item.exerciseDate.toString())
+                        val dialog = SimpleDialog(context, context.getString(R.string.delete_diary), item.exerciseDate.toString())
                         dialog.show()
-
-                        var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                        var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                        btnYes.setOnClickListener {
-
-                            diaryDeleteCallback.diaryDeleteListener(item.diaryId)
-
-
-                            dialog.dismiss()
-
-                        }
-                        btnNo.setOnClickListener {
-                            dialog.dismiss()
+                        dialog.setOnDismissListener {
+                            if(dialog.resultCode == 1){
+                                diaryDeleteCallback.diaryDeleteListener(item.diaryId)
+                            }
                         }
                     }
                 }
