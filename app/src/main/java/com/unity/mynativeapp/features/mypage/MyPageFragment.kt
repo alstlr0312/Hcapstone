@@ -93,8 +93,12 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
             binding.tvUsername.text = data.username
 
-            binding.layoutEmail.visibility = View.VISIBLE
-            binding.tvEmail.text = data.email
+            if(data.email != null){
+                binding.layoutEmail.visibility = View.VISIBLE
+                binding.tvEmail.text = data.email
+            }else{
+                binding.layoutEmail.visibility = View.GONE
+            }
 
             if(data.field != null){
                 binding.layoutField.visibility = View.VISIBLE

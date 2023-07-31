@@ -18,7 +18,7 @@ class MyPostsActivity : BaseActivity<ActivityMyPostsBinding>(ActivityMyPostsBind
     private var getPostIsFirst = true
     private var currentPage = 0
     private val pageSize = 20
-    private var username: String? = null
+    private lateinit var username: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +35,8 @@ class MyPostsActivity : BaseActivity<ActivityMyPostsBinding>(ActivityMyPostsBind
         binding.rvMyPost.adapter = myPostAdpater
 
         // 유저 이름
-        username = MyApplication.prefUtil.getString("username", null)
-        if(username != null){
+        username = MyApplication.prefUtil.getString("username", "").toString()
+        if(username.isNotEmpty()){
             // 내 게시물 목록 요청
             viewModel.myPost(null, null, username, currentPage, pageSize)
         }

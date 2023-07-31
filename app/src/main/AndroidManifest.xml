@@ -23,6 +23,9 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
+            android:name=".features.mypage.setting.SettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.diary.FeedbackPostureActivity"
             android:exported="false" />
         <activity

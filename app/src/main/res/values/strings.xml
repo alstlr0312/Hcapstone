@@ -224,4 +224,9 @@
     <string name="cancel_write">작성을 취소하시겠습니까?</string>
     <string name="change_to_base_img">기본 이미지로 변경</string>
     <string name="select_img_in_gallery">앨범에서 사진 선택</string>
+    <string name="delete_member">회원 탈퇴</string>
+    <string name="app_explain">YouHaveTo 이용 가이드</string>
+    <string name="open_source_license">오픈소스 라이선스</string>
+    <string name="notification">알림</string>
+    <string name="logout">로그아웃</string>
 </resources>

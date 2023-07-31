@@ -305,8 +305,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         // 다이어리 수정
         viewModel.diaryEditSuccess.observe(this) { isSuccess ->
 
-
-
             if(!isSuccess){ return@observe }
 
             deleteMediaFile()

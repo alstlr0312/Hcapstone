@@ -11,6 +11,7 @@ import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.ItemRvMypageBinding
 import com.unity.mynativeapp.features.mypage.myposts.MyPostsActivity
 import com.unity.mynativeapp.features.mypage.editprofile.ProfileActivity
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity
 import com.unity.mynativeapp.model.MyPageRvItem
 
 class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem>): RecyclerView.Adapter<MyPageAdapter.ViewHolder>(){
@@ -38,13 +39,10 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
 
                     }
                     2 -> { // 프로필 수정
-                        val intent = Intent(context, ProfileActivity::class.java)
-                        //intent.putExtra("username", MyApplication.prefUtil.getString("username", ""))
-                        //intent.putExtra("field", MyApplication.prefUtil.getString("field", ""))
-                        context.startActivity(intent)
+                        context.startActivity(Intent(context, ProfileActivity::class.java))
                     }
                     3 -> { // 설정
-
+                        context.startActivity(Intent(context, SettingActivity::class.java))
                     }
                 }
             }

@@ -55,7 +55,7 @@
         android:inputType="textPassword"
         android:textColorHint="@color/main_gray"
         android:padding="14dp"
-        android:drawableStart="@drawable/ic_input_password"
+        android:drawableStart="@drawable/ic_password_small"
         android:drawablePadding="8dp"
         android:drawableTint="@color/main_red_light"
         app:layout_constraintTop_toBottomOf="@id/edt_id"
