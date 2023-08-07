@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_black"
-    tools:context=".features.mypage.myposts.MyPostsActivity">
+    tools:context=".features.mypage.setting.SettingActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_appbar"
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/my_post"
+                android:text="@string/setting"
                 android:textColor="@color/white"
                 style="@style/TitleTextStyle"
                 android:layout_marginStart="@dimen/fab_margin"
@@ -50,21 +50,12 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_my_post"
+        android:id="@+id/rv_setting"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/fab_margin"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <TextView
-        android:id="@+id/emptyView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_post"
-        android:textColor="@color/main_gray_light2"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        android:layout_gravity="center"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

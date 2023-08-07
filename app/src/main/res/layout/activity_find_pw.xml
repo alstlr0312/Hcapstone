@@ -188,7 +188,7 @@
             android:textColorHint="@color/main_gray"
             android:paddingHorizontal="14dp"
             android:paddingVertical="12dp"
-            android:drawableStart="@drawable/ic_input_password"
+            android:drawableStart="@drawable/ic_password_small"
             android:drawablePadding="8dp"
             android:drawableTint="@color/main_red_light"/>
 
@@ -218,7 +218,7 @@
             android:textColorHint="@color/main_gray"
             android:paddingHorizontal="14dp"
             android:paddingVertical="12dp"
-            android:drawableStart="@drawable/ic_input_password"
+            android:drawableStart="@drawable/ic_password_small"
             android:drawablePadding="8dp"
             android:drawableTint="@color/main_red_light"/>
 
