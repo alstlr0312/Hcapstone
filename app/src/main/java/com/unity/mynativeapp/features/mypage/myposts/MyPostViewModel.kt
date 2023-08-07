@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.unity.mynativeapp.model.PostResponse
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

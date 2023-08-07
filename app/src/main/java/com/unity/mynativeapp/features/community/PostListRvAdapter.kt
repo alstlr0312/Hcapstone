@@ -2,11 +2,9 @@ package com.unity.mynativeapp.features.community
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
@@ -16,7 +14,6 @@ import java.time.LocalDateTime
 class PostListRvAdapter(val context: Context): RecyclerView.Adapter<PostListRvAdapter.ViewHolder>() {
 
     var itemList = mutableListOf<PostItem>()
-    var today = LocalDateTime.now()
 
     inner class ViewHolder(val binding: ItemRvPostingBinding): RecyclerView.ViewHolder(binding.root){
 

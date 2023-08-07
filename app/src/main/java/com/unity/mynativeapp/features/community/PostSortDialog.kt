@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.CheckBox
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.R
@@ -18,8 +17,6 @@ data class CbItem(
 class PostSortDialog(context: Context): Dialog(context) {
 
     val binding by lazy { DialogPostSortBinding.inflate(layoutInflater) }
-    //var sortCbList = arrayListOf<CheckBox>()    // 정렬 체크박스 리스트
-    //var categoryCbList = arrayListOf<CheckBox>()    // 카테고리 체크박스 리스트
     lateinit var sortAdapter: CheckBoxAdapter
     lateinit var categoryAdapter: CheckBoxAdapter
     var resultCode = 0

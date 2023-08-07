@@ -12,7 +12,6 @@ import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.network.util.*
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
 import com.unity.mynativeapp.model.PostItem
-import java.time.LocalDateTime
 
 class MyPostRvAdapter(val context: Context): RecyclerView.Adapter<MyPostRvAdapter.ViewHolder>() {
 

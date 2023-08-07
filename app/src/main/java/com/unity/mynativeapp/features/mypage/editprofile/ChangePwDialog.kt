@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.DialogChangePwBinding
 import com.unity.mynativeapp.network.util.PW_FORMAT_ERROR
 import java.util.regex.Pattern

@@ -26,8 +26,6 @@ class BaseActivity<T> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragment()).commitAllowingStateLoss()
         binding.btmNavView.setOnNavigationItemSelectedListener {
             when(it.itemId){

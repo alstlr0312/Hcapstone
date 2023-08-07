@@ -6,10 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.CommentGetResponse
 import com.unity.mynativeapp.model.CommentWriteRequest
-import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient

@@ -1,14 +1,10 @@
 package com.unity.mynativeapp.features.mypage
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentMypageBinding
@@ -16,7 +12,6 @@ import com.unity.mynativeapp.model.MyPageRvItem
 import com.unity.mynativeapp.network.util.PreferenceUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -26,7 +21,6 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
     private val viewModel by viewModels<MyPageViewModel>()
     private lateinit var myPageAdapter: MyPageAdapter
-    lateinit var userName: String
 
     override fun onResume() {
         super.onResume()

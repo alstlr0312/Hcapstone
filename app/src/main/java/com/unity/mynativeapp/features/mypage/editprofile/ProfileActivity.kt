@@ -2,23 +2,17 @@ package com.unity.mynativeapp.features.mypage.editprofile
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.core.graphics.decodeBitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -29,8 +23,6 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityProfileBinding
 import com.unity.mynativeapp.features.diary.DiaryActivity
-import com.unity.mynativeapp.features.postwrite.PostWriteActivity
-import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.network.util.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
@@ -38,7 +30,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBinding::inflate) {
@@ -46,19 +37,14 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
     private var firstStart = true
     lateinit var viewModel: ProfileViewModel
     private var currentPw = ""
-    private var changeToBaseImg: Boolean = false
     private var changedImgPath: String?= null // null: 기본 이미지, not null: 다른 이미지로 변경
-    //private var changedImgUri: Uri? = null
     var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         if(result.resultCode == RESULT_OK){
             val imageUri = result.data?.data
             imageUri?.let{
                 changedImgPath = getRealPathFromUri(it)
-                //changedImgPath = it.path
                 binding.ivProfileImg.setImageURI(it)
-                //val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, it))
-                //saveProfileImg(bitmap)
             }
         }
     }
@@ -249,9 +235,6 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
             if(!isSuccess)return@observe
             // 앱 내부 데이터 수정
             MyApplication.prefUtil.setString("username", binding.edtUsername.text.toString())
-            //MyApplication.prefUtil.setString("field", binding.edtField.text.toString())
-
-
 
             // 프로필 수정 화면 종료
             showCustomToast(EDIT_COMPLETE)

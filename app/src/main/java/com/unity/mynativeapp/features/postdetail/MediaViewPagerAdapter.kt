@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemVpMediaBinding
-import com.unity.mynativeapp.model.OnCommentClick
 
 class MediaViewPagerAdapter(val context: Context)
     : RecyclerView.Adapter<MediaViewPagerAdapter.ViewHolder>() {

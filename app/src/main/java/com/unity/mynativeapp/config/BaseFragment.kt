@@ -3,7 +3,6 @@ package com.unity.mynativeapp.config
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.network.util.LoadingDialog
-import com.unity.mynativeapp.network.util.SPFileName
 import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
 import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
 import kotlin.system.exitProcess

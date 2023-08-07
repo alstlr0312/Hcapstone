@@ -2,11 +2,9 @@ package com.unity.mynativeapp.features.diary
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -15,14 +13,11 @@ import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.network.util.SimpleDialog
-import retrofit2.http.Url
-import java.net.URL
 
 
 class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private var itemList = mutableListOf<MediaRvItem>()
-    private var pathList = mutableListOf<String>()
     // 다이어리 작성할 때 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{

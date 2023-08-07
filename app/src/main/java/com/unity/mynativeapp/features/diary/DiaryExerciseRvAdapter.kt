@@ -3,13 +3,10 @@ package com.unity.mynativeapp.features.diary
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.unity.mynativeapp.MyApplication.Companion.bodyPartHashMap
 import com.unity.mynativeapp.MyApplication.Companion.bodyPartKorHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvDiaryExerciseBinding
@@ -99,9 +96,6 @@ class DiaryExerciseRvAdapter(var context: Context)
         return itemList.size
     }
 
-    fun getListFormView(nList: MutableList<ExerciseItem>){
-        itemList = nList
-    }
 
     fun addItem(item: ExerciseItem){
         itemList.add(item)

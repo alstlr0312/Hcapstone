@@ -85,8 +85,6 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
 
     fun editProfile(username: String, password: String, field: String?, memberId: Int, profileImgPath: String?) {
 
-        //_loading.postValue(true)
-
         if (username.isEmpty()) {
             _toastMessage.postValue(NICKNAME_EMPTY_ERROR)
             return
@@ -163,22 +161,6 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
 
     companion object{
         val TAG = "ProfileViewModel"
-    }
-
-    private fun getRealPathFromUri(uri: Uri): String {
-        val buildName = Build.MANUFACTURER
-        if(buildName.equals("Xiaomi")){
-            return uri.path!!
-        }
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, proj, null, null, null)
-        if(cursor!!.moveToFirst()){
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-        return result
     }
 
 }

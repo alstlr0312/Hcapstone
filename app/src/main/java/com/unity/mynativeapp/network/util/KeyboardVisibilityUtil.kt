@@ -6,7 +6,6 @@ import android.view.Window
 
 class KeyboardVisibilityUtil(
     private val window: Window,
-    //private val onShowKeyboard: ((keyboardHeight: Int) -> Unit)? = null,
     private val onShowKeyboard: (() -> Unit)? = null,
     private val onHideKeyboard: (() -> Unit)? = null
 ) {
@@ -42,7 +41,5 @@ class KeyboardVisibilityUtil(
         window.decorView.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
     }
 
-    fun detachKeyboardListeners() {
-        window.decorView.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
-    }
+
 }

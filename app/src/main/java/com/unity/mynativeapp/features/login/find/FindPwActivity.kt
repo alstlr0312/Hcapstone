@@ -1,6 +1,5 @@
 package com.unity.mynativeapp.features.login.find
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,12 +8,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
-import com.unity.mynativeapp.databinding.ActivityFindIdBinding
 import com.unity.mynativeapp.databinding.ActivityFindPwBinding
 import com.unity.mynativeapp.model.FindPwRequest
-import com.unity.mynativeapp.network.util.PW_EMPTY_ERROR
 import com.unity.mynativeapp.network.util.PW_FORMAT_ERROR
-import com.unity.mynativeapp.network.util.PW_NOT_SAME_ERROR
 import java.util.regex.Pattern
 
 class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
@@ -26,14 +22,12 @@ class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setView()
         setUiEvent()
         subscribeUI()
     }
 
     private fun setView(){
-
         binding.layoutEmail.visibility = View.VISIBLE
         binding.layoutCode.visibility = View.INVISIBLE
         binding.layoutChangePw.visibility = View.INVISIBLE
@@ -41,9 +35,6 @@ class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
         binding.tvWarningEmail.visibility = View.GONE
         binding.btnEmailAuthenticate.background = getDrawable(R.drawable.shape_btn_gray_unenabled)
         binding.btnEmailAuthenticate.isEnabled = false
-
-
-
     }
 
     private fun setUiEvent(){

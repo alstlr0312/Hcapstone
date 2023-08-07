@@ -11,11 +11,6 @@ import com.unity.mynativeapp.databinding.FragmentArBinding
 class ArFragment : Fragment() {
     lateinit var binding: FragmentArBinding
     var isUnityLoaded = false
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,9 +18,9 @@ class ArFragment : Fragment() {
         binding = FragmentArBinding.inflate(layoutInflater)
         binding.Unity.setOnClickListener {
             isUnityLoaded = true
-            //val intent= Intent(context, MainUnityActivity::class.java)
-            //intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            //startActivityForResult(intent, 1)
+            val intent= Intent(context, MainUnityActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivityForResult(intent, 1)
         }
         return binding.root
     }

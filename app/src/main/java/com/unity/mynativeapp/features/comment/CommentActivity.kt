@@ -1,15 +1,12 @@
 package com.unity.mynativeapp.features.comment
 
-import android.app.Service
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityCommentBinding
-import com.unity.mynativeapp.model.CommentData
 import com.unity.mynativeapp.model.CommentWriteRequest
 import com.unity.mynativeapp.model.OnCommentClick
 import com.unity.mynativeapp.util.KeyboardVisibilityUtil

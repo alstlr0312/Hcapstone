@@ -35,7 +35,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
     private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
     private val viewModel by viewModels<MapModel>()
-    private val REQUEST_CODE_LOCATION = 1000
     var roadAdd: String=""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,7 +83,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
             if (location != null) {
                 val lat = location.latitude
                 val lon = location.longitude
-                //val latLng = LatLng(location.latitude, location.longitude)
                 val address = getAddress(lat,lon)
                 var addressarr = address.split(" ")
                 Log.d("lat",lat.toString())

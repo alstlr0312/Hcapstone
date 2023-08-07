@@ -1,14 +1,11 @@
 package com.unity.mynativeapp.features.home
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.HomeResponse
-import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import retrofit2.Call

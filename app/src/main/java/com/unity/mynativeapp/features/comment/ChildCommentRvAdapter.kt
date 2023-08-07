@@ -2,7 +2,6 @@ package com.unity.mynativeapp.features.comment
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -10,7 +9,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvChildCommentBinding
 import com.unity.mynativeapp.model.CommentData
-import kotlin.properties.Delegates
 
 class ChildCommentRvAdapter(val context: Context): RecyclerView.Adapter<ChildCommentRvAdapter.ViewHolder>() {
 

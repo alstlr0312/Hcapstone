@@ -5,17 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.MyApplication
-import com.unity.mynativeapp.features.login.LoginViewModel
-import com.unity.mynativeapp.features.signup.SignUpViewModel
 import com.unity.mynativeapp.model.DietFoodRequest
 import com.unity.mynativeapp.model.RoutineRequest
-import com.unity.mynativeapp.model.SignUpRequest
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import com.unity.mynativeapp.network.util.EMAIL_DUPLICATE_ERROR
-import com.unity.mynativeapp.network.util.SIGNUP_SUCCESS
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

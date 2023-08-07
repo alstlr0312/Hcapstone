@@ -36,10 +36,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
     private val viewModel by viewModels<PostWriteViewModel>()
     private var editing = false
     private var postData: PostWriteRequest?= null
-    //private var postFileBitmapList: ArrayList<Bitmap> ?= null
     private var postFilePathList = arrayListOf<String>()
     private var postId = -1
-    //private var tempMediaPathArr = arrayListOf<String>()
 
     var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->

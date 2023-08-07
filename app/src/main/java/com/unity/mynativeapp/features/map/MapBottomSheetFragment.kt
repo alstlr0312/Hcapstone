@@ -1,14 +1,11 @@
 package com.unity.mynativeapp.features.map
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.naver.maps.map.overlay.Overlay
-import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.FragmentMapBottomSheetBinding
 
 class MapBottomSheetFragment(param: Overlay.OnClickListener) : BottomSheetDialogFragment()  {

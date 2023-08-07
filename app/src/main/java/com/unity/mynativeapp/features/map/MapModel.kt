@@ -29,8 +29,6 @@ class MapModel : ViewModel() {
     private val _mapData = MutableLiveData<MapResponse?>()
     val mapData: LiveData<MapResponse?> = _mapData
 
-
-
     fun GetMap(district: String, offset: Int, limit: Int) {
 
         _loading.postValue(true)

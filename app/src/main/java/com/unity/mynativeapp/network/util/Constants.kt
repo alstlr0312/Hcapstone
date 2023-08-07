@@ -1,8 +1,5 @@
 package com.unity.mynativeapp.network.util
 
-import android.os.Environment
-
-
 // SharedPreferences
 const val SPFileName = "YOU_HAVE_TO"
 

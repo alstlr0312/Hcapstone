@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.CheckBox
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -220,14 +219,6 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             }
         }
 
-        /*
-        // 자식 댓글 조회
-        viewModel.commentGetData.observe(this) {data->
-            if(data != null && data.commentListDto.isNotEmpty()) {
-                commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
-            }
-        }
-        */
 
     }
 
@@ -248,7 +239,6 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     }
 
     override fun childCommentGetListener(parentId: Int) {
-        //viewModel.commentGet(postId, parentId, null, null, null)
     }
 
     override fun writeChildComment(parentId: Int) {
@@ -261,7 +251,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        //val inflater: MenuInflater = menuInflater
+
         if(postId != -1){
             if(mine){ // 내 게시글인 경우의 메뉴
                 menuInflater.inflate(R.menu.menu_post_mine, menu)

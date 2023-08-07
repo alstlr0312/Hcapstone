@@ -3,12 +3,9 @@ package com.unity.mynativeapp.features.comment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.*
-import android.widget.AdapterView
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions

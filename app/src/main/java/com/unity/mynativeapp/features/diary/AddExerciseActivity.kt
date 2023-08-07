@@ -1,7 +1,6 @@
 package com.unity.mynativeapp.features.diary
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -9,11 +8,9 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.Toast
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityAddExerciseBinding
-import com.unity.mynativeapp.model.DiaryExerciseRvItem
 import com.unity.mynativeapp.model.ExerciseItem
 import com.unity.mynativeapp.network.util.*
 

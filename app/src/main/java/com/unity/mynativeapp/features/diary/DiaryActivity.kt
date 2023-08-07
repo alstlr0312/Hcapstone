@@ -3,12 +3,10 @@ package com.unity.mynativeapp.features.diary
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -25,17 +23,11 @@ import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.*
 import com.unity.mynativeapp.network.util.SimpleDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.*
-import java.net.URL
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -63,7 +55,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 }else if(it.toString().contains("video")){
                     mediaAdapter.addItem(MediaRvItem(2, it, null))
                 }else{}
-                //Log.d("aaaaa", getRealPathFromUri(it))
             }
         }
     }
@@ -72,8 +63,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         super.onCreate(savedInstanceState)
 
         diaryActivity = this
-        //loadingDialog = LoadingDialog(this)
-
 
         setView()
 
@@ -286,10 +275,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
                 edited = false
 
-//                for(x in data.mediaList){
-//                    val lastSegment = x.substringAfterLast("/").toInt()
-//                    viewModel.media(lastSegment)
-//                }
             }
         }
 
