@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -81,9 +80,6 @@ class PostWriteMediaRvAdapter(val context: Context)
             }
         }
         fun bind_get(item: MediaRvItem){
-            //val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            //binding.photo.setImageBitmap(bitmap)
-
             item.url?.let{
                 when(item.viewType){
                     3 -> { // 사진

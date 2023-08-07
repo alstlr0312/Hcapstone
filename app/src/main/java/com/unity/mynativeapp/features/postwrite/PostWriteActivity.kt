@@ -49,7 +49,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
                 }else if(it.toString().contains("video")){
                     mediaAdapter.addItem(MediaRvItem(2, it, null))
                 }else{}
-                //Log.d("aaaaa", getRealPathFromUri(it))
             }
         }
     }

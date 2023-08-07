@@ -10,7 +10,7 @@
         android:id="@+id/iv_icon"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
-        android:src="@drawable/ic_password"
+        android:src="@drawable/ic_password_small"
         app:tint="@color/main_red"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

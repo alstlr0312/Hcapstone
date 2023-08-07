@@ -2,7 +2,7 @@ package com.unity.mynativeapp.model
 
 import android.net.Uri
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
+
 
 data class DiaryResponse(
     @SerializedName("diaryId") val diaryId: Int,

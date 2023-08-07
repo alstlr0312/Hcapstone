@@ -1,7 +1,4 @@
 package com.unity.mynativeapp.model
-
-
-
 data class HomeResponse(
     val calenders: List<Calender>,
     val monthlyPercentage: Int,

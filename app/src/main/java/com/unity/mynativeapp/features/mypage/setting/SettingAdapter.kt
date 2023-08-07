@@ -23,8 +23,7 @@ class SettingAdapter(val context: Context): RecyclerView.Adapter<SettingAdapter.
             binding.ivIcon.setImageResource(item.icon)
             binding.tvTitle.text = item.title
             binding.root.setOnClickListener {
-                //val intent = Intent(context, PostDetailActivity::class.java)
-                //context.startActivity(intent)
+
             }
         }
     }

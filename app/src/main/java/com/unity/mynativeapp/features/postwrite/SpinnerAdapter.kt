@@ -11,9 +11,7 @@ import androidx.core.content.ContextCompat
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemSpinnerBinding
 
-data class SpinnerModel(
-    var title: String
-)
+
 class SpinnerAdapter(
     context: Context,
     @LayoutRes private val resId: Int,

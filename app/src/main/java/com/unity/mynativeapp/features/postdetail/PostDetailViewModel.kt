@@ -6,15 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.features.comment.CommentViewModel
 import com.unity.mynativeapp.features.diary.DiaryViewModel
-import com.unity.mynativeapp.model.CommentGetResponse
 import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.network.util.DELETE_COMPLETE
-import com.unity.mynativeapp.network.util.POST_EDIT_COMPLETE
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback

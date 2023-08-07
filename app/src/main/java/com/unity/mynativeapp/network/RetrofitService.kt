@@ -42,11 +42,7 @@ interface RetrofitService {
 		@Body findPwRequest: FindPwRequest
 	): Call<MyResponse<String>>
 
-	// 토큰 재발급
-	@GET("/diary")
-	fun getRefreshToken(
-		@Query("date") date: String
-	): Call<MyResponse<LoginData>>
+
 
 	// 홈 화면 조회 (다이어리 목록 조회)
 	@GET("/diary")

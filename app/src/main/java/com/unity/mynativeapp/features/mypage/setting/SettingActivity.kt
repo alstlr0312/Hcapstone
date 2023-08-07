@@ -24,12 +24,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(ActivitySettingBind
 
     private fun setSettingList(): ArrayList<BaseRvItem>{
         val list = arrayListOf<BaseRvItem>()
-        list.add(BaseRvItem(R.drawable.ic_password, getString(R.string.change_password)))
+        //아직 이미지 없음
+       /* list.add(BaseRvItem(R.drawable.ic_password, getString(R.string.change_password)))
         list.add(BaseRvItem(R.drawable.ic_logout, getString(R.string.logout)))
         list.add(BaseRvItem(R.drawable.ic_leave, getString(R.string.delete_member)))
         list.add(BaseRvItem(R.drawable.ic_notification, getString(R.string.notification)))
         list.add(BaseRvItem(R.drawable.ic_infomation, getString(R.string.app_explain)))
-        list.add(BaseRvItem(R.drawable.ic_open_source, getString(R.string.open_source_license)))
+        list.add(BaseRvItem(R.drawable.ic_open_source, getString(R.string.open_source_license)))*/
         return list
     }
 

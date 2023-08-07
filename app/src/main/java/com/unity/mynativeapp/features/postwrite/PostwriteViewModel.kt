@@ -7,15 +7,13 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.network.*
 import com.unity.mynativeapp.network.util.POST_EDIT_COMPLETE
-
 import com.unity.mynativeapp.network.util.POST_WRITE_COMPLETE
-
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Dictionary
+
 
 class PostWriteViewModel: ViewModel() {
 

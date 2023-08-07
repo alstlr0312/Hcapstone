@@ -51,10 +51,6 @@ class MediaViewPagerAdapter(val context: Context)
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<Bitmap>) {
-        itemList = nList
-        notifyDataSetChanged()
-    }
 
     fun getMediaList(): ArrayList<Bitmap>{
 
