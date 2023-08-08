@@ -14,6 +14,7 @@ import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.PostItem
+import com.unity.mynativeapp.features.BaseActivity
 
 
 class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
@@ -75,9 +76,9 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
                 }
             }
         }
-
         // 게시물 작성
-        this.requireActivity().findViewById<FloatingActionButton>(R.id.btn_write_post).setOnClickListener {
+        val parentActivity = requireActivity() as BaseActivity<*>
+        parentActivity.binding.btnWritePost.setOnClickListener {
             startActivity(Intent(requireContext(), PostWriteActivity::class.java))
         }
 

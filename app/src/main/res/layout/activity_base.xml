@@ -20,16 +20,16 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_write_post"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/ic_add"
-        app:tint="@color/white"
-        android:visibility="gone"
+        android:layout_width="59dp"
+        android:layout_height="90dp"
         android:layout_margin="20dp"
+        android:src="@drawable/ic_add"
+        android:visibility="gone"
         app:fabCustomSize="45dp"
-        app:maxImageSize="35dp"
         app:layout_constraintBottom_toBottomOf="@id/frameLayout"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="35dp"
+        app:tint="@color/white" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btmNavView"

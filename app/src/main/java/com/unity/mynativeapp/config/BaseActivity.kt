@@ -78,8 +78,6 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
 
 
     // 키보드 숨기기
-
-
     fun getRealPathFromUri(uri: Uri): String {
         val buildName = Build.MANUFACTURER
         if(buildName.equals("Xiaomi")){

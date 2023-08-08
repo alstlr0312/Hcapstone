@@ -21,10 +21,11 @@ lateinit var mapFragment: MapFragment
 lateinit var mypageFragment: MyPageFragment
 
 class BaseActivity<T> : AppCompatActivity() {
-    val binding by lazy {ActivityBaseBinding.inflate(layoutInflater)}
+    lateinit var binding: ActivityBaseBinding
     var firstStart = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityBaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragment()).commitAllowingStateLoss()
         binding.btmNavView.setOnNavigationItemSelectedListener {
