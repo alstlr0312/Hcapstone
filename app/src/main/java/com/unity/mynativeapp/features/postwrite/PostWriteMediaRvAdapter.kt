@@ -20,8 +20,8 @@ class PostWriteMediaRvAdapter(val context: Context)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private var itemList = mutableListOf<MediaRvItem>()
-    private var pathList = mutableListOf<String>()
-    // 다이어리 작성할 때 미디어 타입 -> Uri
+
+    // 새로 추가한 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
@@ -44,6 +44,12 @@ class PostWriteMediaRvAdapter(val context: Context)
             when(uriItem.viewType){
                 1 -> { // 사진
                     binding.iconPlay.visibility = View.GONE
+                    binding.root.setOnClickListener {
+                        val intent = Intent(context, MediaFullActivity::class.java)
+                        intent.putExtra("url", uriItem.uri)
+                        intent.putExtra("viewType", uriItem.viewType)
+                        context.startActivity(intent)
+                    }
                 }
                 2 -> { // 동영상
                     binding.iconPlay.visibility = View.VISIBLE
@@ -62,13 +68,12 @@ class PostWriteMediaRvAdapter(val context: Context)
         }
     }
 
-    // 다이어리 상세조회할 때 받아서 출력하는 미디어 타입 -> bitmap
+    // 서버로부터 받은 미디어 타입 -> url
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
                 val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
-
                 dialog.setOnDismissListener {
                     if(dialog.resultCode == 1){
                         itemList.removeAt(adapterPosition)
@@ -76,13 +81,10 @@ class PostWriteMediaRvAdapter(val context: Context)
                         notifyDataSetChanged()
                     }
                 }
-
                 return@OnLongClickListener true
             }
         }
         fun bind_get(item: MediaRvItem){
-            //val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            //binding.photo.setImageBitmap(bitmap)
 
             item.url?.let{
                 when(item.viewType){
@@ -124,13 +126,19 @@ class PostWriteMediaRvAdapter(val context: Context)
     }
 
     fun addItem(media: MediaRvItem){
-
         itemList.add(media)
         notifyDataSetChanged()
     }
 
     fun getMediaList(): List<MediaRvItem>{
         return itemList
+    }
+
+    fun setMediaList(mList: List<String>) {
+        for(media in mList){
+            itemList.add(MediaRvItem(3, null, media))
+            notifyItemChanged(itemCount -1)
+        }
     }
 
     override fun getItemViewType(position: Int):Int {

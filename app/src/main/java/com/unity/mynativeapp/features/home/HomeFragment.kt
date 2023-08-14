@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,9 @@ import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.SPFileName
 import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
 import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
@@ -64,6 +68,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
 
 
     }
+
 
     override fun onResume() {
         super.onResume()

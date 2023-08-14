@@ -88,39 +88,6 @@ class PostDetailViewModel : ViewModel() {
         })
     }
 
-    ////// 미디어
-    fun media(num: Int) {
-
-        _loading.postValue(true)
-
-        getmediaAPI(num)
-    }
-
-    private fun getmediaAPI(num: Int) {
-
-        RetrofitClient.getApiService().getMedia(num).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                _loading.postValue(false)
-                if (response.isSuccessful) {
-                    val imageBytes = response.body()
-                    _mediaData.postValue(imageBytes)
-                } else {
-                    val body = response.errorBody()?.string()
-                    val data = GsonBuilder().create().fromJson(body, MyError::class.java)
-                    _toastMessage.postValue(data.error.toString())
-                }
-
-            }
-
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-            }
-        })
-    }
-
 
     //// 좋아요
     fun like(postId: Int, isClicked: Boolean){

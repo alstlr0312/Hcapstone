@@ -19,10 +19,10 @@ import retrofit2.http.Url
 import java.net.URL
 
 
-class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private var itemList = mutableListOf<MediaRvItem>()
-    private var pathList = mutableListOf<String>()
+
     // 다이어리 작성할 때 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
@@ -33,7 +33,8 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                 dialog.setOnDismissListener {
                     if(dialog.resultCode == 1){
                         itemList.removeAt(adapterPosition)
-                        notifyDataSetChanged()
+                        notifyItemRemoved(adapterPosition)
+                        listener.diaryEditListener()
                     }
                 }
                 return@OnLongClickListener true
@@ -72,7 +73,8 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                 dialog.setOnDismissListener {
                     if(dialog.resultCode == 1){
                         itemList.removeAt(adapterPosition)
-                        notifyDataSetChanged()
+                        notifyItemRemoved(adapterPosition)
+                        listener.diaryEditListener()
                     }
                 }
 
@@ -122,13 +124,21 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
     }
 
     fun addItem(media: MediaRvItem) {
-        itemList.add(media)
-        notifyDataSetChanged()
+        listener.diaryEditListener()
 
+        itemList.add(media)
+        notifyItemChanged(itemCount-1)
     }
 
     fun getMediaList(): List<MediaRvItem>{
         return itemList
+    }
+
+    fun setMediaList(mList: List<String>){
+        for(url in mList){
+            itemList.add(MediaRvItem(3, null, url))
+            notifyItemRemoved(itemCount-1)
+        }
     }
 
     override fun getItemViewType(position: Int):Int {
@@ -149,6 +159,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
             .error(R.drawable.ic_image_failed)
             .fallback(R.drawable.shape_bg_black_rounded)
             .override(430, 430)
+            .centerCrop()
             .apply(RequestOptions.centerCropTransform())
             .into(binding.photo)
     }

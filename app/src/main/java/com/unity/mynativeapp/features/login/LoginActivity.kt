@@ -39,9 +39,9 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
 
     private fun setUiEvent() {
         binding.btnLogin.setOnClickListener {
-            val email = binding.edtId.text.toString()
+            val id = binding.edtId.text.toString()
             val password = binding.edtPassword.text.toString()
-            viewModel.login(email, password)
+            viewModel.login(id, password)
         }
 
         // 회원가입

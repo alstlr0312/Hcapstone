@@ -131,7 +131,6 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
                     commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
                 }
 
-
             }else{
                 binding.tvNoComment.visibility = View.VISIBLE
             }

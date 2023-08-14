@@ -14,22 +14,21 @@ import com.unity.mynativeapp.model.OnCommentClick
 class MediaViewPagerAdapter(val context: Context)
     : RecyclerView.Adapter<MediaViewPagerAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<Bitmap>()
+    private var itemList = mutableListOf<String>()
 
     inner class ViewHolder(val binding: ItemVpMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(img: Bitmap) {
+        fun bind(url: String) {
 
             Glide.with(binding.ivMedia)
-                .load(img)
+                .load(url)
                 .placeholder(R.color.main_black_dark)
-                .error(R.color.main_black_dark)
+                .error(R.drawable.ic_image_failed)
                 .fallback(R.color.main_black_dark)
                 .centerCrop()
                 .apply(RequestOptions.centerCropTransform())
                 .into(binding.ivMedia)
-
 
         }
     }
@@ -52,19 +51,14 @@ class MediaViewPagerAdapter(val context: Context)
         return itemList.size
     }
 
-    fun getListFromView(nList: MutableList<Bitmap>) {
+    fun setMediaList(nList: ArrayList<String>) {
         itemList = nList
         notifyDataSetChanged()
     }
 
-    fun getMediaList(): ArrayList<Bitmap>{
-
-        return itemList as ArrayList<Bitmap>
-    }
-
-    fun addItem(bitmap: Bitmap) {
-        itemList.add(bitmap)
-        notifyDataSetChanged()
+    fun addItem(url: String) {
+        itemList.add(url)
+        notifyItemChanged(itemList.size-1)
     }
     fun removeAllItem() {
         itemList = mutableListOf()

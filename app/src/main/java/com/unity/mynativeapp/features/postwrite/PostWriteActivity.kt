@@ -3,6 +3,7 @@ package com.unity.mynativeapp.features.postwrite
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -10,23 +11,38 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.MyApplication.Companion.postCategoryHashMap
+import com.unity.mynativeapp.MyApplication.Companion.postCategoryKorHashMap
 import com.unity.mynativeapp.MyApplication.Companion.postExerciseTypeHashMap
+import com.unity.mynativeapp.MyApplication.Companion.postExerciseTypeKorHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostWriteBinding
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.model.PostWriteRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.*
 import java.net.HttpURLConnection
+import java.net.MalformedURLException
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWriteBinding::inflate) {
 
@@ -35,11 +51,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
     lateinit var mediaAdapter: PostWriteMediaRvAdapter      // 미디어 Rv 어댑터
     private val viewModel by viewModels<PostWriteViewModel>()
     private var editing = false
-    private var postData: PostWriteRequest?= null
-    //private var postFileBitmapList: ArrayList<Bitmap> ?= null
     private var postFilePathList = arrayListOf<String>()
     private var postId = -1
-    //private var tempMediaPathArr = arrayListOf<String>()
 
     var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
@@ -51,7 +64,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
                 }else if(it.toString().contains("video")){
                     mediaAdapter.addItem(MediaRvItem(2, it, null))
                 }else{}
-                //Log.d("aaaaa", getRealPathFromUri(it))
             }
         }
     }
@@ -87,22 +99,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         editing = intent.getBooleanExtra("editing", false)
         if (editing){
             postId = intent.getIntExtra("postId", -1)
-            postData = intent.getSerializableExtra("postData") as PostWriteRequest
-            val files = intent.getStringArrayListExtra("postFilePathList")
-            if(files != null){
-                postFilePathList = files
-            }
-            binding.spinnerPostCategory.setSelection(postCategoryArr.indexOf(postData?.postType))
-            binding.spinnerPostType.setSelection(postExerciseTypeArr.indexOf(postData?.workOutCategory))
-            binding.edtPostTitle.setText(postData?.title)
-            binding.edtPostText.setText(postData?.content)
-            binding.btnPosting.text = getString(R.string.editing)
-            for(path in postFilePathList){
-                val bitmap = BitmapFactory.decodeFile(path);
-                //mediaAdapter.addItem(MediaRvItem(3, null, bitmap, null))
-            }
-            deleteMediaFile()
-
+            viewModel.getPostEditData(postId)
         }
     }
 
@@ -121,7 +118,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         binding.ivClose.setOnClickListener { finish() }
 
         binding.btnPosting.setOnClickListener {//게시글 등록 또는 수정
-            var category = binding.spinnerPostCategory.selectedItem.toString()
+            val category = binding.spinnerPostCategory.selectedItem.toString()
             val type = binding.spinnerPostType.selectedItem.toString()
             val title = binding.edtPostTitle.text.toString()
             val text = binding.edtPostText.text.toString()
@@ -143,22 +140,40 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
             val imageList: ArrayList<MultipartBody.Part> = ArrayList()
 
             if(editing){ // 게시글 수정
-                for(i in mediaList.indices){
-                    val uri = mediaList[i].uri
-                    val url = mediaList[i].url
-                    var file: File = if(url != null){
-                        val realPath = saveMedia(url)
-                        File(realPath)
-                    }else if(uri != null){
-                        File(getRealPathFromUri(uri))
-                    }else{return@setOnClickListener}
-                    val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-                    val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
-                    imageList.add(uploadFile)
+                CoroutineScope(Dispatchers.Main).launch {
+                    for (i in mediaList.indices) {
+                        val uri = mediaList[i].uri // 추가한 미디어
+                        val url = mediaList[i].url // 서버로부터 받은 미디어
+                        if (url != null) {
+                            val filePath = withContext(Dispatchers.IO) {
+                                saveMedia(url)
+                            }
+                            if (filePath != null) {
+                                postFilePathList.add(filePath)
+                                val file = File(filePath)
+                                val requestFile: RequestBody =
+                                    file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                                val uploadFile =
+                                    MultipartBody.Part.createFormData(
+                                        "files",
+                                        file.name,
+                                        requestFile
+                                    )
+                                imageList.add(uploadFile)
+                            } else {
+                                Log.d(DiaryActivity.TAG, "file is null")
+                            }
+                        } else if (uri != null) {
+                            val file = File(getRealPathFromUri(uri))
+                            val requestFile: RequestBody =
+                                file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                            val uploadFile =
+                                MultipartBody.Part.createFormData("files", file.name, requestFile)
+                            imageList.add(uploadFile)
+                        }
+                    }
+                    viewModel.postEdit(postId, postData, imageList)
                 }
-
-                viewModel.postEdit(postId, postData, imageList)
-
             }else{ // 게시글 작성
                 for(element in mediaList) {
                     if(element.uri != null){
@@ -187,37 +202,67 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
             if(logout) logout()
         }
 
+        // 게시글 작성
         viewModel.postWriteSuccess.observe(this){ isSuccess ->
             if(!isSuccess) return@observe
 
-            finish()
+            deleteMediaFile()
+        }
+
+        // 수정할 게시글 데이터 요청
+        viewModel.postEditData.observe(this){ data ->
+            if(data == null) {
+                finish()
+                return@observe
+            }
+
+            with(binding){
+                val category = postCategoryKorHashMap[data.postType].takeIf { it != null }
+                val exerciseType = postExerciseTypeKorHashMap[data.workOutCategory].takeIf { it != null }
+                spinnerPostCategory.setSelection(postCategoryArr.indexOf(category))
+                spinnerPostType.setSelection(postExerciseTypeArr.indexOf(exerciseType))
+                edtPostTitle.setText(data.title)
+                edtPostText.setText(data.content)
+                btnPosting.text = getString(R.string.editing)
+                mediaAdapter.setMediaList(data.mediaList)
+            }
         }
     }
     // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
-    private fun saveMedia(url: String): String {
-        val fileName = url.substringAfter("/")
-        val tempFile = File(cacheDir, "$fileName")
+    private suspend fun saveMedia(imageUrl: String): String?{
+        var bitmap: Bitmap? = null
+        try{
+            val url = URL(imageUrl)
+            val stream = url.openStream()
+            bitmap = BitmapFactory.decodeStream(stream)
+        } catch (e: MalformedURLException){
+            e.printStackTrace()
+        } catch (e: IOException){
+            e.printStackTrace()
+        }
+        if(bitmap == null) return null
 
+        val fileName = "${getString(R.string.app_name)}_${
+            SimpleDateFormat("yyyyMMddhhmmss").format(Date(System.currentTimeMillis()))
+        }.jpg"
+        val tempFile = File(cacheDir, fileName)
         try {
-            // convert url to bitmap
-            val connection: HttpURLConnection = URL(url).openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input: InputStream = connection.inputStream
-            val bitmap = BitmapFactory.decodeStream(input)
 
-            // save bitmap image into cache
             tempFile.createNewFile()
+
             val out = FileOutputStream(tempFile)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
 
+
             out.close()
+
+
+
         } catch (e: FileNotFoundException) {
             Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
         } catch (e: IOException) {
             Log.e(DiaryActivity.TAG, "IOException : " + e.message)
         }
-        postFilePathList.add(tempFile.path)
         return tempFile.absolutePath
     }
 
@@ -226,20 +271,17 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         for(path in postFilePathList){
             val file = File(path)
             if(file.exists()){
-                Log.d(DiaryActivity.TAG, "file name: ${path}")
+                Log.d(DiaryActivity.TAG, "file name: $path")
                 file.delete()
+            }else{
+                Log.e(DiaryActivity.TAG, "file is not exist")
             }
         }
-
-    }
-
-    override fun finish() {
-        super.finish()
-        deleteMediaFile()
+        finish()
     }
 
     companion object{
-        val TAG = "PostWriteActivity"
+        const val TAG = "PostWriteActivity"
     }
 
 }

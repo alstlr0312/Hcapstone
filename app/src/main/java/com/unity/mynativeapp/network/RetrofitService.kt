@@ -55,10 +55,10 @@ interface RetrofitService {
 	) : Call<MyResponse<HomeResponse>>
 
 	// 미디어 조회
-	@GET("/media/{num}")
-	fun getMedia(
-		@Path("num") num: Int
-	) : Call<ResponseBody>
+//	@GET("/media/{num}")
+//	fun getMedia(
+//		@Path("num") num: Int
+//	) : Call<ResponseBody>
 
 	/*
 	//////////////// 다이어리 ///////////////

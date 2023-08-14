@@ -103,13 +103,16 @@ open class DiaryViewModel: ViewModel() {
     private fun getDiaryAPI(date: String) {
         RetrofitClient.getApiService().getDiary(date).enqueue(object :
             Callback<MyResponse<DiaryResponse>> {
-            override fun onResponse(call: Call<MyResponse<DiaryResponse>>, response: Response<MyResponse<DiaryResponse>>) {
+            override fun onResponse(
+                call: Call<MyResponse<DiaryResponse>>,
+                response: Response<MyResponse<DiaryResponse>>
+            ) {
                 _loading.postValue(false)
 
                 val code = response.code()
                 Log.d(TAG, code.toString())
 
-                when(code) {
+                when (code) {
                     200 -> { // 다이어리 상세조회 성공
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
@@ -134,37 +137,6 @@ open class DiaryViewModel: ViewModel() {
             override fun onFailure(call: Call<MyResponse<DiaryResponse>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
-            }
-        })
-    }
-    fun media(num: Int) {
-        _loading.postValue(true)
-        getMediaAPI(num)
-    }
-
-    private fun getMediaAPI(num: Int) {
-        RetrofitClient.getApiService().getMedia(num).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                _loading.postValue(false)
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    _mediaData.postValue(data)
-
-                } else {
-                    // 응답이 실패한 경우 처리하는 코드 작성
-                    val body = response.errorBody()?.string()
-                    val data = GsonBuilder().create().fromJson(body, MyError::class.java)
-                    _toastMessage.postValue(data.error.toString())
-                }
-
-            }
-
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-
             }
         })
     }

@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     tools:context=".features.media.MediaFullActivity">
+
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
@@ -14,6 +16,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:scaleType="centerCrop"/>
+        android:layout_gravity="center"/>
+
 </FrameLayout>

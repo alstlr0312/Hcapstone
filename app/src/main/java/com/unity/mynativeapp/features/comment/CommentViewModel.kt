@@ -126,42 +126,6 @@ class CommentViewModel : ViewModel() {
         })
     }
 
-
-    ////// 미디어
-    fun media(num: Int) {
-
-        _loading.postValue(true)
-
-        getmediaAPI(num)
-    }
-
-    private fun getmediaAPI(num: Int) {
-
-        RetrofitClient.getApiService().getMedia(num).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                _loading.postValue(false)
-                if (response.isSuccessful) {
-                    val imageBytes = response.body()
-                    _mediaData.postValue(imageBytes)
-                } else {
-                    // 응답이 실패한 경우 처리하는 코드 작성
-                    val body = response.errorBody()?.string()
-                    val data = GsonBuilder().create().fromJson(body, MyError::class.java)
-                    _toastMessage.postValue(data.error.toString())
-                }
-
-            }
-
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-            }
-        })
-    }
-
-
     companion object {
         const val TAG = "CommentViewModel"
     }

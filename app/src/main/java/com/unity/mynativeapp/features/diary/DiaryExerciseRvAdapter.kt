@@ -17,7 +17,7 @@ import com.unity.mynativeapp.model.ExerciseItem
 import com.unity.mynativeapp.network.util.SimpleDialog
 
 
-class DiaryExerciseRvAdapter(var context: Context)
+class DiaryExerciseRvAdapter(var context: Context, val listener: OnEditDiary)
     : RecyclerView.Adapter<DiaryExerciseRvAdapter.ViewHolder>() {
 
     private var itemList = mutableListOf<ExerciseItem>()
@@ -34,7 +34,8 @@ class DiaryExerciseRvAdapter(var context: Context)
                     if(dialog.resultCode == 1){
                         itemList.removeAt(adapterPosition)
                         bindingList.remove(binding)
-                        notifyDataSetChanged()
+                        notifyItemRemoved(adapterPosition)
+                        listener.diaryEditListener()
                     }
                 }
 
@@ -73,7 +74,7 @@ class DiaryExerciseRvAdapter(var context: Context)
 
             binding.checkbox.setOnClickListener {
                 itemList[adapterPosition].finished = binding.checkbox.isChecked
-                diaryActivity.edited = true
+                listener.diaryEditListener()
             }
 
             // 운동 자극 피드백 페이지로 이동
@@ -99,17 +100,20 @@ class DiaryExerciseRvAdapter(var context: Context)
         return itemList.size
     }
 
-    fun getListFormView(nList: MutableList<ExerciseItem>){
-        itemList = nList
-    }
-
-    fun addItem(item: ExerciseItem){
-        itemList.add(item)
+    fun setDataList(list: List<ExerciseItem>){
+        for(data in list){
+            itemList.add(data)
+        }
         notifyDataSetChanged()
 
     }
+    fun addItem(item: ExerciseItem){
+        listener.diaryEditListener()
 
+        itemList.add(item)
+        notifyItemChanged(itemCount-1)
 
+    }
 
     fun getExerciseList(): List<ExerciseItem> {
         return itemList

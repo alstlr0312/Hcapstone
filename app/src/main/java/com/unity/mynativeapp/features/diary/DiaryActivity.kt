@@ -4,17 +4,17 @@ package com.unity.mynativeapp.features.diary
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.media.ExifInterface
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
@@ -25,24 +25,27 @@ import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.*
 import com.unity.mynativeapp.network.util.SimpleDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.*
+import java.net.MalformedURLException
 import java.net.URL
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.coroutines.coroutineContext
 
 
 lateinit var diaryActivity: DiaryActivity
-class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate){
+
+interface OnEditDiary {
+    fun diaryEditListener()
+}
+class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::inflate), OnEditDiary{
     private val viewModel by viewModels<DiaryViewModel>()
     private lateinit var exerciseDate: String               // 운동 날짜
     lateinit var exerciseAdapter: DiaryExerciseRvAdapter    // 오늘의 운동 Rv 어댑터
@@ -92,12 +95,12 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         exerciseDate = intent.getStringExtra("exerciseDate").toString()
 
         // 오늘의 운동 리사이클러 뷰
-        exerciseAdapter = DiaryExerciseRvAdapter(this)
+        exerciseAdapter = DiaryExerciseRvAdapter(this, this)
         binding.recyclerViewTodaysExercise.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTodaysExercise.adapter = exerciseAdapter
 
         // 미디어 리사이클러 뷰
-        mediaAdapter = DiaryMediaRvAdapter(this)
+        mediaAdapter = DiaryMediaRvAdapter(this, this)
         binding.recyclerViewMedia.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewMedia.adapter = mediaAdapter
 
@@ -106,14 +109,13 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         if(diaryId != -1){
             viewModel.diaryDetail(exerciseDate)
         }
-
     }
 
     private fun setUiEvent(){
 
         // 운동 추가
         binding.btnAddExercise.setOnClickListener {
-            var intent = Intent(this, AddExerciseActivity::class.java)
+            val intent = Intent(this, AddExerciseActivity::class.java)
             intent.putExtra("exerciseDate", exerciseDate)
             startActivity(intent)
         }
@@ -128,20 +130,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 mediaResult.launch(intent)
             }
         }
-
-        mediaAdapter.registerAdapterDataObserver(object: AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
-                edited = true
-            }
-        })
-
-        exerciseAdapter.registerAdapterDataObserver(object: AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
-                edited = true
-            }
-        })
 
         // 뒤로 가기
         binding.btnBack.setOnClickListener {
@@ -174,49 +162,60 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             val mediaList = mediaAdapter.getMediaList()
             val imageList: ArrayList<MultipartBody.Part> = ArrayList()
 
-            if(diaryId != -1){ // 다이어리 수정
+            if(diaryId != -1) { // 다이어리 수정
                 // 수정 데이터 있는지 확인
-                if(!edited && oldData?.review == binding.edtMemo.text.toString()){
+                if (!edited && oldData?.review == binding.edtMemo.text.toString()) { // 수정 데이터 없음
                     finish()
+                    return
                 }
-                for(i in mediaList.indices){
-                    val uri = mediaList[i].uri
-                    val url = mediaList[i].url
-                    var file: File? = null
-                    if(url != null){
-                        saveMedia(url, "image${i}") { filePath ->
-                            if(filePath != null){
-                                file = File(filePath)
-                            }else {
-                                file = null
+                // 수정 데이터 있음
+                CoroutineScope(Dispatchers.Main).launch {
+                    for (i in mediaList.indices) {
+                        val uri = mediaList[i].uri // 추가한 미디어
+                        val url = mediaList[i].url // 서버로부터 받은 미디어
+                        if (url != null) {
+                            val filePath = withContext(Dispatchers.IO) {
+                                saveMedia(url)
                             }
+                            if (filePath != null) {
+                                tempMediaPathArr.add(filePath)
+                                val file = File(filePath)
+                                val requestFile: RequestBody =
+                                    file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                                val uploadFile =
+                                    MultipartBody.Part.createFormData(
+                                        "files",
+                                        file.name,
+                                        requestFile
+                                    )
+                                imageList.add(uploadFile)
+                            } else {
+                                Log.d(TAG, "file is null")
+                            }
+                        } else if (uri != null) {
+                            val file = File(getRealPathFromUri(uri))
+                            val requestFile: RequestBody =
+                                file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                            val uploadFile =
+                                MultipartBody.Part.createFormData("files", file.name, requestFile)
+                            imageList.add(uploadFile)
                         }
-                    }else if(uri != null){
-                        file = File(getRealPathFromUri(uri))
-                    }else{return}
-                    if(file != null){
-                        val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),
-                            file!!
-                        )
-                        val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file!!.name, requestFile)
-                        imageList.add(uploadFile)
                     }
+                    viewModel.diaryEdit(diaryId, diaryData, imageList)
                 }
-                viewModel.diaryEdit(diaryId, diaryData, imageList)
-
             }else{ // 다이어리 작성
                 for (element in mediaList) {
                     if(element.uri != null){
                         val file = File(getRealPathFromUri(element.uri))
-                        val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-                        val uploadFile: MultipartBody.Part = MultipartBody.Part.createFormData("files",  file.name, requestFile)
+                        val requestFile: RequestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                        val uploadFile = MultipartBody.Part.createFormData("files",  file.name, requestFile)
                         imageList.add(uploadFile)
                     }
                 }
                 viewModel.diaryWrite(diaryData, imageList) // 다이어리 작성 요청
             }
         }else{
-            var dialog = SimpleDialog(
+            val dialog = SimpleDialog(
                 this,
                 getString(R.string.cancel_write),
                 getString(R.string.no_save_without_exercise)
@@ -267,86 +266,73 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         viewModel.diaryData.observe(this) { data ->
 
             if (data == null){  // 다이어리 상세조회 실패
-                //setWriteView()
                 diaryId = -1
             }else{ // 다이어리 상세조회 성공
-
-                //setReadView()   // 읽기 모드
                 oldData = data
 
                 diaryId = data.diaryId
                 binding.edtMemo.setText(data.review)
 
-                for(item in data.exerciseInfo){
-                    exerciseAdapter.addItem(item)
-                }
-                for(media in data.mediaList){
-                    mediaAdapter.addItem(MediaRvItem(3, null, media))
-                }
+                exerciseAdapter.setDataList(data.exerciseInfo)
+                mediaAdapter.setMediaList(data.mediaList)
 
-                edited = false
 
-//                for(x in data.mediaList){
-//                    val lastSegment = x.substringAfterLast("/").toInt()
-//                    viewModel.media(lastSegment)
-//                }
             }
         }
 
         // 다이어리 작성
         viewModel.diaryWriteSuccess.observe(this) { isSuccess ->
-
-            if(!isSuccess) return@observe
-
             deleteMediaFile()
-
+            if(!isSuccess) return@observe
         }
 
         // 다이어리 수정
         viewModel.diaryEditSuccess.observe(this) { isSuccess ->
-
+            //deleteMediaFile()
+            finish()
             if(!isSuccess){ return@observe }
-
-            deleteMediaFile()
-
         }
-    }
-
-    companion object{
-        const val TAG = "DiaryActivity"
     }
 
 
 
     // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
-    private fun saveMedia(imageUrl: String, fileName: String, callback: (String?) -> Unit) {
 
-        Glide.with(this)
-            .asBitmap()
-            .load(imageUrl)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?){
-                    val file = File(cacheDir,
-                        "${getString(R.string.app_name)}_${SimpleDateFormat("yyyyMMddhhmmss").format(Date(System.currentTimeMillis()))}.jpg")
-                    try {
-                        file.createNewFile()
-                        FileOutputStream(file).use { outputStream ->
-                            resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                        }
-                        Log.d("fileName", file.path)
-                        tempMediaPathArr.add(file.path)
-                        callback(file.path)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        callback(null)
-                    }
+    private suspend fun saveMedia(imageUrl: String): String?{
+        var bitmap: Bitmap? = null
+        try{
+            val url = URL(imageUrl)
+            val stream = url.openStream()
+            bitmap = BitmapFactory.decodeStream(stream)
+        } catch (e: MalformedURLException){
+            e.printStackTrace()
+        } catch (e: IOException){
+            e.printStackTrace()
+        }
+        if(bitmap == null) return null
 
-                }
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    // Do nothing
-                }
-            })
+        val fileName = "${getString(R.string.app_name)}_${
+            SimpleDateFormat("yyyyMMddhhmmss").format(Date(System.currentTimeMillis()))
+        }.jpg"
+        val tempFile = File(cacheDir, fileName)
+        try {
+
+            tempFile.createNewFile()
+
+            val out = FileOutputStream(tempFile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+
+
+            out.close()
+
+
+
+        } catch (e: FileNotFoundException) {
+            Log.e(TAG, "FileNotFoundException : " + e.message)
+        } catch (e: IOException) {
+            Log.e(TAG, "IOException : " + e.message)
+        }
+        return tempFile.absolutePath
     }
 
     // 임시로 저장 해놓은 이미지 삭제
@@ -354,12 +340,20 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
         for(path in tempMediaPathArr){
             val file = File(path)
             if(file.exists()){
-                Log.d(TAG, "file name: ${path}")
+                Log.d(TAG, "file name: $path")
                 file.delete()
+            }else{
+                Log.e(TAG, "file is not exist")
             }
         }
         finish()
     }
 
+    override fun diaryEditListener() {
+        edited = true
+    }
 
+    companion object{
+        const val TAG = "DiaryActivityLog"
+    }
 }

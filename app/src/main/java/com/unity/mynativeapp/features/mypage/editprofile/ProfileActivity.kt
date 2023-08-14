@@ -251,8 +251,6 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
             MyApplication.prefUtil.setString("username", binding.edtUsername.text.toString())
             //MyApplication.prefUtil.setString("field", binding.edtField.text.toString())
 
-
-
             // 프로필 수정 화면 종료
             showCustomToast(EDIT_COMPLETE)
             finish()

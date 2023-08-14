@@ -22,6 +22,7 @@ import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.CommentData
+import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.model.OnCommentClick
 import com.unity.mynativeapp.model.PostWriteRequest
 import com.unity.mynativeapp.network.util.SimpleDialog
@@ -161,12 +162,11 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                     binding.tvSeeMoreComment.text = getString(R.string.see_more_comment)
                 }
 
-                val getMedia = data.mediaList
+                val getMedia = data.mediaList as ArrayList<String>
                 mediaVpAdapter.removeAllItem()
-                for (x in getMedia) {
-                    val lastSegment = x.substringAfterLast("/").toInt()
-                    viewModel.media(lastSegment) // 미디어 요청
-                }
+                mediaVpAdapter.setMediaList(getMedia)
+
+
                 // 댓글 있으면 화면에 보이기
                 if(data.comments.isNotEmpty()){
                     commentRvAdapter.getListFromView(data.comments as MutableList<CommentData>)
@@ -188,17 +188,16 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 postExerciseTypeKorHashMap[data?.workOutCategory]
             )
 
-
         }
 
         // 미디어 조회
-        viewModel.mediaData.observe(this) { data ->
-            if (data != null) {
-                val byteArray = data.bytes()
-                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                mediaVpAdapter.addItem(bitmap)
-            }
-        }
+//        viewModel.mediaData.observe(this) { data ->
+//            if (data != null) {
+//                val byteArray = data.bytes()
+//                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+//                mediaVpAdapter.addItem(bitmap)
+//            }
+//        }
 
         // 좋아요
         viewModel.likePressed.observe(this){
@@ -278,15 +277,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 val intent = Intent(this, PostWriteActivity::class.java)
                 intent.putExtra("editing", true)
                 intent.putExtra("postId", postId)
-                intent.putExtra("postData", postData)
-                if(mediaVpAdapter.itemCount > 0) {
-                    val bitmapList = mediaVpAdapter.getMediaList()
-                    tempMediaPathArr = arrayListOf()
-                    for(i in bitmapList.indices){
-                        val realPath = saveMedia(bitmapList[i], "temp$i")
-                    }
-                    intent.putExtra("postFilePathList", tempMediaPathArr)
-                }
+
                 startActivity(intent)
             }
             R.id.menuDeletePost -> { // 내 게시글 삭제
@@ -311,27 +302,6 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             }
         }
         return super.onContextItemSelected(item)
-    }
-
-    // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
-    private fun saveMedia(bitmap: Bitmap, name: String): String {
-        val tempFile = File(cacheDir, "$name.jpg")
-
-        try {
-            tempFile.createNewFile()
-
-            val out = FileOutputStream(tempFile)
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-
-            out.close()
-        } catch (e: FileNotFoundException) {
-            Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
-        } catch (e: IOException) {
-            Log.e(DiaryActivity.TAG, "IOException : " + e.message)
-        }
-        tempMediaPathArr.add(tempFile.path)
-        return tempFile.absolutePath
     }
 
 }
