@@ -2,6 +2,7 @@ package com.unity.mynativeapp.features.diary
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +11,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.network.util.SimpleDialog
 import retrofit2.http.Url
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
@@ -51,7 +60,7 @@ class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): Recy
                 }
             }
 
-            setImage(uriItem.uri!!, binding)
+            binding.photo.setImageURI(uriItem.uri)
 
             binding.root.setOnClickListener {
                 val intent = Intent(context, MediaFullActivity::class.java)
@@ -98,9 +107,9 @@ class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): Recy
                         binding.iconPlay.visibility = View.VISIBLE
                     }
                 }
-                setImage(it, binding)
-            }
+                binding.photo.setImageBitmap(item.bitmap)
 
+            }
         }
     }
 
@@ -136,31 +145,49 @@ class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): Recy
 
     fun setMediaList(mList: List<String>){
         for(url in mList){
-            itemList.add(MediaRvItem(3, null, url))
-            notifyItemRemoved(itemCount-1)
+            Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        itemList.add(MediaRvItem(3, null, url, resource))
+                        notifyItemRemoved(itemCount-1)
+                    }
+                })
         }
     }
 
     override fun getItemViewType(position: Int):Int {
-        if(itemList[position].viewType == 1)
-            return 1
+        return if(itemList[position].viewType == 1)
+            1
         else if(itemList[position].viewType == 2)
-            return 2
+            2
         else if(itemList[position].viewType == 3)
-            return 3
-        else return 4
+            3
+        else 4
     }
 
-    private fun setImage(image: Any, binding: ItemRvMediaBinding){
+    private fun setImage(image: Any, binding: ItemRvMediaBinding, pos: Int){
 
         Glide.with(binding.photo)
+            .asBitmap()
             .load(image)
-            .placeholder(R.drawable.shape_bg_black_rounded)
+            .placeholder(R.color.black)
             .error(R.drawable.ic_image_failed)
-            .fallback(R.drawable.shape_bg_black_rounded)
-            .override(430, 430)
+            .fallback(R.color.black)
             .centerCrop()
             .apply(RequestOptions.centerCropTransform())
-            .into(binding.photo)
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    itemList[pos].bitmap = resource
+                    binding.photo.setImageBitmap(resource)
+                }
+            })
     }
 }

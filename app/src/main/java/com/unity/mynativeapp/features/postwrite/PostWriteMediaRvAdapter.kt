@@ -136,7 +136,7 @@ class PostWriteMediaRvAdapter(val context: Context)
 
     fun setMediaList(mList: List<String>) {
         for(media in mList){
-            itemList.add(MediaRvItem(3, null, media))
+            itemList.add(MediaRvItem(3, null, media, null))
             notifyItemChanged(itemCount -1)
         }
     }

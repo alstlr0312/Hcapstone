@@ -53,11 +53,9 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
             if(item.dailyPercentage != -1){ // 작성한 일지가 있음
                 binding.tvDailyPercentage.visibility = View.VISIBLE
                 binding.tvDailyPercentage.text = item.dailyPercentage.toString() + "%"
-               // binding.tvDiary.visibility = View.VISIBLE
 
             }else{ // 작성한 일지가 없음
                 binding.tvDailyPercentage.visibility = View.GONE
-                //binding.tvDiary.visibility = View.GONE
             }
 
             binding.layoutDay.setOnClickListener {

@@ -71,6 +71,7 @@
             style="@style/SmallTextStyle"/>
 
         <ImageView
+            android:id="@+id/iv_detail"
             android:layout_width="@dimen/icon_small_size"
             android:layout_height="@dimen/icon_small_size"
             android:src="@drawable/ic_next"

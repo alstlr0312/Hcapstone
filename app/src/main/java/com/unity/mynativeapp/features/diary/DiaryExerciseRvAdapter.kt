@@ -50,7 +50,6 @@ class DiaryExerciseRvAdapter(var context: Context, val listener: OnEditDiary)
                 item.bodyPart = part
             }
 
-
             if(item.cardio){
                 item.bodyPart = context.getString(R.string.exercise_cardio)
 
@@ -60,6 +59,8 @@ class DiaryExerciseRvAdapter(var context: Context, val listener: OnEditDiary)
                 binding.tvExerciseTime.text = "${item.cardioTime}분"
                 binding.tvExerciseTime.visibility = View.VISIBLE
 
+                binding.ivDetail.visibility = View.GONE
+
             }else{
                 binding.tvExerciseNumbers.text = "${item.reps}회"
                 binding.tvExerciseNumbers.visibility = View.VISIBLE
@@ -68,6 +69,9 @@ class DiaryExerciseRvAdapter(var context: Context, val listener: OnEditDiary)
                 binding.tvExerciseSet.visibility = View.VISIBLE
 
                 binding.tvExerciseTime.visibility = View.GONE
+
+                binding.ivDetail.visibility = View.VISIBLE
+
             }
 
             binding.tvExerciseName.text = "${item.exerciseName} - ${item.bodyPart}"

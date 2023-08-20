@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
@@ -62,9 +63,9 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             val imageUri = result.data?.data
             imageUri?.let{
                 if(it.toString().contains("image")){
-                    mediaAdapter.addItem(MediaRvItem(1, it, null))
+                    mediaAdapter.addItem(MediaRvItem(1, it, null, null))
                 }else if(it.toString().contains("video")){
-                    mediaAdapter.addItem(MediaRvItem(2, it, null))
+                    mediaAdapter.addItem(MediaRvItem(2, it, null, null))
                 }else{}
                 //Log.d("aaaaa", getRealPathFromUri(it))
             }
@@ -169,13 +170,14 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                     return
                 }
                 // 수정 데이터 있음
-                CoroutineScope(Dispatchers.Main).launch {
+                runBlocking {
                     for (i in mediaList.indices) {
                         val uri = mediaList[i].uri // 추가한 미디어
                         val url = mediaList[i].url // 서버로부터 받은 미디어
-                        if (url != null) {
-                            val filePath = withContext(Dispatchers.IO) {
-                                saveMedia(url)
+                        val bitmap = mediaList[i].bitmap
+                        if (url != null && bitmap != null) {
+                            val filePath: String? = withContext(Dispatchers.IO) {
+                                saveMedia(bitmap)
                             }
                             if (filePath != null) {
                                 tempMediaPathArr.add(filePath)
@@ -288,7 +290,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
         // 다이어리 수정
         viewModel.diaryEditSuccess.observe(this) { isSuccess ->
-            //deleteMediaFile()
+            deleteMediaFile()
             finish()
             if(!isSuccess){ return@observe }
         }
@@ -298,41 +300,27 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
     // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
 
-    private suspend fun saveMedia(imageUrl: String): String?{
-        var bitmap: Bitmap? = null
-        try{
-            val url = URL(imageUrl)
-            val stream = url.openStream()
-            bitmap = BitmapFactory.decodeStream(stream)
-        } catch (e: MalformedURLException){
-            e.printStackTrace()
-        } catch (e: IOException){
-            e.printStackTrace()
+    private suspend fun saveMedia(bitmap: Bitmap): String?{
+
+        val filePath = withContext(Dispatchers.IO){
+            val fileName = "${getString(R.string.app_name)}_${
+                SimpleDateFormat("yyyyMMddhhmmss").format(Date(System.currentTimeMillis()))
+            }_${Random().nextInt(Int.MAX_VALUE)}.jpg"
+            val tempFile = File(cacheDir, fileName)
+            try {
+                tempFile.createNewFile()
+                val out = FileOutputStream(tempFile)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                out.close()
+                Log.d(TAG,fileName)
+            } catch (e: FileNotFoundException) {
+                Log.e(TAG, "FileNotFoundException : " + e.message)
+            } catch (e: IOException) {
+                Log.e(TAG, "IOException : " + e.message)
+            }
+            tempFile.absolutePath
         }
-        if(bitmap == null) return null
-
-        val fileName = "${getString(R.string.app_name)}_${
-            SimpleDateFormat("yyyyMMddhhmmss").format(Date(System.currentTimeMillis()))
-        }.jpg"
-        val tempFile = File(cacheDir, fileName)
-        try {
-
-            tempFile.createNewFile()
-
-            val out = FileOutputStream(tempFile)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-
-
-            out.close()
-
-
-
-        } catch (e: FileNotFoundException) {
-            Log.e(TAG, "FileNotFoundException : " + e.message)
-        } catch (e: IOException) {
-            Log.e(TAG, "IOException : " + e.message)
-        }
-        return tempFile.absolutePath
+        return filePath
     }
 
     // 임시로 저장 해놓은 이미지 삭제

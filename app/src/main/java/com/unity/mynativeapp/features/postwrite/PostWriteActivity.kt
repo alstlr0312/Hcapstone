@@ -60,9 +60,9 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
             val imageUri = result.data?.data
             imageUri?.let{
                 if(it.toString().contains("image")){
-                    mediaAdapter.addItem(MediaRvItem(1, it, null))
+                    mediaAdapter.addItem(MediaRvItem(1, it, null, null))
                 }else if(it.toString().contains("video")){
-                    mediaAdapter.addItem(MediaRvItem(2, it, null))
+                    mediaAdapter.addItem(MediaRvItem(2, it, null, null))
                 }else{}
             }
         }
