@@ -145,19 +145,24 @@ interface RetrofitService {
 	/*
 	/////////// 댓글 ////////////////
 	 */
-	@GET("/comment")
+	@GET("/comment") // 댓글 조회
 	fun getComment(
-		@Query("postId") postId: Int,
+		@Query("postId") postId: Int?,
 		@Query("parentId") parent: Int?,
 		@Query("username") username: String?,
 		@Query("page") page: Int?,
 		@Query("size") size: Int?,
 	): Call<MyResponse<CommentGetResponse>>
 
-	@POST("/comment/write")
+	@POST("/comment/write") // 댓글 작성
 	fun postCommentWrite(
 		@Body commentWriteRequest: CommentWriteRequest
 	): Call<MyResponse<String>>
+
+	@PATCH("/comment/delete/{commentId}") // 댓글 삭제
+	fun patchCommentDelete(
+		@Path("commentId") commentId: Int,
+	): Call<MyResponse<Int>>
 
 	/*
 	//////////// 회원정보 ////////////////

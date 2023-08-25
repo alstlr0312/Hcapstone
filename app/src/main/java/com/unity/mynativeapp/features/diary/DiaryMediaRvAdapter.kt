@@ -144,7 +144,7 @@ class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): Recy
     }
 
     fun setMediaList(mList: List<String>){
-        for(url in mList){
+        for(url in mList){ // url > bitmap 변환 후 리스트에 추가
             Glide.with(context)
                 .asBitmap()
                 .load(url)
@@ -170,24 +170,4 @@ class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): Recy
         else 4
     }
 
-    private fun setImage(image: Any, binding: ItemRvMediaBinding, pos: Int){
-
-        Glide.with(binding.photo)
-            .asBitmap()
-            .load(image)
-            .placeholder(R.color.black)
-            .error(R.drawable.ic_image_failed)
-            .fallback(R.color.black)
-            .centerCrop()
-            .apply(RequestOptions.centerCropTransform())
-            .into(object : SimpleTarget<Bitmap>() {
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap>?
-                ) {
-                    itemList[pos].bitmap = resource
-                    binding.photo.setImageBitmap(resource)
-                }
-            })
-    }
 }

@@ -25,6 +25,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityDiaryBinding
 import com.unity.mynativeapp.model.*
+import com.unity.mynativeapp.network.util.LOADING_LOSS_WARNING
 import com.unity.mynativeapp.network.util.SimpleDialog
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -67,7 +68,7 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 }else if(it.toString().contains("video")){
                     mediaAdapter.addItem(MediaRvItem(2, it, null, null))
                 }else{}
-                //Log.d("aaaaa", getRealPathFromUri(it))
+                //Log.d(TAG, getRealPathFromUri(it))
             }
         }
     }
@@ -127,7 +128,8 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
                 Toast.makeText(this, getString(R.string.you_can_register_six_medias), Toast.LENGTH_SHORT).show()
             }else{
                 val intent = Intent(Intent.ACTION_PICK)
-                intent.setDataAndType(MediaStore.AUTHORITY_URI, "image/* video/*")
+                //intent.setDataAndType(MediaStore.AUTHORITY_URI, "image/* video/*")
+                intent.setDataAndType(MediaStore.AUTHORITY_URI, "image/*")
                 mediaResult.launch(intent)
             }
         }
@@ -256,8 +258,12 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
             showCustomToast(message)
         }
 
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
+        viewModel.loading.observe(this) { type ->
+            when(type){
+                SHOW_LOADING -> showLoadingDialog(this)
+                SHOW_TEXT_LOADING -> showLoadingDialog(this, LOADING_LOSS_WARNING)
+                DISMISS_LOADING -> dismissLoadingDialog()
+            }
         }
 
         viewModel.logout.observe(this) { logout ->
@@ -299,7 +305,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
 
     // 이미지 절대 경로 얻기 위해, 서버로 부터 받은 이미지 캐쉬에 임시 저장
-
     private suspend fun saveMedia(bitmap: Bitmap): String?{
 
         val filePath = withContext(Dispatchers.IO){
@@ -343,5 +348,6 @@ class DiaryActivity : BaseActivity<ActivityDiaryBinding>(ActivityDiaryBinding::i
 
     companion object{
         const val TAG = "DiaryActivityLog"
+
     }
 }

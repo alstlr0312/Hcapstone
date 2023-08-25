@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel : ViewModel() {
+open class LoginViewModel : ViewModel() {
 
 	private val _toastMessage = MutableLiveData<String>()
 	val toastMessage: LiveData<String> = _toastMessage
@@ -31,7 +31,7 @@ class LoginViewModel : ViewModel() {
 
 	fun login(id: String, password: String) {
 
-		// Email이 비어있을경우
+		// id가 비어있을경우
 		if (id.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return
@@ -60,6 +60,7 @@ class LoginViewModel : ViewModel() {
 					val data = response.body()?.data
 
 					if(data != null){
+						MyApplication.prefUtil.setString("id", id)
 						MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
 						MyApplication.prefUtil.setString(X_REFRESH_TOKEN, data.refreshToken)
 						MyApplication.prefUtil.setString("username", data.username)

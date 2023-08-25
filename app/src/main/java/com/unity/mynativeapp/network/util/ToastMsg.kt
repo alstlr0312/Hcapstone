@@ -35,3 +35,5 @@ const val SELECT_CARDIO_TIME = "유산소 시간을 설정해 주세요."
 const val INPUT_WEIGHT_COUNT = "운동 횟수를 입력해 주세요."
 const val SELECT_WEIGHT_PART = "운동할 부위를 선택해 주세요."
 const val INPUT_EXERCISE_NAME = "운동 이름을 입력해 주세요."
+
+const val LOADING_LOSS_WARNING = "로딩 중 앱을 종료하면 데이터가 손실될 수 있습니다."

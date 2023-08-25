@@ -21,35 +21,14 @@
         app:contentScrim="@color/main_black"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/tv_exercise_posting"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/fab_margin"
-            android:layout_marginVertical="12dp">
-            <ImageView
-                android:id="@+id/iv_logo"
-                android:layout_width="35dp"
-                android:layout_height="18dp"
-                android:src="@drawable/logo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
-            <TextView
-                android:id="@+id/tv_exercise_posting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/exercise_posting"
-                style="@style/TitleTextStyle"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@id/iv_logo"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/exercise_posting"
+            style="@style/TitleTextStyle"
+            android:layout_marginVertical="@dimen/fab_margin"
+            android:layout_gravity="center"/>
 
         <ImageView
             android:id="@+id/iv_close"

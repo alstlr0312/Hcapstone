@@ -1,24 +1,28 @@
 package com.unity.mynativeapp.features.mypage
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.databinding.ItemRvMypageBinding
-import com.unity.mynativeapp.features.mypage.myposts.MyPostsActivity
 import com.unity.mynativeapp.features.mypage.editprofile.ProfileActivity
+import com.unity.mynativeapp.features.mypage.mycomments.MyCommentsActivity
+import com.unity.mynativeapp.features.mypage.myposts.MyPostsActivity
 import com.unity.mynativeapp.features.mypage.setting.SettingActivity
 import com.unity.mynativeapp.model.MyPageRvItem
 
-class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem>): RecyclerView.Adapter<MyPageAdapter.ViewHolder>(){
+class MyPageAdapter(val context: Context,
+                    var itemList: MutableList<MyPageRvItem>,
+                    username: String
+): RecyclerView.Adapter<MyPageAdapter.ViewHolder>(){
+
+    val username = username
 
     inner class ViewHolder(val binding: ItemRvMypageBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: MyPageRvItem){
-
 
             binding.ivImg.setImageResource(item.Img)
             binding.tvTitle.text = item.title
@@ -33,12 +37,16 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
             binding.root.setOnClickListener {
                 when(adapterPosition){
                     0 -> { // 게시글
-                        context.startActivity(Intent(context, MyPostsActivity::class.java))
+                        val intent = Intent(context, MyPostsActivity::class.java)
+                        intent.putExtra("username", username)
+                        context.startActivity(intent)
                     }
                     1 -> { // 댓글
-
+                        val intent = Intent(context, MyCommentsActivity::class.java)
+                        context.startActivity(intent)
                     }
                     2 -> { // 프로필 수정
+                        Log.d("aaaa", "clicked")
                         context.startActivity(Intent(context, ProfileActivity::class.java))
                     }
                     3 -> { // 설정
@@ -61,10 +69,14 @@ class MyPageAdapter(val context: Context, var itemList: MutableList<MyPageRvItem
         return itemList.size
     }
 
-    fun setCounts(postCnt: Int, cmtCnt: Int){
+    fun setPostCounts(postCnt: Int){
         itemList[0].count = postCnt
-        itemList[1].count = cmtCnt
-        notifyDataSetChanged()
+        notifyItemChanged(0)
     }
+    fun setCmtCounts(cmtCnt: Int){
+        itemList[1].count = cmtCnt
+        notifyItemChanged(1)
+    }
+
 
 }

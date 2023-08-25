@@ -2,6 +2,7 @@ package com.unity.mynativeapp.features.postwrite
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.features.media.MediaFullActivity
@@ -135,9 +138,20 @@ class PostWriteMediaRvAdapter(val context: Context)
     }
 
     fun setMediaList(mList: List<String>) {
-        for(media in mList){
-            itemList.add(MediaRvItem(3, null, media, null))
-            notifyItemChanged(itemCount -1)
+
+        for(url in mList){ // url > bitmap 변환 후 리스트에 추가
+            Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        itemList.add(MediaRvItem(3, null, url, resource))
+                        notifyItemRemoved(itemCount-1)
+                    }
+                })
         }
     }
 

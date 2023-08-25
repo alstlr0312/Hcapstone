@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityFeedbackPostureBinding
+import com.unity.mynativeapp.network.util.LOADING_LOSS_WARNING
 import com.unity.mynativeapp.network.util.MUSCLE_SELECT_MAX
 
 class FeedbackPostureActivity : BaseActivity<ActivityFeedbackPostureBinding>(ActivityFeedbackPostureBinding::inflate) {
@@ -133,8 +134,12 @@ class FeedbackPostureActivity : BaseActivity<ActivityFeedbackPostureBinding>(Act
             showCustomToast(message)
         }
 
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
+        viewModel.loading.observe(this) { type ->
+            when(type){
+                SHOW_LOADING -> showLoadingDialog(this)
+                SHOW_TEXT_LOADING -> showLoadingDialog(this, LOADING_LOSS_WARNING)
+                DISMISS_LOADING -> dismissLoadingDialog()
+            }
         }
 
         viewModel.logout.observe(this) { logout ->

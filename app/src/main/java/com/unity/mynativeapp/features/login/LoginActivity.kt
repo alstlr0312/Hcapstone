@@ -15,6 +15,7 @@ import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.login.find.FindIdActivity
 import com.unity.mynativeapp.features.login.find.FindPwActivity
 import com.unity.mynativeapp.features.signup.SignUpActivity
+import com.unity.mynativeapp.network.util.PreferenceUtil
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -28,15 +29,21 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setView()
+
         // viewModel의 Data를 Observe하는 이벤트 모음 함수
         subscribeUI()
 
         // UI Event를 정리한 함수
         setUiEvent()
-
     }
 
-
+    private fun setView(){
+        val id = MyApplication.prefUtil.getString("id", null)
+        if(id!=null){
+            binding.edtId.setText(id)
+        }
+    }
     private fun setUiEvent() {
         binding.btnLogin.setOnClickListener {
             val id = binding.edtId.text.toString()

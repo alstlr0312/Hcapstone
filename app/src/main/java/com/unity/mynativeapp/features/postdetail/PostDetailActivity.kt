@@ -1,13 +1,9 @@
 package com.unity.mynativeapp.features.postdetail
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.CheckBox
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -19,21 +15,13 @@ import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostDetailBinding
 import com.unity.mynativeapp.features.comment.CommentActivity
 import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
-import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.CommentData
-import com.unity.mynativeapp.model.MediaRvItem
-import com.unity.mynativeapp.model.OnCommentClick
 import com.unity.mynativeapp.model.PostWriteRequest
 import com.unity.mynativeapp.network.util.SimpleDialog
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 
 
-class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate),
-    OnCommentClick {
+class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate) {
 
     private lateinit var mediaVpAdapter: MediaViewPagerAdapter // 게시물 미디어 어댑터
     private lateinit var commentRvAdapter: ParentCommentRvAdapter // 댓글 어댑터
@@ -72,7 +60,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
 
         // 게시물 댓글 리사이클러뷰
-        commentRvAdapter = ParentCommentRvAdapter(this,this)
+        commentRvAdapter = ParentCommentRvAdapter(this)
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         binding.rvPostComment.adapter = commentRvAdapter
         commentRvAdapter.setPostId(postId)
@@ -111,7 +99,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
     private fun subscribeUI(){
 
-        viewModel.loading.observe(this){isLoading ->
+        viewModel.loading.observe(this){ isLoading ->
             if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
         }
 
@@ -141,7 +129,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 // 좋아요 수, 댓글 수, 조회수 설정
                 postLikeCnt = data.likeCount
                 binding.tvLikeCnt.text = postLikeCnt.toString()
-                binding.tvCommentCnt.text = data.comments.size.toString()
+                binding.tvCommentCnt.text = data.commentCount.toString()
                 binding.tvViewsCnt.text = data.views.toString()
 
                 // 게시 날짜 설정
@@ -154,7 +142,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 if(data.comments.isEmpty()){ // 댓글 없으면
                     binding.tvComment2.visibility = View.GONE
                     binding.tvSeeMoreComment.text = getString(R.string.write_comment)
-                }else if(data.comments.size <= 3){ // 댓글이 3개 이하이면
+                }else if(data.commentCount <= 3){ // 댓글이 3개 이하이면
                     binding.tvComment2.visibility = View.VISIBLE
                     binding.tvSeeMoreComment.text = getString(R.string.write_comment)
                 }else { // 댓글이 3개 이상이면
@@ -162,6 +150,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                     binding.tvSeeMoreComment.text = getString(R.string.see_more_comment)
                 }
 
+                // 게시글 미디어
                 val getMedia = data.mediaList as ArrayList<String>
                 mediaVpAdapter.removeAllItem()
                 mediaVpAdapter.setMediaList(getMedia)
@@ -180,24 +169,8 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 binding.tvNoExistPost.visibility = View.VISIBLE
             }
 
-            // 게시글 수정할 때 필요한 데이터 저장
-            postData = PostWriteRequest(
-                data?.title,
-                data?.content,
-                postCategoryKorHashMap[data?.postType],
-                postExerciseTypeKorHashMap[data?.workOutCategory]
-            )
 
         }
-
-        // 미디어 조회
-//        viewModel.mediaData.observe(this) { data ->
-//            if (data != null) {
-//                val byteArray = data.bytes()
-//                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-//                mediaVpAdapter.addItem(bitmap)
-//            }
-//        }
 
         // 좋아요
         viewModel.likePressed.observe(this){
@@ -246,13 +219,6 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         viewModel.getPostDetail(postId)
     }
 
-    override fun childCommentGetListener(parentId: Int) {
-        //viewModel.commentGet(postId, parentId, null, null, null)
-    }
-
-    override fun writeChildComment(parentId: Int) {
-
-    }
 
     override fun onCreateContextMenu(
         menu: ContextMenu?,

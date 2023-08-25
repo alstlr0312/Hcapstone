@@ -66,29 +66,26 @@
         android:background="@drawable/shape_gradient_black"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_post_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
                 <TextView
                     android:id="@+id/tv_post_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="게시글 종류"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/main_red"
-                    android:layout_marginVertical="8dp"
+                    style="@style/SmallBoldTextStyle"
+                    android:layout_marginVertical="@dimen/fab_margin"
                     android:layout_marginHorizontal="@dimen/fab_margin"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 
                 <ImageView
                     android:id="@+id/iv_arrow_right"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="@dimen/icon_small_size"
+                    android:layout_height="@dimen/icon_small_size"
                     android:src="@drawable/ic_next"
                     app:tint="@color/main_red"
                     android:layout_marginStart="2dp"
@@ -101,9 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="운동 종류"
-                    android:textSize="14sp"
-                    android:textColor="@color/main_red"
-                    android:textStyle="bold"
+                    style="@style/SmallBoldTextStyle"
                     android:layout_marginStart="2dp"
                     app:layout_constraintStart_toEndOf="@id/iv_arrow_right"
                     app:layout_constraintTop_toTopOf="@id/iv_arrow_right"
@@ -130,8 +125,7 @@
                 android:layout_marginHorizontal="@dimen/fab_margin"
                 android:text="유저 닉네임"
                 android:textColor="@color/main_gray_light"
-                android:textSize="15sp"
-                android:textStyle="bold"
+                style="@style/BoldTextStyle"
                 app:layout_constraintBottom_toBottomOf="@id/iv_profile_img"
                 app:layout_constraintEnd_toStartOf="@+id/cb_like"
                 app:layout_constraintStart_toEndOf="@id/iv_profile_img"
@@ -139,8 +133,8 @@
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/cb_like"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
                 android:background="@drawable/sel_checkbox_heart"
                 android:button="@android:color/transparent"
                 android:layout_marginEnd="@dimen/fab_margin"
@@ -167,9 +161,8 @@
                 android:layout_height="wrap_content"
                 android:text="게시물 제목..."
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                style="@style/TitleTextStyle"
                 android:layout_margin="@dimen/fab_margin"
-                android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/iv_profile_img"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -180,12 +173,11 @@
                 android:layout_height="wrap_content"
                 android:text="게시물 내용...\n.....\n....."
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                style="@style/NormalTextStyle"
                 android:layout_margin="@dimen/fab_margin"
                 app:layout_constraintTop_toBottomOf="@id/tv_post_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
-
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_post_media"
@@ -212,106 +204,83 @@
                 app:layout_constraintTop_toBottomOf="@id/vp_post_media"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-
-            <TextView
-                android:id="@+id/tv_like"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/like"
-                android:textColor="@color/main_gray_light2"
-                android:textSize="14sp"
                 android:layout_marginStart="@dimen/fab_margin"
+                android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tab_layout"/>
+                app:layout_constraintTop_toBottomOf="@id/tab_layout">
 
-            <TextView
-                android:id="@+id/tv_like_cnt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="14sp"
-                android:textColor="@color/main_gray_light2"
-                android:layout_marginStart="5dp"
-                app:layout_constraintStart_toEndOf="@id/tv_like"
-                app:layout_constraintTop_toTopOf="@id/tv_like"
-                app:layout_constraintBottom_toBottomOf="@id/tv_like"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/like"
+                    android:textColor="@color/main_gray_light2"
+                    style="@style/SmallTextStyle"/>
 
-            <ImageView
-                android:id="@+id/iv_like_dot"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:src="@drawable/ic_dot"
-                app:tint="@color/main_gray_light2"
-                app:layout_constraintStart_toEndOf="@id/tv_like_cnt"
-                app:layout_constraintTop_toTopOf="@id/tv_like_cnt"
-                app:layout_constraintBottom_toBottomOf="@id/tv_like_cnt"/>
+                <TextView
+                    android:id="@+id/tv_like_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/main_gray_light2"
+                    style="@style/SmallTextStyle"
+                    android:layout_marginStart="5dp"/>
 
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_dot"
+                    app:tint="@color/main_gray_light2"/>
 
-            <TextView
-                android:id="@+id/tv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/comment"
-                android:textColor="@color/main_gray_light2"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/iv_like_dot"
-                app:layout_constraintTop_toTopOf="@id/iv_like_dot"
-                app:layout_constraintBottom_toBottomOf="@id/iv_like_dot"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment"
+                    android:textColor="@color/main_gray_light2"
+                    style="@style/SmallTextStyle"/>
 
-            <TextView
-                android:id="@+id/tv_comment_cnt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="14sp"
-                android:textColor="@color/main_gray_light2"
-                android:layout_marginStart="5dp"
-                app:layout_constraintStart_toEndOf="@id/tv_comment"
-                app:layout_constraintTop_toTopOf="@id/tv_comment"
-                app:layout_constraintBottom_toBottomOf="@id/tv_comment"/>
+                <TextView
+                    android:id="@+id/tv_comment_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/main_gray_light2"
+                    style="@style/SmallTextStyle"
+                    android:layout_marginStart="5dp"/>
 
-            <ImageView
-                android:id="@+id/iv_comment_dot"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:src="@drawable/ic_dot"
-                app:tint="@color/main_gray_light2"
-                app:layout_constraintStart_toEndOf="@id/tv_comment_cnt"
-                app:layout_constraintTop_toTopOf="@id/tv_comment_cnt"
-                app:layout_constraintBottom_toBottomOf="@id/tv_comment_cnt"/>
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_dot"
+                    app:tint="@color/main_gray_light2"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/views"
+                    android:textColor="@color/main_gray_light2"
+                    style="@style/SmallTextStyle"/>
 
-            <TextView
-                android:id="@+id/tv_views"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/views"
-                android:textColor="@color/main_gray_light2"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/iv_comment_dot"
-                app:layout_constraintTop_toTopOf="@id/iv_comment_dot"
-                app:layout_constraintBottom_toBottomOf="@id/iv_comment_dot"/>
+                <TextView
+                    android:id="@+id/tv_views_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/main_gray_light2"
+                    style="@style/SmallTextStyle"
+                    android:layout_marginStart="5dp"/>
 
-            <TextView
-                android:id="@+id/tv_views_cnt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="14sp"
-                android:textColor="@color/main_gray_light2"
-                android:layout_marginStart="5dp"
-                app:layout_constraintStart_toEndOf="@id/tv_views"
-                app:layout_constraintTop_toTopOf="@id/tv_views"
-                app:layout_constraintBottom_toBottomOf="@id/tv_views"/>
-
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_post_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2023-03-28 16:33"
+                android:text="20xx-xx-xx xx:xx"
                 android:textColor="@color/main_gray_light2"
-                android:textSize="14sp"
+                style="@style/SmallTextStyle"
                 android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintTop_toBottomOf="@id/tab_layout"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -332,8 +301,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/comment"
                     android:textColor="@color/main_gray_light2"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
+                    style="@style/BoldTextStyle"
                     android:layout_marginStart="@dimen/fab_margin"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -354,8 +322,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/see_more_comment"
                     android:textColor="@color/main_red_light"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
+                    style="@style/BoldTextStyle"
                     android:layout_marginVertical="10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_post_comment"

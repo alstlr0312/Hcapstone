@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
@@ -32,8 +33,7 @@ import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.MediaRvItem
 import com.unity.mynativeapp.network.util.*
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -46,19 +46,15 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
     private var firstStart = true
     lateinit var viewModel: ProfileViewModel
     private var currentPw = ""
-    private var changeToBaseImg: Boolean = false
     private var changedImgPath: String?= null // null: 기본 이미지, not null: 다른 이미지로 변경
-    //private var changedImgUri: Uri? = null
+
     var mediaResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         if(result.resultCode == RESULT_OK){
             val imageUri = result.data?.data
             imageUri?.let{
                 changedImgPath = getRealPathFromUri(it)
-                //changedImgPath = it.path
                 binding.ivProfileImg.setImageURI(it)
-                //val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, it))
-                //saveProfileImg(bitmap)
             }
         }
     }
@@ -76,8 +72,10 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
         binding.tilChangedPw.visibility = View.GONE
 
         val userName = MyApplication.prefUtil.getString("username", "").toString()
-        if(userName.isNotEmpty()){
+        if(userName.isNotEmpty()) {
             viewModel.myPageInfo(userName)
+        }else{
+            showCustomToast("회원 정보를 가져올 수 없습니다.")
         }
     }
 
@@ -157,7 +155,6 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
         dialog.show()
         dialog.setOnDismissListener {
             if(dialog.resultCode == 1){
-                deleteProfileImgFile()
                 finish()
             }
         }
@@ -167,8 +164,12 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
             showCustomToast(message)
         }
 
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) showLoadingDialog(this) else dismissLoadingDialog()
+        viewModel.loading2.observe(this) { type ->
+            when(type){
+                SHOW_LOADING -> showLoadingDialog(this)
+                SHOW_TEXT_LOADING -> showLoadingDialog(this, LOADING_LOSS_WARNING)
+                DISMISS_LOADING -> dismissLoadingDialog()
+            }
         }
 
         viewModel.logout.observe(this) { logout ->
@@ -180,26 +181,24 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
             if (data == null) return@observe
 
             if (data.profileImage != null) {
-                MainScope().async {
-                    Glide.with(binding.ivProfileImg)
+                CoroutineScope(Dispatchers.Main).launch {
+                    Glide.with(applicationContext)
+                        .asBitmap()
                         .load(data.profileImage)
                         .placeholder(R.color.main_black)
                         .error(R.drawable.ic_profile_photo_base)
                         .apply(RequestOptions.centerCropTransform())
-                        .into(binding.ivProfileImg)
-
-                    Glide.with(applicationContext)
-                        .asBitmap()
-                        .load(data.profileImage)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(object : CustomTarget<Bitmap>() {
                             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?){
+                                binding.ivProfileImg.setImageBitmap(resource)
                                 val file = File(cacheDir, "profileImage.jpg")
                                 changedImgPath = file.path
                                 try {
                                     file.createNewFile()
                                     FileOutputStream(file).use { outputStream ->
                                         resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                                        outputStream.close()
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
@@ -227,7 +226,7 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
         viewModel.getMemberId.observe(this) { id ->
             if(id==null) return@observe
 
-            // 비밀 번호
+            // 비밀 번호 변경 하였다면
             if(binding.tilChangedPw.visibility == View.VISIBLE){
                 currentPw = binding.edtChangedPw.text.toString()
             }
@@ -244,17 +243,30 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
 
         // 프로필 수정 성공
         viewModel.editProfileSuccess.observe(this) { isSuccess ->
-            viewModel._loading.postValue(false)
 
             if(!isSuccess)return@observe
             // 앱 내부 데이터 수정
             MyApplication.prefUtil.setString("username", binding.edtUsername.text.toString())
-            //MyApplication.prefUtil.setString("field", binding.edtField.text.toString())
 
             // 프로필 수정 화면 종료
             showCustomToast(EDIT_COMPLETE)
-            finish()
 
+            // 재로그인
+            val id = MyApplication.prefUtil.getString("id", null)
+            if(id != null){
+                viewModel.login(id, currentPw)
+            }else logout()
+        }
+
+        // 토큰 재발급 후 화면 종료
+        viewModel.loginSuccess.observe(this){ isSuccess ->
+            if(!isSuccess) {
+                logout()
+                return@observe
+            }
+            else{
+                finish()
+            }
         }
     }
 
@@ -263,35 +275,17 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
         deleteProfileImgFile()
     }
 
-
     companion object{
-        const val TAG = "LogProfileActivity"
-    }
-
-    private fun saveProfileImg(bitmap: Bitmap): String {
-
-        val tempFile = File(cacheDir, "profileImage.jpg")
-
-        try {
-            tempFile.createNewFile()
-
-            val out = FileOutputStream(tempFile)
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-
-            out.close()
-        } catch (e: FileNotFoundException) {
-            Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
-        } catch (e: IOException) {
-            Log.e(DiaryActivity.TAG, "IOException : " + e.message)
-        }
-        return tempFile.absolutePath
+        const val TAG = "ProfileActivityLog"
     }
 
     private fun deleteProfileImgFile(){
-        val file = File(cacheDir, "profileImage.jpg")
-        if(file.exists()){
-            file.delete()
+        CoroutineScope(Dispatchers.Default).launch {
+            val file = File(cacheDir, "profileImage.jpg")
+            if(file.exists()){
+                file.delete()
+                Log.d(TAG, "file delete")
+            }
         }
     }
 
@@ -304,9 +298,6 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>(ActivityProfileBind
         }
     }
 
-    private fun getURIForResource(resId: Int): Uri {
-        return Uri.parse("android.resource://$packageName/$resId")
-    }
 
     override fun onCreateContextMenu(
         menu: ContextMenu?,

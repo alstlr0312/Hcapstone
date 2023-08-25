@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.config.BaseActivity.Companion.DISMISS_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_TEXT_LOADING
 import com.unity.mynativeapp.model.DiaryResponse
 import com.unity.mynativeapp.model.FeedbackPostureRequest
 import com.unity.mynativeapp.network.MyError
@@ -26,8 +29,8 @@ open class DiaryViewModel: ViewModel() {
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
+    private val _loading = MutableLiveData<Int>()
+    val loading: LiveData<Int> = _loading
 
     private val _logout = MutableLiveData<Boolean>(false)
     val logout: LiveData<Boolean> = _logout
@@ -53,7 +56,7 @@ open class DiaryViewModel: ViewModel() {
 
     // 다이어리 작성
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
-        _loading.postValue(true)
+        _loading.postValue(SHOW_TEXT_LOADING)
         postDiaryWrite(body,body1)
     }
 
@@ -61,7 +64,7 @@ open class DiaryViewModel: ViewModel() {
         RetrofitClient.getApiService().postDiaryWrite(body,body1).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 if(code == 201){ // 다이어리 작성 성공
@@ -88,7 +91,7 @@ open class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })
@@ -96,7 +99,7 @@ open class DiaryViewModel: ViewModel() {
 
     // 다이어리 상세 조회
     fun diaryDetail(date: String) {
-        _loading.postValue(true)
+        _loading.postValue(SHOW_LOADING)
         getDiaryAPI(date)
     }
 
@@ -107,7 +110,7 @@ open class DiaryViewModel: ViewModel() {
                 call: Call<MyResponse<DiaryResponse>>,
                 response: Response<MyResponse<DiaryResponse>>
             ) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 Log.d(TAG, code.toString())
@@ -136,14 +139,14 @@ open class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<DiaryResponse>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
             }
         })
     }
 
     // 다이어리 수정
     fun diaryEdit(diaryId: Int, diaryDto: RequestBody, files: MutableList<MultipartBody.Part>) {
-        _loading.postValue(true)
+        _loading.postValue(SHOW_TEXT_LOADING)
         patchDiaryEditAPI(diaryDto,files, diaryId)
     }
 
@@ -151,7 +154,7 @@ open class DiaryViewModel: ViewModel() {
         RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto, files).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 if(code == 200){ // 다이어리 수정 성공
@@ -178,7 +181,7 @@ open class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })
@@ -186,14 +189,14 @@ open class DiaryViewModel: ViewModel() {
 
     // 운동 자극 피드백
     fun postureFeedback(exerciseName: String, bodyPart: String) {
-        _loading.postValue(true)
+        _loading.postValue(SHOW_LOADING)
         postPostureFeedback(FeedbackPostureRequest(exerciseName, bodyPart))
     }
     private fun postPostureFeedback(body: FeedbackPostureRequest) {
         RetrofitClient.getApiService().postFeedbackPosture(body).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 when(code){
@@ -218,7 +221,7 @@ open class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })

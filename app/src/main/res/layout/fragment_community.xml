@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_post"
         android:textColor="@color/main_gray_light2"
-        android:textSize="18sp"
+        style="@style/NormalTextStyle"
         android:visibility="invisible"
         android:layout_gravity="center"/>
 

@@ -8,8 +8,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.config.BaseActivity.Companion.DISMISS_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_TEXT_LOADING
+import com.unity.mynativeapp.features.login.LoginViewModel
 import com.unity.mynativeapp.features.mypage.MyPageViewModel
 import com.unity.mynativeapp.model.EditProfileRequest
+import com.unity.mynativeapp.model.LoginData
+import com.unity.mynativeapp.model.LoginRequest
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -24,29 +31,35 @@ import retrofit2.Response
 import java.io.File
 import java.util.regex.Pattern
 
-class ProfileViewModel(val context: Context): MyPageViewModel() {
+class ProfileViewModel(val context: Context): MyPageViewModel(){
 
     // 비밀번호 검사 후 받은 아이디
     private val _getMemberId = MutableLiveData<Int?>()
     val getMemberId: MutableLiveData<Int?> = _getMemberId
 
+    private val _loading = MutableLiveData<Int>()
+    val loading2: LiveData<Int> = _loading
+
     // 프로필 수정 요청 결과
     private val _editProfileSuccess = MutableLiveData<Boolean>()
     val editProfileSuccess: LiveData<Boolean> = _editProfileSuccess
 
+    // 프로필 수정하고 토큰 재발급
+    private val _loginSuccess = MutableLiveData<Boolean>()
+    val loginSuccess: LiveData<Boolean> = _loginSuccess
 
     private val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
 
+    // 비밀 번호 검사
     fun checkPw(password: String){
-
         if(password.isEmpty()){
             _toastMessage.postValue(PW_EMPTY_ERROR)
             return
         }
-        _loading.postValue(true)
+        _loading.postValue(SHOW_LOADING)
         RetrofitClient.getApiService().postPasswordCheck(password).enqueue(object : Callback<MyResponse<Int>> {
             override fun onResponse(call: Call<MyResponse<Int>>, response: Response<MyResponse<Int>>) {
-
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 Log.d(TAG, code.toString())
@@ -59,33 +72,31 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
                         }
                     }
                     400 -> {
-                        _loading.postValue(false)
                         val body = response.errorBody()?.string()
                         val data = GsonBuilder().create().fromJson(body, MyError::class.java)
                         val error = data.error.toString()
                         _toastMessage.postValue(error)
                     }
                     401 -> {
-                        _loading.postValue(false)
                         _logout.postValue(true)
                     }
                     else -> {
-                        _loading.postValue(false)
                         Log.d(TAG, "$code")
                     }
                 }
             }
             override fun onFailure(call: Call<MyResponse<Int>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
             }
         })
 
     }
 
+    // 프로필 수정하기
     fun editProfile(username: String, password: String, field: String?, memberId: Int, profileImgPath: String?) {
 
-        //_loading.postValue(true)
+        _loading.postValue(SHOW_TEXT_LOADING)
 
         if (username.isEmpty()) {
             _toastMessage.postValue(NICKNAME_EMPTY_ERROR)
@@ -115,7 +126,6 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
         // 프로필 이미지
         var profileImgBody: MultipartBody.Part? = null
         val profileImgFile = profileImgPath?.let { File(it)}
-        //Log.d("herehere", profileImgUri?.path.toString())
         profileImgFile?.let{
             val requestFile: RequestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),
                 profileImgFile
@@ -128,7 +138,7 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
     private fun editProfileAPI(editProfileDto: RequestBody, profileImgFile: MultipartBody.Part?) {
         RetrofitClient.getApiService().patchMemberInfoEdit(editProfileDto, profileImgFile).enqueue(object : Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 Log.d(TAG, code.toString())
@@ -156,7 +166,47 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
             }
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
+            }
+        })
+    }
+
+
+
+    fun login(id: String, password: String) {
+        _loading.postValue(SHOW_LOADING)
+        postLoginAPI(id, password)
+    }
+    private fun postLoginAPI(id: String, password: String) {
+        RetrofitClient.getApiService().login(LoginRequest(id, password)).enqueue(object : Callback<MyResponse<LoginData>> {
+            override fun onResponse(call: Call<MyResponse<LoginData>>, response: Response<MyResponse<LoginData>>) {
+                _loading.postValue(DISMISS_LOADING)
+
+                val code = response.code()
+
+                if(code == 200){ // 로그인 성공
+                    val data = response.body()?.data
+
+                    if(data != null){
+                        MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
+                        MyApplication.prefUtil.setString(X_REFRESH_TOKEN, data.refreshToken)
+                        MyApplication.prefUtil.setString("username", data.username)
+                        _loginSuccess.postValue(true)
+                    }else{
+                        _loginSuccess.postValue(false)
+                    }
+
+                }else if(code == 401){// 로그인 실패
+                    val body = response.errorBody()?.string()
+                    val data = GsonBuilder().create().fromJson(body, MyError::class.java)
+                    _toastMessage.postValue(data.error.toString())
+                }
+
+            }
+            override fun onFailure(call: Call<MyResponse<LoginData>>, t: Throwable) {
+                Log.e(LoginViewModel.TAG, "Error: ${t.message}")
+                _loading.postValue(DISMISS_LOADING)
+
             }
         })
     }
@@ -164,21 +214,4 @@ class ProfileViewModel(val context: Context): MyPageViewModel() {
     companion object{
         val TAG = "ProfileViewModel"
     }
-
-    private fun getRealPathFromUri(uri: Uri): String {
-        val buildName = Build.MANUFACTURER
-        if(buildName.equals("Xiaomi")){
-            return uri.path!!
-        }
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, proj, null, null, null)
-        if(cursor!!.moveToFirst()){
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-        return result
-    }
-
 }

@@ -23,6 +23,12 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
+            android:name=".features.mypage.mycomments.MyCommentsActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".features.mypage.MemberPageActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.mypage.setting.SettingActivity"
             android:exported="false" />
         <activity

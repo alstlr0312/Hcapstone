@@ -42,9 +42,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/comment"
-                    android:textColor="@color/main_gray_light2"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    style="@style/TitleTextStyle"
                     android:layout_marginStart="@dimen/fab_margin"
                     app:layout_constraintStart_toEndOf="@id/iv_back"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -65,6 +64,7 @@
 
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/please_write_comment"
                 android:textColor="@color/main_red_light"
-                android:textSize="18sp"
+                style="@style/NormalTextStyle"
                 android:visibility="gone"
                 android:layout_margin="@dimen/fab_margin"
                 app:layout_constraintTop_toTopOf="parent"

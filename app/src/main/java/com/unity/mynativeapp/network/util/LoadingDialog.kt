@@ -6,17 +6,24 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Window
 import com.unity.mynativeapp.R
+import com.unity.mynativeapp.databinding.DialogLoadingBinding
 
-class LoadingDialog(context: Context): Dialog(context) {
+class LoadingDialog(context: Context, val title: String = ""): Dialog(context) {
+    val binding by lazy {
+        DialogLoadingBinding.inflate(layoutInflater)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_loading)
+        setContentView(binding.root)
         setCanceledOnTouchOutside(false)
         setCancelable(false)
         window!!.setBackgroundDrawable(ColorDrawable())
         window!!.setDimAmount(0.0f)
+
+        binding.tvWarning.text = title
+
     }
 
     override fun show() {

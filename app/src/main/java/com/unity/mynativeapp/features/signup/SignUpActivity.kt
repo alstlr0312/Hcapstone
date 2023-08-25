@@ -1,39 +1,21 @@
 package com.unity.mynativeapp.features.signup
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.util.Util
-import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
-
+import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
-import com.unity.mynativeapp.features.BaseActivity
-import com.unity.mynativeapp.features.diary.DiaryActivity
+import com.unity.mynativeapp.network.util.LOADING_LOSS_WARNING
 import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.hideKeyboard
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import org.json.JSONObject
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 import java.util.regex.Pattern
 
 
-class SignUpActivity : AppCompatActivity(){
-    private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
+class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate){
     private val viewModel by viewModels<SignUpViewModel>()
 
     val emailPattern = android.util.Patterns.EMAIL_ADDRESS
@@ -44,7 +26,6 @@ class SignUpActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         dialog = LoadingDialog(this)
 
@@ -181,8 +162,12 @@ class SignUpActivity : AppCompatActivity(){
         }
 
 
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) dialog.show() else dialog.dismiss()
+        viewModel.loading.observe(this) { type ->
+            when(type){
+                SHOW_LOADING -> showLoadingDialog(this)
+                SHOW_TEXT_LOADING -> showLoadingDialog(this, LOADING_LOSS_WARNING)
+                DISMISS_LOADING -> dismissLoadingDialog()
+            }
         }
 
         viewModel.checkSuccess.observe(this){ isSuccess ->
@@ -207,29 +192,5 @@ class SignUpActivity : AppCompatActivity(){
         }
 
     }
-//    private fun saveBaseProfileImg() {
-//        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_profile_photo_base)
-//
-//        val tempFile = File(cacheDir, "profileImage.jpg")
-//
-//        try {
-//            tempFile.createNewFile()
-//
-//            val out = FileOutputStream(tempFile)
-//
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-//
-//            out.close()
-//        } catch (e: FileNotFoundException) {
-//            Log.e(DiaryActivity.TAG, "FileNotFoundException : " + e.message)
-//        } catch (e: IOException) {
-//            Log.e(DiaryActivity.TAG, "IOException : " + e.message)
-//        }
-//
-//        MyApplication.prefUtil.setString("profileImgPath", tempFile.absolutePath)
-//
-//    }
-
-
 
 }

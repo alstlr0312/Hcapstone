@@ -7,29 +7,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemVpMediaBinding
-import com.unity.mynativeapp.model.OnCommentClick
 
 class MediaViewPagerAdapter(val context: Context)
     : RecyclerView.Adapter<MediaViewPagerAdapter.ViewHolder>() {
 
-    private var itemList = mutableListOf<String>()
+    private var itemList = mutableListOf<Bitmap>()
 
     inner class ViewHolder(val binding: ItemVpMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(url: String) {
-
+        fun bind(bitmap: Bitmap) {
             Glide.with(binding.ivMedia)
-                .load(url)
+                .load(bitmap)
                 .placeholder(R.color.main_black_dark)
                 .error(R.drawable.ic_image_failed)
                 .fallback(R.color.main_black_dark)
                 .centerCrop()
                 .apply(RequestOptions.centerCropTransform())
                 .into(binding.ivMedia)
-
         }
     }
 
@@ -52,14 +51,23 @@ class MediaViewPagerAdapter(val context: Context)
     }
 
     fun setMediaList(nList: ArrayList<String>) {
-        itemList = nList
-        notifyDataSetChanged()
+        for(url in nList){ // url > bitmap 변환 후 리스트에 추가
+            Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        itemList.add(resource)
+                        notifyItemRemoved(itemCount-1)
+                    }
+                })
+        }
     }
 
-    fun addItem(url: String) {
-        itemList.add(url)
-        notifyItemChanged(itemList.size-1)
-    }
+
     fun removeAllItem() {
         itemList = mutableListOf()
         notifyDataSetChanged()

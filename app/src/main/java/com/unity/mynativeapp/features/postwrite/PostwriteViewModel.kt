@@ -6,6 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.config.BaseActivity.Companion.DISMISS_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_TEXT_LOADING
 import com.unity.mynativeapp.features.postdetail.PostDetailViewModel
 import com.unity.mynativeapp.model.PostDetailResponse
 import com.unity.mynativeapp.network.*
@@ -25,8 +28,8 @@ class PostWriteViewModel: ViewModel() {
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
+    private val _loading = MutableLiveData<Int>()
+    val loading: LiveData<Int> = _loading
 
     private val _logout = MutableLiveData<Boolean>(false)
     val logout: LiveData<Boolean> = _logout
@@ -41,7 +44,7 @@ class PostWriteViewModel: ViewModel() {
     // 게시글 수정 요청
     fun postEdit(postId: Int, postDto: RequestBody, files: MutableList<MultipartBody.Part>) {
 
-        _loading.postValue(true)
+        _loading.postValue(SHOW_TEXT_LOADING)
 
         postEditApi(postId, postDto, files)
     }
@@ -53,7 +56,7 @@ class PostWriteViewModel: ViewModel() {
                 call: Call<MyResponse<String>>,
                 response: Response<MyResponse<String>>
             ) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 when(code) {
@@ -80,7 +83,7 @@ class PostWriteViewModel: ViewModel() {
             }
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })
@@ -89,7 +92,7 @@ class PostWriteViewModel: ViewModel() {
     // 게시글 작성
     fun postWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
 
-        _loading.postValue(true)
+        _loading.postValue(SHOW_TEXT_LOADING)
 
         postWriteApi(body, body1)
     }
@@ -101,7 +104,7 @@ class PostWriteViewModel: ViewModel() {
                 call: Call<MyResponse<String>>,
                 response: Response<MyResponse<String>>
             ) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 when(code) {
@@ -131,7 +134,7 @@ class PostWriteViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })
@@ -140,7 +143,7 @@ class PostWriteViewModel: ViewModel() {
     ///// 수정할 게시글 데이터 조회
     fun getPostEditData(postId: Int) {
 
-        _loading.postValue(true)
+        _loading.postValue(SHOW_LOADING)
 
         getPostEditDataAPI(postId)
     }
@@ -152,7 +155,7 @@ class PostWriteViewModel: ViewModel() {
                 call: Call<MyResponse<PostDetailResponse>>,
                 response: Response<MyResponse<PostDetailResponse>>
             ) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 when (code) {
@@ -176,7 +179,7 @@ class PostWriteViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<PostDetailResponse>>, t: Throwable) {
                 Log.e(ContentValues.TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
             }
         })
     }

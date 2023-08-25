@@ -35,10 +35,16 @@ class MyPostsActivity : BaseActivity<ActivityMyPostsBinding>(ActivityMyPostsBind
         binding.rvMyPost.adapter = myPostAdpater
 
         // 유저 이름
-        username = MyApplication.prefUtil.getString("username", "").toString()
-        if(username.isNotEmpty()){
-            // 내 게시물 목록 요청
-            viewModel.myPost(null, null, username, currentPage, pageSize)
+        //username = MyApplication.prefUtil.getString("username", "").toString()
+        username = intent.getStringExtra("username")!!
+
+        // 내 게시물 목록 요청
+        viewModel.myPost(null, null, username, currentPage, pageSize)
+
+        if(username == MyApplication.prefUtil.getString("username", "").toString()){
+            binding.tvTitle.text = getString(R.string.my_post)
+        }else{
+            binding.tvTitle.text = "$username 님의 게시글"
         }
     }
 

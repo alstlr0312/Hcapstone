@@ -18,6 +18,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+data class ChildDeleteData(
+    val commentId: Int?,
+    val parentId: Int
+)
 class CommentViewModel : ViewModel() {
 
     private val _toastMessage = MutableLiveData<String>()
@@ -29,24 +33,28 @@ class CommentViewModel : ViewModel() {
     private val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
 
-    private val _mediaData = MutableLiveData<ResponseBody?>()
-    val mediaData: MutableLiveData<ResponseBody?> = _mediaData
+    private val _commentGetData = MutableLiveData<CommentGetResponse?>()
+    val commentGetData : MutableLiveData<CommentGetResponse?> = _commentGetData
 
     private val _commentWriteSuccess = MutableLiveData<Boolean>()
     val commentWriteSuccess: LiveData<Boolean> = _commentWriteSuccess
 
-    private val _commentGetData = MutableLiveData<CommentGetResponse?>()
-    val commentGetData : MutableLiveData<CommentGetResponse?> = _commentGetData
+    private val _parentCommentDeleteData = MutableLiveData<Int?>()
+    val parentCommentDeleteData: LiveData<Int?> = _parentCommentDeleteData
+
+    private val _childCommentDeleteData = MutableLiveData<ChildDeleteData>()
+    val childCommentDeleteData: LiveData<ChildDeleteData> = _childCommentDeleteData
+
 
     ///// 댓글 조회
-    fun commentGet(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) { //comment?postId=1&page=0&size=6'
+    fun commentGet(postId: Int?, parentId: Int?, username: String?, page: Int?, size: Int?) { //comment?postId=1&page=0&size=6'
 
         _loading.postValue(true)
 
         getCommentAPI(postId, parentId, username, page, size)
     }
 
-    private fun getCommentAPI(postId: Int, parentId: Int?, username: String?, page: Int?, size: Int?) {
+    private fun getCommentAPI(postId: Int?, parentId: Int?, username: String?, page: Int?, size: Int?) {
         RetrofitClient.getApiService().getComment(postId, parentId, username, page, size).enqueue(object :
             Callback<MyResponse<CommentGetResponse>> {
             override fun onResponse(
@@ -56,7 +64,6 @@ class CommentViewModel : ViewModel() {
                 _loading.postValue(false)
 
                 val code = response.code()
-                Log.d("aaaaa", "$code $postId")
                 when (code) {
                     200 -> { // 댓글 조회 성공
                         val data = response.body()?.data
@@ -76,7 +83,7 @@ class CommentViewModel : ViewModel() {
                 }
             }
             override fun onFailure(call: Call<MyResponse<CommentGetResponse>>, t: Throwable) {
-                Log.e(ContentValues.TAG, "Error: ${t.message}")
+                Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)
             }
         })
@@ -86,7 +93,6 @@ class CommentViewModel : ViewModel() {
     fun commentWrite(requestBody: CommentWriteRequest) { //comment?postId=1&page=0&size=6'
 
         _loading.postValue(true)
-        Log.d("aaaaa", requestBody.toString())
         postCommentWriteAPI(requestBody)
     }
 
@@ -99,9 +105,7 @@ class CommentViewModel : ViewModel() {
             ) {
                 _loading.postValue(false)
 
-                val code = response.code()
-                Log.d("aaaaa", "$code")
-                when (code) {
+                when (val code = response.code()) {
                     201 -> { // 댓글 작성 성공
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
@@ -126,6 +130,54 @@ class CommentViewModel : ViewModel() {
         })
     }
 
+    // 댓글 삭제
+    fun commentDelete(commentId: Int, parentId: Int? = null){ // type = 0: 부모 댓글, type = 1: 자식 댓글
+        _loading.postValue(true)
+        patchCommentDeleteAPI(commentId, parentId)
+    }
+
+    private fun patchCommentDeleteAPI(commentId: Int, parentId: Int? = null){
+        RetrofitClient.getApiService().patchCommentDelete(commentId).enqueue(object :
+            Callback<MyResponse<Int>> {
+            override fun onResponse(
+                call: Call<MyResponse<Int>>,
+                response: Response<MyResponse<Int>>
+            ) {
+                _loading.postValue(false)
+
+                when (val code = response.code()) {
+                    200 -> { // 댓글 삭제 성공
+                        val commentId = response.body()?.data
+                        Log.d(TAG, commentId.toString())
+                        if(parentId == null){ // 부모 댓글 삭제 성공
+                            _parentCommentDeleteData.postValue(commentId)
+                        }else{ // 자식 댓글 삭제 성공
+                            _childCommentDeleteData.postValue(ChildDeleteData(commentId!!, parentId))
+                        }
+                        _toastMessage.postValue("댓글을 삭제하였습니다.")
+                    }
+                    401 -> _logout.postValue(true)
+                    400 -> { // 댓글 삭제 실패
+                        val body = response.errorBody()?.string()
+                        val data = GsonBuilder().create().fromJson(body, MyError::class.java)
+                        if(parentId == null){ // 부모 댓글 삭제 실패
+                            _parentCommentDeleteData.postValue(null)
+                        }else{ // 자식 댓글 삭제 실패
+                            _childCommentDeleteData.postValue(ChildDeleteData(null, parentId))
+                        }
+                        _toastMessage.postValue(data.error.toString())
+                    }
+                    else -> {
+                        Log.d(TAG, "$code")
+                    }
+                }
+            }
+            override fun onFailure(call: Call<MyResponse<Int>>, t: Throwable) {
+                Log.e(ContentValues.TAG, "Error: ${t.message}")
+                _loading.postValue(false)
+            }
+        })
+    }
     companion object {
         const val TAG = "CommentViewModel"
     }

@@ -19,30 +19,24 @@ open class MyPageViewModel: ViewModel() {
     val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    val _loading = MutableLiveData<Boolean>()
+    private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
     val _myPageData = MutableLiveData<MemberPageResponse?>()
     val myPageData: LiveData<MemberPageResponse?> = _myPageData
 
-    val _mediaData = MutableLiveData<ResponseBody?>()
-    val mediaData: MutableLiveData<ResponseBody?> = _mediaData
-
-    val _logout = MutableLiveData<Boolean>(false)
+    val _logout = MutableLiveData(false)
     val logout: LiveData<Boolean> = _logout
-    fun myPageInfo(date: String) {
-
+    fun myPageInfo(username: String) {
         _loading.postValue(true)
-
-        getMyPageInfoAPI(date)
+        getMyPageInfoAPI(username)
     }
 
-    private fun getMyPageInfoAPI(date: String) {
-        RetrofitClient.getApiService().getMemberPage(date).enqueue(object :
+    private fun getMyPageInfoAPI(username: String) { // 마이페이지 정보 가져오기
+        RetrofitClient.getApiService().getMemberPage(username).enqueue(object :
             Callback<MyResponse<MemberPageResponse>> {
             override fun onResponse(call: Call<MyResponse<MemberPageResponse>>, response: Response<MyResponse<MemberPageResponse>>) {
                 _loading.postValue(false)
-
                 val code = response.code()
                 Log.d(TAG, code.toString())
 
@@ -50,10 +44,7 @@ open class MyPageViewModel: ViewModel() {
                     200 -> { // 성공
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
-
-                        data?.let {
-                            _myPageData.postValue(data)
-                        }
+                        data?.let { _myPageData.postValue(data) }
                     }
                     400 -> { // 잘못된 유저 이름으로 요청
                         _myPageData.postValue(null)
@@ -66,8 +57,6 @@ open class MyPageViewModel: ViewModel() {
                     }
                 }
             }
-
-
             override fun onFailure(call: Call<MyResponse<MemberPageResponse>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
                 _loading.postValue(false)

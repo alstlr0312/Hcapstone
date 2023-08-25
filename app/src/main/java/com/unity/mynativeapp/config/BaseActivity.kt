@@ -27,6 +27,11 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
     lateinit var inputMethodManager: InputMethodManager
     var keyBoardIsShowing: Boolean = false
 
+    companion object {
+        const val SHOW_LOADING = 0
+        const val SHOW_TEXT_LOADING = 1
+        const val DISMISS_LOADING = 2
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
@@ -40,8 +45,8 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun showLoadingDialog(context: Context) {
-        loadingDialog = LoadingDialog(context)
+    fun showLoadingDialog(context: Context, title: String = "") {
+        loadingDialog = LoadingDialog(context, title)
         loadingDialog.show()
     }
 
