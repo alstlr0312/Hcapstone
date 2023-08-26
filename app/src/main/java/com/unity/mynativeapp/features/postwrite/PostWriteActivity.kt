@@ -80,6 +80,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(ActivityPostWri
         binding.spinnerPostCategory.adapter = postCategoryAdapter
         binding.spinnerPostType.adapter = postExerciseTypeAdapter
 
+        // 게시글 미디어 어댑터
         mediaAdapter = PostWriteMediaRvAdapter(this)
         binding.rvPostMedia.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPostMedia.adapter = mediaAdapter

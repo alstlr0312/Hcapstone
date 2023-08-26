@@ -101,7 +101,7 @@ class PostDetailViewModel : ViewModel() {
             ) {
                 _loading.postValue(false)
                 when(response.code()){
-                    200 -> { // 요청 성공
+                    200 -> { // 좋아요 요청 성공
                         _likePressed.postValue(true)
                     }
                     400 -> { // 요청 실패
@@ -109,6 +109,9 @@ class PostDetailViewModel : ViewModel() {
                         val data = GsonBuilder().create().fromJson(body, MyError::class.java)
                         val error = data.error.toString()
                         _toastMessage.postValue(error)
+                    }
+                    else -> {
+                        Log.d(TAG, "${GsonBuilder().create().fromJson(response.errorBody()?.string(), MyError::class.java).error}")
                     }
                 }
             }

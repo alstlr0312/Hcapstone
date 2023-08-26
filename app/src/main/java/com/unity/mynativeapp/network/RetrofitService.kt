@@ -187,6 +187,12 @@ interface RetrofitService {
 		@Part file: MultipartBody.Part?
 	): Call<MyResponse<String>>
 
+	// 회원 탈퇴
+	@PATCH("/member/delete")
+	fun patchMemberDelete(
+		@Body password: String
+	): Call<MyResponse<Int>>
+
 	////////////// 지도 /////////////////
 	//지도 체육관 가져오기
 	@GET("/api/exercise/seoul")

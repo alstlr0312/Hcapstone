@@ -25,6 +25,7 @@ import java.io.IOException
 class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBinding>(
     ActivityLoginBinding::inflate) {
     private val viewModel by viewModels<LoginViewModel>()
+    private     var firstStart = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,11 +65,8 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
         // 비밀번호 찾기
         binding.tvFindPassword.setOnClickListener {
             val intent = Intent(this, FindPwActivity::class.java)
+            intent.putExtra("mode", "find")
             startActivity(intent)
-        }
-
-        binding.layoutMain.setOnClickListener {
-            hideKeyBoard()
         }
     }
 
@@ -88,6 +86,12 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
             finish()
         }
     }
-
+    override fun onResume() {
+        super.onResume()
+        if(!firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_left, R.drawable.anim_slide_out_right)
+        }
+        firstStart = false
+    }
 
 }

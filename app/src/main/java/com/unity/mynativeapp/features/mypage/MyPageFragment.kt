@@ -67,8 +67,9 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
             if (isLoading) showLoadingDialog(requireContext()) else dismissLoadingDialog()
         }
 
-        viewModel.logout.observe(viewLifecycleOwner){
-            if(it) logout()
+        viewModel.logout.observe(viewLifecycleOwner){ logout ->
+            if(!logout)return@observe
+            logout()
         }
 
         viewModel.myPageData.observe(viewLifecycleOwner) { data ->

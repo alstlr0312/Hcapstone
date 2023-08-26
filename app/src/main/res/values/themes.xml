@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/main_black</item>
         <item name="colorPrimaryVariant">@color/main_black</item>
         <item name="colorOnPrimary">@color/main_red_light</item>
+        <item name="colorPrimaryDark">@color/main_black_dark</item>
         <item name="colorAccent">@color/main_red_light</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">false</item>

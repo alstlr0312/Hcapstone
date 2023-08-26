@@ -1,23 +1,14 @@
-package com.unity.mynativeapp.features.mypage.editprofile
+package com.unity.mynativeapp.network.util
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.view.WindowManager
-import android.widget.Toast
-import com.unity.mynativeapp.R
-import com.unity.mynativeapp.databinding.DialogChangePwBinding
-import com.unity.mynativeapp.databinding.DialogSaveProfileBinding
-import com.unity.mynativeapp.network.util.PW_FORMAT_ERROR
-import java.util.regex.Pattern
+import com.unity.mynativeapp.databinding.DialogIdentificationBinding
 
 
-class SaveProfileDialog(context: Context): Dialog(context) {
+class IdentificationDialog(context: Context, val positiveBtnString: String): Dialog(context) {
 
-    val binding by lazy { DialogSaveProfileBinding.inflate(layoutInflater) }
+    val binding by lazy { DialogIdentificationBinding.inflate(layoutInflater) }
     var resultCode = 0
     var password = ""
 
@@ -25,6 +16,8 @@ class SaveProfileDialog(context: Context): Dialog(context) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setUiEvent()
+
+        binding.btnOk.text = positiveBtnString
     }
 
 
@@ -36,7 +29,7 @@ class SaveProfileDialog(context: Context): Dialog(context) {
             dismiss()
         }
         // 확인
-        binding.btnSave.setOnClickListener {
+        binding.btnOk.setOnClickListener {
             resultCode = 1
             password = binding.edtPassword.text.toString()
             dismiss()

@@ -13,8 +13,8 @@ import com.unity.mynativeapp.databinding.ActivityFindIdBinding
 class FindIdActivity : BaseActivity<ActivityFindIdBinding>(
     ActivityFindIdBinding::inflate) {
     private val viewModel by viewModels<FindViewModel>()
-
-    val emailPattern = android.util.Patterns.EMAIL_ADDRESS
+    private var firstStart = true
+    private val emailPattern = android.util.Patterns.EMAIL_ADDRESS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -118,6 +118,15 @@ class FindIdActivity : BaseActivity<ActivityFindIdBinding>(
         viewModel.findError.observe(this){ error ->
             if(error == null) return@observe
             binding.tvNotificationSend.text = error
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
         }
 
     }

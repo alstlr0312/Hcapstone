@@ -3,6 +3,7 @@ package com.unity.mynativeapp.features.postwrite
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,27 +27,12 @@ class PostWriteMediaRvAdapter(val context: Context)
 
     // 새로 추가한 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
-        init{
-            binding.root.setOnLongClickListener OnLongClickListener@{
-                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
-                dialog.show()
-
-                dialog.setOnDismissListener {
-                    if(dialog.resultCode == 1){
-                        itemList.removeAt(adapterPosition)
-                        dialog.dismiss()
-                        notifyDataSetChanged()
-                    }
-                }
-
-                return@OnLongClickListener true
-            }
-        }
         fun bind_post(uriItem: MediaRvItem){
-
+            binding.iconCancel.visibility = View.VISIBLE
             when(uriItem.viewType){
                 1 -> { // 사진
                     binding.iconPlay.visibility = View.GONE
+
                     binding.root.setOnClickListener {
                         val intent = Intent(context, MediaFullActivity::class.java)
                         intent.putExtra("url", uriItem.uri)
@@ -61,6 +47,7 @@ class PostWriteMediaRvAdapter(val context: Context)
 
             setImage(uriItem.uri!!, binding)
 
+            // 미디어 크기 보기
             binding.root.setOnClickListener {
                 val intent = Intent(context, MediaFullActivity::class.java)
                 intent.putExtra("uri", uriItem.uri.toString())
@@ -68,27 +55,44 @@ class PostWriteMediaRvAdapter(val context: Context)
                 context.startActivity(intent)
             }
 
+            // 미디어 삭제
+            /*
+            binding.root.setOnLongClickListener OnLongClickListener@{
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
+                dialog.show()
+
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        dialog.dismiss()
+                        notifyItemRemoved(adapterPosition)
+                    }
+                }
+                return@OnLongClickListener true
+            }
+             */
+            binding.iconCancel.setOnClickListener {
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
+                dialog.show()
+
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        dialog.dismiss()
+                        notifyItemRemoved(adapterPosition)
+
+                    }
+                }
+            }
+
         }
     }
 
     // 서버로부터 받은 미디어 타입 -> url
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
-        init{
-            binding.root.setOnLongClickListener OnLongClickListener@{
-                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
-                dialog.show()
-                dialog.setOnDismissListener {
-                    if(dialog.resultCode == 1){
-                        itemList.removeAt(adapterPosition)
-                        dialog.dismiss()
-                        notifyDataSetChanged()
-                    }
-                }
-                return@OnLongClickListener true
-            }
-        }
-        fun bind_get(item: MediaRvItem){
 
+        fun bind_get(item: MediaRvItem){
+            binding.iconCancel.visibility = View.VISIBLE
             item.url?.let{
                 when(item.viewType){
                     3 -> { // 사진
@@ -104,9 +108,23 @@ class PostWriteMediaRvAdapter(val context: Context)
                         binding.iconPlay.visibility = View.VISIBLE
                     }
                 }
+                // 미디어 세팅
                 setImage(it, binding)
-            }
+                // 미디어 삭제
 
+            }
+            binding.iconCancel.setOnClickListener {
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
+                dialog.show()
+
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        dialog.dismiss()
+                        notifyItemRemoved(adapterPosition)
+                    }
+                }
+            }
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -120,7 +138,7 @@ class PostWriteMediaRvAdapter(val context: Context)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is PostWriteMediaRvAdapter.ViewHolder_post) itemList[position].uri?.let{holder.bind_post(itemList[position])}
+        if(holder is PostWriteMediaRvAdapter.ViewHolder_post) holder.bind_post(itemList[position])
         else if(holder is PostWriteMediaRvAdapter.ViewHolder_get) itemList[position].url?.let{holder.bind_get(itemList[position])}
     }
 
@@ -130,7 +148,7 @@ class PostWriteMediaRvAdapter(val context: Context)
 
     fun addItem(media: MediaRvItem){
         itemList.add(media)
-        notifyDataSetChanged()
+        notifyItemRemoved(itemCount-1)
     }
 
     fun getMediaList(): List<MediaRvItem>{
@@ -139,20 +157,24 @@ class PostWriteMediaRvAdapter(val context: Context)
 
     fun setMediaList(mList: List<String>) {
 
-        for(url in mList){ // url > bitmap 변환 후 리스트에 추가
+        for(itemIdx in mList.indices){ // url > bitmap 변환 후 리스트에 추가
             Glide.with(context)
                 .asBitmap()
-                .load(url)
+                .load(mList[itemIdx])
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(
                         resource: Bitmap,
                         transition: Transition<in Bitmap>?
                     ) {
-                        itemList.add(MediaRvItem(3, null, url, resource))
+                        itemList.add(MediaRvItem(3, null, mList[itemIdx], resource))
                         notifyItemRemoved(itemCount-1)
+
+                        if(itemIdx == mList.size-1){
+                        }
                     }
                 })
         }
+
     }
 
     override fun getItemViewType(position: Int):Int {
@@ -174,6 +196,12 @@ class PostWriteMediaRvAdapter(val context: Context)
             .override(300, 300)
             .apply(RequestOptions.centerCropTransform())
             .into(binding.photo)
+    }
+
+
+
+    companion object {
+        const val TAG = "PostWriteMediaRvAdapterLog"
     }
 
 

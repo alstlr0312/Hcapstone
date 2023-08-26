@@ -1,10 +1,11 @@
 <resources>
     <dimen name="fab_margin">15dp</dimen>
+    <dimen name="fab_margin_big">30dp</dimen>
     <dimen name="icon_size">30dp</dimen>
     <dimen name="appbar_icon_size">26dp</dimen>
     <dimen name="icon_small_size">18dp</dimen>
     <dimen name="title_text_size">20sp</dimen>
-    <dimen name="normal_text_size">16sp</dimen>
+    <dimen name="normal_text_size">15sp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="logo_width">35dp</dimen>
     <dimen name="logo_height">18dp</dimen>

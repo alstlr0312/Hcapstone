@@ -7,7 +7,7 @@
     android:background="@android:color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp"
@@ -164,14 +164,14 @@
                     android:layout_height="15dp"
                     android:src="@drawable/ic_comment_2"
                     android:layout_marginStart="8dp"
-                    app:tint="@color/purple"/>
+                    app:tint="@color/orange"/>
 
                 <TextView
                     android:id="@+id/tv_comment_cnt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@color/purple"
+                    android:textColor="@color/orange"
                     style="@style/SmallTextStyle"
                     android:layout_marginStart="5dp"/>
 
@@ -180,7 +180,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
 

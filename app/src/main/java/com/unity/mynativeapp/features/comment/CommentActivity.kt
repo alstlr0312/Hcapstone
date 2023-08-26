@@ -1,8 +1,11 @@
 package com.unity.mynativeapp.features.comment
 
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Input
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.R
@@ -90,10 +93,13 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             }
         )
 
-        binding.nestedScrollView.setOnClickListener {
-            hideKeyBoard()
+        // 댓글 새로 고침
+        binding.ivRefresh.setOnClickListener {
+            viewModel.commentGet(postId, null, null, null, null) // 댓글 전체 조회
         }
     }
+
+
 
     private fun subscribeUI(){
 

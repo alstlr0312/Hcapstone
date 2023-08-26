@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvBaseBinding
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
+import com.unity.mynativeapp.features.login.find.FindPwActivity
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
 import com.unity.mynativeapp.model.BaseRvItem
 import com.unity.mynativeapp.model.PostItem
+import com.unity.mynativeapp.network.util.IdentificationDialog
 import com.unity.mynativeapp.network.util.SimpleDialog
 import java.time.LocalDateTime
 
@@ -27,6 +29,9 @@ class SettingAdapter(val context: Context, val listener: OnSettingClick): Recycl
             binding.root.setOnClickListener {
                 when(adapterPosition){
                     0 -> { // 비밀번호 변경
+                        val intent = Intent(context, FindPwActivity::class.java)
+                        intent.putExtra("mode", "change")
+                        context.startActivity(intent)
                     }
                     1 -> { // 로그 아웃
                         val dialog = SimpleDialog(context, context.getString(R.string.you_want_log_out))
@@ -38,7 +43,19 @@ class SettingAdapter(val context: Context, val listener: OnSettingClick): Recycl
                         }
                     }
                     2 -> { // 회원 탈퇴
-
+                        val alertDialog = SimpleDialog(context, context.getString(R.string.you_want_delete_member))
+                        alertDialog.show()
+                        alertDialog.setOnDismissListener {
+                            if(alertDialog.resultCode == 1){
+                                val dialog = IdentificationDialog(context, context.getString(R.string.withdrawal))
+                                dialog.show()
+                                dialog.setOnDismissListener {
+                                    if(dialog.resultCode == 1){
+                                        listener.memberDeleteListener(dialog.password)
+                                    }
+                                }
+                            }
+                        }
                     }
                     3 -> { // 이용 가이드
                     }

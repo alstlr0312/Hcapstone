@@ -236,4 +236,8 @@
     <string name="you_want_log_out">로그아웃 하시겠습니까?</string>
     <string name="you_want_delete_comment">댓글을 삭제하시겠습니까?</string>
     <string name="no_comment">작성한 댓글이 없어요!</string>
+    <string name="notification_update_later">해당 기능은 추후 업데이트 될 예정입니다!</string>
+    <string name="try_add_media">미디어를\n추가해 보세요!</string>
+    <string name="you_want_delete_member">회원 탈퇴 하시겠습니까?</string>
+    <string name="withdrawal">탈퇴</string>
 </resources>

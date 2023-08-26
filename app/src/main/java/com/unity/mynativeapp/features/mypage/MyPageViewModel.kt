@@ -4,13 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.GsonBuilder
-import com.unity.mynativeapp.features.diary.DiaryViewModel
 import com.unity.mynativeapp.model.MemberPageResponse
-import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +21,7 @@ open class MyPageViewModel: ViewModel() {
     val _myPageData = MutableLiveData<MemberPageResponse?>()
     val myPageData: LiveData<MemberPageResponse?> = _myPageData
 
-    val _logout = MutableLiveData(false)
+    val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
     fun myPageInfo(username: String) {
         _loading.postValue(true)

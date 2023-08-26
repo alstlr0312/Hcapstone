@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_black"
-    tools:context=".features.mypage.myposts.MyCommentsActivity">
+    android:background="@drawable/shape_gradient_black"
+    tools:context=".features.mypage.myposts.MyPostsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_appbar"

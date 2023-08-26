@@ -20,10 +20,10 @@ import java.util.regex.Pattern
 class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
     ActivityFindPwBinding::inflate) {
     private val viewModel by viewModels<FindViewModel>()
-    val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
-    val emailPattern = android.util.Patterns.EMAIL_ADDRESS
-    val pwCheck = arrayListOf(false, false)
-
+    private val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
+    private val emailPattern = android.util.Patterns.EMAIL_ADDRESS
+    private val pwCheck = arrayListOf(false, false)
+    private var firstStart = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,6 +33,13 @@ class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
     }
 
     private fun setView(){
+
+        val mode: String = intent.getStringExtra("mode")!!
+        binding.tvTitle.text = when(mode){
+            "find" -> {getString(R.string.find_password)}
+            "mode" -> {getString(R.string.change_password)}
+            else -> {getString(R.string.change_password)}
+        }
 
         binding.layoutEmail.visibility = View.VISIBLE
         binding.layoutCode.visibility = View.INVISIBLE
@@ -193,6 +200,12 @@ class FindPwActivity : BaseActivity<ActivityFindPwBinding>(
 
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
+        }
+    }
 
 }

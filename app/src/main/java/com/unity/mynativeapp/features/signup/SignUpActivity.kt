@@ -18,10 +18,10 @@ import java.util.regex.Pattern
 class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate){
     private val viewModel by viewModels<SignUpViewModel>()
 
-    val emailPattern = android.util.Patterns.EMAIL_ADDRESS
-    val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
-    val checkArr = arrayListOf(false, false, false, false)
-
+    private val emailPattern = android.util.Patterns.EMAIL_ADDRESS
+    private val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
+    private val checkArr = arrayListOf(false, false, false, false)
+    private var firstStart = true
     lateinit var dialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,10 +55,6 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding
 
         binding.btnBack.setOnClickListener {
             finish()
-        }
-
-        binding.layoutMain.setOnClickListener {
-            this.hideKeyboard()
         }
 
         // 아이디 입력 이벤트
@@ -192,5 +188,11 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding
         }
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
+        }
+    }
 }

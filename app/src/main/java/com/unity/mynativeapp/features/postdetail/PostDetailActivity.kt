@@ -2,11 +2,14 @@ package com.unity.mynativeapp.features.postdetail
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.CheckBox
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
 import com.unity.mynativeapp.MyApplication.Companion.postCategoryKorHashMap
 import com.unity.mynativeapp.MyApplication.Companion.postExerciseTypeKorHashMap
@@ -15,6 +18,7 @@ import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostDetailBinding
 import com.unity.mynativeapp.features.comment.CommentActivity
 import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
+import com.unity.mynativeapp.features.mypage.MemberPageActivity
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 import com.unity.mynativeapp.model.CommentData
 import com.unity.mynativeapp.model.PostWriteRequest
@@ -28,8 +32,8 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
     private var firstStart = true
     private val viewModel by viewModels<PostDetailViewModel>()
     private var postId = -1
-    private var postLikeCnt = -1
     private var mine = false
+    private var postUserName: String? = null
     private lateinit var postData: PostWriteRequest
     private var tempMediaPathArr = arrayListOf<String>()
 
@@ -84,11 +88,14 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
         // 좋아요 체크박스
         binding.cbLike.setOnClickListener {
-            if (it is CheckBox) {
+            if (it is AppCompatCheckBox) {
                 viewModel.like(postId, !(it.isChecked)) // 좋아요 요청
+                Log.d(TAG, "it.isChecked=${it.isChecked}")
+                // isChecked = true -> 좋아요 요청 (clicked=false)
+                // isChecked = false -> 좋아요 취소 요청 (clicked=true)
             }
-
         }
+
         // 메뉴 설정
         binding.ivMenu.setOnClickListener {
             registerForContextMenu(it)
@@ -122,13 +129,21 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 binding.tvPostCatory.text = postExerciseTypeKorHashMap[data.workOutCategory]
 
                 // 게시글 유저이름, 타이틀, 내용 설정
+                postUserName = data.username
                 binding.tvUsername.text = data.username
                 binding.tvPostTitle.text = data.title
                 binding.tvPostContent.text = data.content
 
+                Glide.with(binding.ivProfileImg)
+                    .load(data.profileImage)
+                    .placeholder(R.drawable.ic_profile_photo_base)
+                    .error(R.drawable.ic_profile_photo_base)
+                    .fallback(R.drawable.ic_profile_photo_base)
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(binding.ivProfileImg)
+
                 // 좋아요 수, 댓글 수, 조회수 설정
-                postLikeCnt = data.likeCount
-                binding.tvLikeCnt.text = postLikeCnt.toString()
+                binding.tvLikeCnt.text = data.likeCount.toString()
                 binding.tvCommentCnt.text = data.commentCount.toString()
                 binding.tvViewsCnt.text = data.views.toString()
 
@@ -173,15 +188,17 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         }
 
         // 좋아요
-        viewModel.likePressed.observe(this){
-            if(it){
-                if(binding.cbLike.isChecked){
-                    postLikeCnt++
-                }else{
-                    postLikeCnt--
-                }
-                binding.tvLikeCnt.text = postLikeCnt.toString()
+        viewModel.likePressed.observe(this){ isSuccess ->
+            if(!isSuccess)return@observe
+
+            var likeCnt: Int = binding.tvLikeCnt.text.toString().toInt()
+            if(binding.cbLike.isChecked){ // 좋아요
+                likeCnt++
+            }else{ // 좋아요 취소
+                likeCnt--
             }
+            binding.tvLikeCnt.text = likeCnt.toString()
+
         }
 
         viewModel.postDeleteSuccess.observe(this){
@@ -243,14 +260,11 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 val intent = Intent(this, PostWriteActivity::class.java)
                 intent.putExtra("editing", true)
                 intent.putExtra("postId", postId)
-
                 startActivity(intent)
             }
             R.id.menuDeletePost -> { // 내 게시글 삭제
-                // alert dialog
                 val dialog = SimpleDialog(this, getString(R.string.you_want_delete_post))
                 dialog.show()
-
                 dialog.setOnDismissListener {
                     if(dialog.resultCode == 1){
                         viewModel.postDelete(postId)
@@ -258,10 +272,17 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
                 }
             }
             R.id.menuAccusePost -> { // 타인의 게시글 신고
-                // 신고 이유 menu 선택
+                showAlertDialog(getString(R.string.notification_update_later))
             }
             R.id.menuSendMsg -> { // 게시글 주인에게 메시지 보내기
-
+                showAlertDialog(getString(R.string.notification_update_later))
+            }
+            R.id.menuMemberInfo -> { // 게시글 주인의 회원 정보 페이지로 이동
+                if(postUserName != null){
+                    val intent = Intent(this, MemberPageActivity::class.java)
+                    intent.putExtra("username", postUserName)
+                    startActivity(intent)
+                }
             }
             R.id.menuRefresh -> { // 게시글 새로고침
                 viewModel.getPostDetail(postId)
@@ -270,4 +291,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
         return super.onContextItemSelected(item)
     }
 
+    companion object {
+        const val TAG = "PostDetailActivityLog"
+    }
 }

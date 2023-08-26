@@ -1,6 +1,8 @@
 package com.unity.mynativeapp.features.comment
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -256,7 +258,11 @@ class ParentCommentRvAdapter(
                 val memberInfoItem = menu?.add(Menu.NONE, 1003, 4, "회원 정보")
 
                 commentAccuseItem?.setOnMenuItemClickListener {// 댓글 신고
-                    val dialog = SimpleDialog(context, "해당 기능은 추후 업데이트 될 예정입니다!")
+                    val dialog = AlertDialog.Builder(context)
+                        .setTitle(context.getString(R.string.notification))
+                        .setMessage("해당 기능은 추후 업데이트 될 예정입니다!")
+                        .setPositiveButton(context.getString(R.string.confirm)) { p0, _ -> p0.dismiss()}
+                        .create()
                     dialog.show()
 
                     true

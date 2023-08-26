@@ -26,6 +26,7 @@ const val EMAIL_DUPLICATE_ERROR = "이미 존재하는 이메일입니다."
 const val SAVE_COMPLETE = "저장되었습니다."
 const val EDIT_COMPLETE = "수정되었습니다."
 const val DELETE_COMPLETE = "삭제되었습니다."
+const val MEMBER_DELETE_COMPLETE = "회원 탈퇴하였습니다."
 const val POST_WRITE_COMPLETE = "게시글이 작성되었습니다."
 const val POST_EDIT_COMPLETE = "게시글이 수정되었습니다."
 
