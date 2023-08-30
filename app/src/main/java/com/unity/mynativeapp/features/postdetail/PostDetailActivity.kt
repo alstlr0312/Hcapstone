@@ -17,6 +17,7 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivityPostDetailBinding
 import com.unity.mynativeapp.features.comment.CommentActivity
+import com.unity.mynativeapp.features.comment.OnCommentClick
 import com.unity.mynativeapp.features.comment.ParentCommentRvAdapter
 import com.unity.mynativeapp.features.mypage.MemberPageActivity
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
@@ -25,7 +26,7 @@ import com.unity.mynativeapp.model.PostWriteRequest
 import com.unity.mynativeapp.network.util.SimpleDialog
 
 
-class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate) {
+class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostDetailBinding::inflate), OnCommentClick {
 
     private lateinit var mediaVpAdapter: MediaViewPagerAdapter // 게시물 미디어 어댑터
     private lateinit var commentRvAdapter: ParentCommentRvAdapter // 댓글 어댑터
@@ -64,7 +65,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
 
         // 게시물 댓글 리사이클러뷰
-        commentRvAdapter = ParentCommentRvAdapter(this)
+        commentRvAdapter = ParentCommentRvAdapter(this, this)
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         binding.rvPostComment.adapter = commentRvAdapter
         commentRvAdapter.setPostId(postId)
@@ -173,6 +174,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
                 // 댓글 있으면 화면에 보이기
                 if(data.comments.isNotEmpty()){
+                    commentRvAdapter.removeAllItem()
                     commentRvAdapter.getListFromView(data.comments as MutableList<CommentData>)
                 }
                 // 게시글 뷰 보이기
@@ -201,6 +203,7 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
         }
 
+        // 게시글 삭제
         viewModel.postDeleteSuccess.observe(this){
             if(it){ // 삭제 성공
                 finish()
@@ -209,15 +212,32 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
             }
         }
 
-        /*
+
         // 자식 댓글 조회
-        viewModel.commentGetData.observe(this) {data->
+        viewModel.commentGetData.observe(this){ data ->
             if(data != null && data.commentListDto.isNotEmpty()) {
+                // 자식 댓글만 조회한 경우 (답글 보기 클릭 또는 답글 작성)
                 commentRvAdapter.setChildComments(data.parentId!!, data.commentListDto)
             }
         }
-        */
 
+        // 부모 댓글 삭제
+        viewModel.parentCommentDeleteData.observe(this) { commentId ->
+            if(commentId==null){
+                commentRvAdapter.setCommentUnFocus()
+                return@observe
+            }
+            commentRvAdapter.setCommentDelete(commentId)
+        }
+
+        // 자식 댓글 삭제
+        viewModel.childCommentDeleteData.observe(this) { data ->
+            if(data.commentId==null){
+                commentRvAdapter.setChildCommentUnFocus(data.parentId)
+                return@observe
+            }
+            commentRvAdapter.setChildCommentDelete(data.commentId, data.parentId)
+        }
     }
 
     override fun onResume() {
@@ -293,5 +313,25 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
     companion object {
         const val TAG = "PostDetailActivityLog"
+    }
+
+    override fun parentCommentGetListener() {
+        viewModel.commentGet(postId, null, null, null, null)
+    }
+
+    override fun childCommentGetListener(parentId: Int) {
+        viewModel.commentGet(postId, parentId, null, null, null)
+    }
+
+    override fun writeChildComment(parentId: Int) {
+
+    }
+
+    override fun deleteParentCommentListener(commentId: Int) {
+        viewModel.commentDelete(commentId)
+    }
+
+    override fun deleteChileCommentListener(commentId: Int, parentId: Int) {
+        viewModel.commentDelete(commentId, parentId)
     }
 }

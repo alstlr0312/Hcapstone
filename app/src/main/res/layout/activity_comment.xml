@@ -118,37 +118,24 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <LinearLayout
-        android:id="@+id/layout_bottom"
+    <EditText
+        android:id="@+id/edt_send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center_vertical"
+        android:hint="@string/add_comment"
+        android:textColorHint="@color/main_gray"
+        android:textColor="@color/white"
+        android:textSize="16sp"
         android:background="@drawable/shape_edge_red_bg_black"
-        android:orientation="horizontal"
-        android:layout_marginBottom="1dp">
+        android:layout_weight="1"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="@dimen/fab_margin"
+        android:drawableTint="@color/main_red"
+        android:drawableEnd="@drawable/resize_ic_send"
+        android:drawablePadding="5dp"
+        android:layout_marginBottom="1dp"
+        android:layout_gravity="bottom"/>
 
-        <EditText
-            android:id="@+id/edt_add_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/add_comment"
-            android:textColorHint="@color/main_gray"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="@dimen/fab_margin"/>
 
-        <ImageView
-            android:id="@+id/btn_send_comment"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_send"
-            app:tint="@color/main_red_light"
-            android:layout_gravity="bottom"
-            android:layout_margin="@dimen/fab_margin"/>
-
-    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

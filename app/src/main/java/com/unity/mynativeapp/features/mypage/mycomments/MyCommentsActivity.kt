@@ -120,6 +120,10 @@ class MyCommentsActivity : BaseActivity<ActivityMyCommentsBinding>(ActivityMyCom
         }
     }
 
+    override fun parentCommentGetListener() {
+        TODO("Not yet implemented")
+    }
+
     override fun childCommentGetListener(parentId: Int) {
         viewModel.commentGet(null, parentId, username, null, null)
     }

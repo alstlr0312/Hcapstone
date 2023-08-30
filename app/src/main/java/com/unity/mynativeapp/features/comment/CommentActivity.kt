@@ -1,10 +1,12 @@
 package com.unity.mynativeapp.features.comment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,8 @@ import com.unity.mynativeapp.model.CommentWriteRequest
 import com.unity.mynativeapp.util.KeyboardVisibilityUtil
 
 interface OnCommentClick{
+
+    fun parentCommentGetListener()
     fun childCommentGetListener(parentId: Int)
     fun writeChildComment(parentId: Int)
     fun deleteParentCommentListener(commentId: Int)
@@ -35,6 +39,11 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         super.onCreate(savedInstanceState)
 
         postId = intent.getIntExtra("postId", -1)
+        val parentId = intent.getIntExtra("parentId", -1)
+        if(parentId != -1){
+            focusParentId = parentId
+        }
+
         setView()
         setUiEvent()
         subscribeUI()
@@ -47,45 +56,61 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         binding.rvPostComment.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         binding.rvPostComment.adapter = commentRvAdapter
         commentRvAdapter.setPostId(postId)
+        if(focusParentId != null){
+            commentRvAdapter.setFocusId(focusParentId!!)
+        }
+
 
         // 전체 댓글 조회 요청
         viewModel.commentGet(postId, null, null, null, null)
 
-        binding.edtAddComment.requestFocus() // edt 포커스
-        showKeyBoard(binding.edtAddComment) // 키보드 올리기
+        binding.edtSendComment.requestFocus() // edt 포커스
+        //showKeyBoard(binding.edtSendComment)// 키보드 올리기
 
     }
 
-
-    private fun setUiEvent(){
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUiEvent() {
 
         binding.ivBack.setOnClickListener {
             finish()
         }
 
-        // 댓글 추가
-        binding.btnSendComment.setOnClickListener {
-            if(binding.edtAddComment.text.toString() != ""){
 
-                viewModel.commentWrite(CommentWriteRequest(
-                    postId,
-                    binding.edtAddComment.text.toString(),
-                    focusParentId
-                ))
+        // 댓글 작성
+        binding.edtSendComment.setOnTouchListener { _, event ->
+            when (event?.action) {
 
+                MotionEvent.ACTION_UP -> {
+                    binding.edtSendComment.requestFocus()
+                    showKeyBoard(binding.edtSendComment)
+                    if (event.rawX >= (binding.edtSendComment.right
+                                - binding.edtSendComment.compoundDrawables[2].bounds.width())
+                    ) {
+                        viewModel.commentWrite(CommentWriteRequest(
+                            postId,
+                            binding.edtSendComment.text.toString(),
+                            focusParentId
+                        ))
+                    }
+                }
             }
+            true
         }
 
         keyboardVisibilityUtil = KeyboardVisibilityUtil(window,
             onShowKeyboard = {
+                keyBoardIsShowing = true
                 binding.root.run {
                     //키보드 올라왔을때 원하는 동작
                 }
             },
             onHideKeyboard = {
                 binding.root.run {
+                    keyBoardIsShowing = false
+
                     //키보드 내려갔을때 원하는 동작
-                    if(focusParentId != null){
+                    if (focusParentId != null) {
                         focusParentId = null
                         commentRvAdapter.setCommentUnFocus()
                     }
@@ -93,10 +118,15 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             }
         )
 
+
         // 댓글 새로 고침
         binding.ivRefresh.setOnClickListener {
             viewModel.commentGet(postId, null, null, null, null) // 댓글 전체 조회
         }
+
+
+
+
     }
 
 
@@ -122,7 +152,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             //viewModel.commentGet(postId, focusParentId, null, null, null) // 댓글 다시 전체 조회
 
             hideKeyBoard()
-            binding.edtAddComment.setText("")
+            binding.edtSendComment.setText("")
 
         }
 
@@ -173,6 +203,10 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
     }
 
 
+    override fun parentCommentGetListener() {
+        viewModel.commentGet(postId, null, null, null, null)
+    }
+
     // 자식 댓글 조회 요청
     override fun childCommentGetListener(parentId: Int) {
         viewModel.commentGet(postId, parentId, null, null, null)
@@ -180,9 +214,8 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
 
     override fun writeChildComment(parentId: Int) {
         focusParentId = parentId
-        binding.edtAddComment.requestFocus()
-
-        showKeyBoard(binding.edtAddComment)
+        binding.edtSendComment.requestFocus()
+        showKeyBoard(binding.edtSendComment)
     }
 
     override fun deleteParentCommentListener(commentId: Int) {
@@ -191,6 +224,10 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
 
     override fun deleteChileCommentListener(commentId: Int, parentId: Int) {
         viewModel.commentDelete(commentId, parentId)
+    }
+
+    companion object {
+        const val TAG = "CommentActivityLog"
     }
 
 }

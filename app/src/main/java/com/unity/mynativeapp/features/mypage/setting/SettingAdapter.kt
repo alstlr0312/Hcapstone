@@ -10,6 +10,12 @@ import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvBaseBinding
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
 import com.unity.mynativeapp.features.login.find.FindPwActivity
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity.Companion
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity.Companion.SETTING_TYPE_CHANGE_PW
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity.Companion.SETTING_TYPE_LEAVE
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity.Companion.SETTING_TYPE_LICENCE
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity.Companion.SETTING_TYPE_LOG_OUT
+import com.unity.mynativeapp.features.mypage.setting.SettingActivity.Companion.SETTING_TYPE_USE_GUIDE
 import com.unity.mynativeapp.features.postdetail.PostDetailActivity
 import com.unity.mynativeapp.model.BaseRvItem
 import com.unity.mynativeapp.model.PostItem
@@ -27,13 +33,13 @@ class SettingAdapter(val context: Context, val listener: OnSettingClick): Recycl
             binding.ivIcon.setImageResource(item.icon)
             binding.tvTitle.text = item.title
             binding.root.setOnClickListener {
-                when(adapterPosition){
-                    0 -> { // 비밀번호 변경
+                when(item.type){
+                    SETTING_TYPE_CHANGE_PW -> { // 비밀번호 변경
                         val intent = Intent(context, FindPwActivity::class.java)
                         intent.putExtra("mode", "change")
                         context.startActivity(intent)
                     }
-                    1 -> { // 로그 아웃
+                    SETTING_TYPE_LOG_OUT -> { // 로그 아웃
                         val dialog = SimpleDialog(context, context.getString(R.string.you_want_log_out))
                         dialog.show()
                         dialog.setOnDismissListener {
@@ -42,7 +48,7 @@ class SettingAdapter(val context: Context, val listener: OnSettingClick): Recycl
                             }
                         }
                     }
-                    2 -> { // 회원 탈퇴
+                    SETTING_TYPE_LEAVE -> { // 회원 탈퇴
                         val alertDialog = SimpleDialog(context, context.getString(R.string.you_want_delete_member))
                         alertDialog.show()
                         alertDialog.setOnDismissListener {
@@ -57,9 +63,11 @@ class SettingAdapter(val context: Context, val listener: OnSettingClick): Recycl
                             }
                         }
                     }
-                    3 -> { // 이용 가이드
+                    SETTING_TYPE_USE_GUIDE -> { // 이용 가이드
+
                     }
-                    4 -> { // 오픈소스 라이선스
+                    SETTING_TYPE_LICENCE -> { // 오픈소스 라이선스
+
                     }
 //                    5 -> { // 알림, 채팅
 //                    }

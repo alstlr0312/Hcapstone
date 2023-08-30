@@ -26,7 +26,7 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
     private var getPostIsFirst = true
     private var getPostHasNext = false
     private var currentPage = 0
-    private val pageSize = 20
+    private val pageSize = 30
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +43,7 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
 
             // 게시물 필터 설정
             layoutFilter.setOnClickListener {
-                var dialog = PostSortDialog(requireContext())
+                val dialog = PostSortDialog(requireContext())
                 dialog.show()
 
                 dialog.setOnDismissListener {
@@ -70,7 +70,8 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
                         }
 
                         binding.tvFilter.text = btnStr
-                        viewModel.community(postType, workOutCategory, null, currentPage, pageSize)
+                        //viewModel.community(postType, workOutCategory, null, null, null)
+                        viewModel.community("Q_AND_A", "HEALTH", null, null, null)
                     }
                 }
             }
@@ -135,7 +136,8 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
     override fun onResume() {
         super.onResume()
         postingRvAdapter.removeAllItem()
-        viewModel.community(postType, workOutCategory, null, currentPage, pageSize)
+        //viewModel.community(postType, workOutCategory, null, null, null)
+        viewModel.community("Q_AND_A", "HEALTH", null, null, null)
     }
 
 }

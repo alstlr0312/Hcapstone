@@ -22,15 +22,15 @@ data class ChildDeleteData(
     val commentId: Int?,
     val parentId: Int
 )
-class CommentViewModel : ViewModel() {
+open class CommentViewModel : ViewModel() {
 
-    private val _toastMessage = MutableLiveData<String>()
+    val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    private val _loading = MutableLiveData<Boolean>()
+    val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _logout = MutableLiveData<Boolean>()
+    val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
 
     private val _commentGetData = MutableLiveData<CommentGetResponse?>()

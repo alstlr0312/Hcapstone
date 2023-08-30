@@ -30,11 +30,11 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(ActivitySettingBind
 
     private fun setSettingList(): ArrayList<BaseRvItem>{
         val list = arrayListOf<BaseRvItem>()
-        list.add(BaseRvItem(R.drawable.ic_password, getString(R.string.change_password)))
-        list.add(BaseRvItem(R.drawable.ic_logout, getString(R.string.logout)))
-        list.add(BaseRvItem(R.drawable.ic_leave, getString(R.string.delete_member)))
-        list.add(BaseRvItem(R.drawable.ic_infomation, getString(R.string.app_explain)))
-        list.add(BaseRvItem(R.drawable.ic_open_source, getString(R.string.open_source_license)))
+        list.add(BaseRvItem(SETTING_TYPE_CHANGE_PW, R.drawable.ic_password, getString(R.string.change_password)))
+        list.add(BaseRvItem(SETTING_TYPE_USE_GUIDE, R.drawable.ic_infomation, getString(R.string.app_explain)))
+        list.add(BaseRvItem(SETTING_TYPE_LICENCE, R.drawable.ic_open_source, getString(R.string.open_source_license)))
+        list.add(BaseRvItem(SETTING_TYPE_LOG_OUT, R.drawable.ic_logout, getString(R.string.logout)))
+        list.add(BaseRvItem(SETTING_TYPE_LEAVE, R.drawable.ic_leave, getString(R.string.delete_member)))
         //list.add(BaseRvItem(R.drawable.ic_notification, getString(R.string.notification)))
         //list.add(BaseRvItem(R.drawable.ic_comment_2, getString(R.string.chatting)))
 
@@ -100,5 +100,14 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(ActivitySettingBind
 
     override fun memberDeleteListener(pw: String) {
         viewModel.memberDelete(pw)
+    }
+
+    companion object {
+        const val TAG = "SettingActivityLog"
+        const val SETTING_TYPE_CHANGE_PW = 0
+        const val SETTING_TYPE_USE_GUIDE = 1
+        const val SETTING_TYPE_LICENCE = 2
+        const val SETTING_TYPE_LOG_OUT = 3
+        const val SETTING_TYPE_LEAVE = 4
     }
 }

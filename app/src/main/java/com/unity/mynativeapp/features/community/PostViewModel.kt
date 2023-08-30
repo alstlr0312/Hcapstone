@@ -1,7 +1,5 @@
 package com.unity.mynativeapp.features.community
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -69,6 +67,10 @@ class PostViewModel: ViewModel() {
                 _loading.postValue(false)
             }
         })
+    }
+
+    companion object{
+        const val TAG="PostViewModelLog"
     }
 
 }

@@ -107,7 +107,7 @@ class ChildCommentRvAdapter(val context: Context, listener: OnCommentClick, priv
                 itemList.removeAt(index)
                 setChildCommentUnFocus()
                 notifyItemRemoved(index)
-                return
+                break
             }
         }
     }

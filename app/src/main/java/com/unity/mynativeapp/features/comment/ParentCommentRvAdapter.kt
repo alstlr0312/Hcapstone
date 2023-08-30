@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.nfc.Tag
 import android.util.Log
 import android.view.*
 import androidx.recyclerview.widget.RecyclerView
@@ -16,13 +17,15 @@ import com.unity.mynativeapp.databinding.ItemRvParentCommentBinding
 import com.unity.mynativeapp.model.CommentData
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.features.mypage.MemberPageActivity
+import com.unity.mynativeapp.features.postdetail.PostDetailActivity
 import com.unity.mynativeapp.network.util.SimpleDialog
 
 class ParentCommentRvAdapter(
-    val context: Context, listener: OnCommentClick? = null
+    val context: Context, listener: OnCommentClick
 ): RecyclerView.Adapter<ParentCommentRvAdapter.ViewHolder>(), View.OnCreateContextMenuListener {
 
     private var postId = -1
+    private var focusParentId = -1
     private var parentList = mutableListOf<CommentData>()
     private val commentListener = listener
     private var childCommentAdapterList = mutableListOf<ChildCommentRvAdapter>()
@@ -49,36 +52,40 @@ class ParentCommentRvAdapter(
                 tvPostDate.text = commentItem.createdAt
                 tvCommentContext.text = commentItem.commentContext
 
-                if(commentItem.commentId == null){ // 게시글 상세조회 화면의 댓글
+                if(commentItem.commentId != null){
                     layoutInvisibleChildComment.visibility = View.GONE
                     layoutVisibleChildComment.visibility = View.GONE
 
-                }else{ // 댓글 화면의 댓글
+                    // 부모 댓글
+                    if(commentItem.childCount != -1) {
 
-                    // 답글 어댑터 설정
-                    val childCommentAdapter = ChildCommentRvAdapter(context, commentListener!!, commentItem.commentId)
-                    binding.rvChildComment.adapter = childCommentAdapter
-                    childCommentAdapterList.add(childCommentAdapter)
+                        if(!findChildAdapter(commentItem.commentId)){
+                            // 답글 어댑터 설정
+                            val childCommentAdapter =
+                                ChildCommentRvAdapter(context, commentListener, commentItem.commentId)
+                            binding.rvChildComment.adapter = childCommentAdapter
+                            childCommentAdapterList.add(childCommentAdapter)
+                        }
 
-                    if(commentItem.childCount > 0){ // 자식 댓글이 있으면
-                        layoutInvisibleChildComment.visibility = View.VISIBLE
-                        tvChildCommentNum.text = "${commentItem.childCount}개"
-                        layoutVisibleChildComment.visibility = View.GONE
-
-                    }else{
-                        layoutInvisibleChildComment.visibility = View.GONE
-                        layoutVisibleChildComment.visibility = View.GONE
-
+                        // 자식 댓글이 있다면
+                        if (commentItem.childCount > 0) {
+                            layoutInvisibleChildComment.visibility = View.VISIBLE
+                            tvChildCommentNum.text = "${commentItem.childCount}개"
+                            layoutVisibleChildComment.visibility = View.GONE
+                        }
                     }
+
                 }
 
             }
 
             if(adapterPosition == bgColorChangePos){
                 binding.root.background = ColorDrawable(context.getColor(R.color.main_red_dark))
+            }else if(commentItem.commentId == focusParentId){
+                longClickPos = adapterPosition
+                binding.root.background = ColorDrawable(context.getColor(R.color.main_red_dark))
             }else{
                 binding.root.background = ColorDrawable(Color.TRANSPARENT)
-
             }
 
             // 답글 보기 클릭
@@ -86,7 +93,7 @@ class ParentCommentRvAdapter(
 
                 val childNum = commentItem.childCount
                 if(childNum > 0) { // 부모 댓글에 자식 댓글이 있다면 자식 댓글 조회 요청
-                    commentItem.commentId?.let { it -> commentListener?.childCommentGetListener(it) }
+                    commentItem.commentId?.let { it -> commentListener.childCommentGetListener(it) }
                 }
                 it.visibility = View.GONE
                 binding.layoutVisibleChildComment.visibility = View.VISIBLE
@@ -146,7 +153,7 @@ class ParentCommentRvAdapter(
 
     // 부모 댓글 포커스 취소
     fun setCommentUnFocus(){
-        bgColorChangePos = -1
+        bgColorChangePos = -1; focusParentId = -1
         notifyItemChanged(longClickPos)
         longClickPos = -1
     }
@@ -192,9 +199,13 @@ class ParentCommentRvAdapter(
 
     // 자식 댓글 삭제
     fun setChildCommentDelete(commentId: Int, parentId: Int){
-        for(childAdapter in childCommentAdapterList){
+        for(childAdapterIdx in childCommentAdapterList.indices){
+            val childAdapter = childCommentAdapterList[childAdapterIdx]
             if(childAdapter.getParentId() == parentId){
                 childAdapter.setChildCommentDelete(commentId)
+                if(childAdapter.itemCount == 0){
+                    commentListener.parentCommentGetListener()
+                }
                 break
             }
         }
@@ -203,6 +214,19 @@ class ParentCommentRvAdapter(
 
     fun setPostId(id: Int){
         postId = id
+    }
+
+    fun setFocusId(id: Int){
+        focusParentId = id
+    }
+
+    fun findChildAdapter(parentId: Int): Boolean{
+        for(adapter in childCommentAdapterList){
+            if(parentId == adapter.getParentId()){
+                return true
+            }
+        }
+        return false
     }
 
     override fun onCreateContextMenu(
@@ -229,9 +253,24 @@ class ParentCommentRvAdapter(
 //                    notifyItemChanged(bgColorChangePos)
 //                    commentListener.writeChildComment(parentList[longClickPos].commentId!!)
 //                }
-                bgColorChangePos = longClickPos
-                notifyItemChanged(bgColorChangePos)
-                commentListener?.writeChildComment(parentList[longClickPos].commentId!!)
+                if(context is PostDetailActivity){
+                    Log.d("focusView", "postDetail")
+                    val intent = Intent(context, CommentActivity::class.java)
+                    intent.putExtra("postId", postId)
+                    intent.putExtra(
+                        "parentId",
+                        parentList[longClickPos].commentId
+                    ) // 대댓글 달기 위해 부모 댓글의 id 전달
+                    context.startActivity(intent)
+
+                }else if(context is CommentActivity){
+                    bgColorChangePos = longClickPos
+                    notifyItemChanged(bgColorChangePos)
+                    commentListener.writeChildComment(parentList[longClickPos].commentId!!)
+                    Log.d("longClick", "답글 달기 클릭: pos: $longClickPos, id: ${parentList[longClickPos].commentId}")
+                }
+
+
                 true
             }
 
@@ -245,7 +284,7 @@ class ParentCommentRvAdapter(
                     dialog.show()
                     dialog.setOnDismissListener {
                         if(dialog.resultCode == 1){ // 댓글 삭제 요청
-                            parentList[longClickPos].commentId?.let { commentListener?.deleteParentCommentListener(it) }
+                            parentList[longClickPos].commentId?.let { commentListener.deleteParentCommentListener(it) }
                         }else{
                             setCommentUnFocus()
                         }

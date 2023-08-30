@@ -20,25 +20,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PostDetailViewModel : ViewModel() {
-
-    private val _toastMessage = MutableLiveData<String>()
-    val toastMessage: LiveData<String> = _toastMessage
-
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
-
-    private val _logout = MutableLiveData<Boolean>()
-    val logout: LiveData<Boolean> = _logout
+class PostDetailViewModel : CommentViewModel() {
 
     private val _postDetailData = MutableLiveData<PostDetailResponse?>()
     val postDetailData: LiveData<PostDetailResponse?> = _postDetailData
 
     private val _postDeleteSuccess = MutableLiveData<Boolean>()
     val postDeleteSuccess: LiveData<Boolean> = _postDeleteSuccess
-
-    private val _mediaData = MutableLiveData<ResponseBody?>()
-    val mediaData: MutableLiveData<ResponseBody?> = _mediaData
 
     private val _likePressed = MutableLiveData<Boolean>()
     val likePressed: MutableLiveData<Boolean> = _likePressed

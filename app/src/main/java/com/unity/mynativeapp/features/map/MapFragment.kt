@@ -174,7 +174,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
         return addressResult
     }
     //주소 좌표 변환
-    fun getLocationFromAddress(strAddress: String): LatLng? {
+    private fun getLocationFromAddress(strAddress: String): LatLng? {
         val geoCoder = Geocoder(requireContext(), Locale.KOREA)
         val address: List<Address>?
         var p1: LatLng? = null
