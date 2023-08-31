@@ -1,5 +1,6 @@
 package com.unity.mynativeapp.config
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -16,9 +17,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.viewbinding.ViewBinding
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
+import com.unity.mynativeapp.databinding.ActivityCommentBinding
 import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
 import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
@@ -88,10 +91,7 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
 
-        //val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        //imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-
-        if (ev?.action == MotionEvent.ACTION_DOWN) {
+        if (ev?.action == MotionEvent.ACTION_DOWN && binding !is ActivityCommentBinding ) {
             val v: View? = currentFocus
             if (v is EditText) {
                 val outRect = Rect()
@@ -99,13 +99,19 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
                 if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
                     v.clearFocus()
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
                 }
             }
         }
 
         return super.dispatchTouchEvent(ev)
     }
+
+
+
+
+
+
 
 
 

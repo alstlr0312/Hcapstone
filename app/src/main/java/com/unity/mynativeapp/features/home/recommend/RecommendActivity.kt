@@ -1,9 +1,13 @@
 package com.unity.mynativeapp.features.home.recommend
 
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.NumberPicker
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -211,5 +215,4 @@ class RecommendActivity : BaseActivity<ActivityRecommendBinding>(ActivityRecomme
 
         }
     }
-
 }

@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.oss.licenses.OssLicensesActivity
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvBaseBinding
 import com.unity.mynativeapp.databinding.ItemRvPostingBinding
@@ -67,7 +69,9 @@ class SettingAdapter(val context: Context, val listener: OnSettingClick): Recycl
 
                     }
                     SETTING_TYPE_LICENCE -> { // 오픈소스 라이선스
-
+                        OssLicensesMenuActivity.setActivityTitle(context.getString(R.string.open_source_license))
+                        val intent = Intent(context, OssLicensesMenuActivity::class.java)
+                        context.startActivity(intent)
                     }
 //                    5 -> { // 알림, 채팅
 //                    }
