@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.comment
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
 import android.renderscript.ScriptGroup.Input
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.unity.mynativeapp.R
@@ -68,6 +70,27 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         //showKeyBoard(binding.edtSendComment)// 키보드 올리기
 
     }
+/*
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            val v: View? = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                val btmView = binding.layoutBottom as View
+                btmView.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                    v.clearFocus()
+                    Log.d("focusView", "here")
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(btmView.windowToken, 0)
+                }
+            }
+        }
+        return true
+    }
+
+ */
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUiEvent() {
@@ -76,17 +99,28 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             finish()
         }
 
-
         // 댓글 작성
+        binding.btnSendComment.setOnClickListener{
+            if(binding.edtSendComment.text.toString() != ""){
+                viewModel.commentWrite(CommentWriteRequest(
+                    postId,
+                    binding.edtSendComment.text.toString(),
+                    focusParentId
+                ))
+            }
+        }
+/*
         binding.edtSendComment.setOnTouchListener { _, event ->
             when (event?.action) {
-
                 MotionEvent.ACTION_UP -> {
-                    binding.edtSendComment.requestFocus()
-                    showKeyBoard(binding.edtSendComment)
+                    if(!keyBoardIsShowing){
+                        binding.edtSendComment.requestFocus()
+                        showKeyBoard(binding.edtSendComment)
+                    }
                     if (event.rawX >= (binding.edtSendComment.right
                                 - binding.edtSendComment.compoundDrawables[2].bounds.width())
                     ) {
+                        Log.d("focusView", "clicked")
                         viewModel.commentWrite(CommentWriteRequest(
                             postId,
                             binding.edtSendComment.text.toString(),
@@ -97,6 +131,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             }
             true
         }
+ */
 
         keyboardVisibilityUtil = KeyboardVisibilityUtil(window,
             onShowKeyboard = {
@@ -123,13 +158,7 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
         binding.ivRefresh.setOnClickListener {
             viewModel.commentGet(postId, null, null, null, null) // 댓글 전체 조회
         }
-
-
-
-
     }
-
-
 
     private fun subscribeUI(){
 
@@ -149,7 +178,6 @@ class CommentActivity : BaseActivity<ActivityCommentBinding>(ActivityCommentBind
             if(!it) return@observe
 
             viewModel.commentGet(postId, null, null, null, null) // 댓글 다시 전체 조회
-            //viewModel.commentGet(postId, focusParentId, null, null, null) // 댓글 다시 전체 조회
 
             hideKeyBoard()
             binding.edtSendComment.setText("")

@@ -70,8 +70,8 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
                         }
 
                         binding.tvFilter.text = btnStr
-                        //viewModel.community(postType, workOutCategory, null, null, null)
-                        viewModel.community("Q_AND_A", "HEALTH", null, null, null)
+                        viewModel.community(postType, workOutCategory, null, null, null)
+                        //viewModel.community("Q_AND_A", null, null, null, null)
                     }
                 }
             }
@@ -136,8 +136,8 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
     override fun onResume() {
         super.onResume()
         postingRvAdapter.removeAllItem()
-        //viewModel.community(postType, workOutCategory, null, null, null)
-        viewModel.community("Q_AND_A", "HEALTH", null, null, null)
+        viewModel.community(postType, workOutCategory, null, null, null)
+        //viewModel.community("Q_AND_A", null, null, null, null)
     }
 
 }
