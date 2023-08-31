@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.network
 
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.BuildConfig
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -9,8 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-private const val baseUrl = "http://15.164.165.73:8080/"
-//private const val baseUrl = "https://yhthealth.duckdns.org:9077/"
 
 object RetrofitClient{
 
@@ -22,7 +21,7 @@ object RetrofitClient{
 		.build()
 
 	private val retrofit = Retrofit.Builder()
-		.baseUrl(baseUrl)
+		.baseUrl(BuildConfig.BASE_URL)
 		.client(okHttpClient)
 		//.addConverterFactory(ScalarsConverterFactory.create())
 		.addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
@@ -32,6 +31,5 @@ object RetrofitClient{
 
 	fun getApiService(): RetrofitService = retrofitService
 
-	fun getBaseUrl(): String = baseUrl
 }
 
