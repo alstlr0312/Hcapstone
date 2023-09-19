@@ -60,7 +60,6 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding>(ActivityPostD
 
         // 뷰페이저 인디케이터
         TabLayoutMediator(binding.tabLayout, binding.vpPostMedia){ tab, pos ->
-
         }.attach()
 
 

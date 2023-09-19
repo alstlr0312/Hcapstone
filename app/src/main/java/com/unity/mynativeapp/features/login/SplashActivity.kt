@@ -34,7 +34,9 @@ class SplashActivity : AppCompatActivity() {
         /**
          * accessToken이 존재하면 [BaseActivity], 아니면 로그인하도록 [LoginActivity]로 이동
          */
-        val nextActivity = if (accessToken != null) BaseActivity::class.java else LoginActivity::class.java
+        val nextActivity =
+            if (accessToken != null) BaseActivity::class.java
+            else LoginActivity::class.java
         startActivity(Intent(this, nextActivity))
         finish()
 

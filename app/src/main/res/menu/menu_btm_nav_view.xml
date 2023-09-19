@@ -24,7 +24,7 @@
         />
     <item
         android:id="@+id/menuMap"
-        android:title="AR"
+        android:title="Map"
         android:enabled="true"
         android:visible="true"
         android:icon="@drawable/sel_nav_map"
