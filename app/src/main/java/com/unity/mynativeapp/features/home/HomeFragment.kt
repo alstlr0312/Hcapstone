@@ -5,10 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,14 +20,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
+import com.unity.mynativeapp.databinding.ActivityRecommendBinding
 
 import com.unity.mynativeapp.databinding.FragmentHomeBinding
+import com.unity.mynativeapp.features.home.recommend.RecommendActivity
 
 import com.unity.mynativeapp.model.CalenderRvItem
 import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.SPFileName
 import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
 import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
@@ -45,50 +54,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
         todayDate = LocalDate.now()
         selectedDate = todayDate
 
+        binding.tvUsername.text = MyApplication.prefUtil.getString("username", "")
+
         calenderRvAdapter = CalenderRvAdapter(requireContext(), this)
         binding.recyclerViewCalendar.layoutManager = GridLayoutManager(context, 7)
         binding.recyclerViewCalendar.adapter = calenderRvAdapter
 
-
-        //setCalenderView()
-
-        //setListener()
+        // UI Event를 정리한 함수
+        setUiEvent()
 
         // viewModel의 Data를 Observe하는 이벤트 모음 함수
         subscribeUI()
 
-        // UI Event를 정리한 함수
-        setUiEvent()
+
     }
-    /*
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        //loadingDialog = LoadingDialog(requireContext())
 
-        todayDate = LocalDate.now()
-        selectedDate = todayDate
 
-        calenderRvAdapter = CalenderRvAdapter(requireContext())
-        binding.recyclerViewCalendar.layoutManager = GridLayoutManager(context, 7)
-        binding.recyclerViewCalendar.adapter = calenderRvAdapter
-
+    override fun onResume() {
+        super.onResume()
 
         setCalenderView()
-
-        //setListener()
-
-        // viewModel의 Data를 Observe하는 이벤트 모음 함수
-        subscribeUI()
-
-        // UI Event를 정리한 함수
-        setUiEvent()
-
-        return binding.root
     }
-
-     */
 
     fun setCalenderView(){
         binding.tvMonth.text = selectedDate.monthValue.toString() // 월
@@ -113,6 +99,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
             if(selectedDate.year==todayDate.year && selectedDate.monthValue==todayDate.monthValue)
                 selectedDate = todayDate
             setCalenderView()
+        }
+
+        // 추천 받기 화면으로 이동
+        binding.btnRecommend.setOnClickListener {
+            var recommendStr = ""
+            when(binding.rgPurpose.checkedRadioButtonId){
+                R.id.rb_routine -> { // 운동 루틴 추천
+                    recommendStr = "routine"
+                }
+                R.id.rb_food -> { // 식단 추천
+                    recommendStr = "food"
+                }
+            }
+
+            if(recommendStr != ""){
+                val intent = Intent(requireContext(), RecommendActivity::class.java)
+                intent.putExtra("recommend", recommendStr)
+                startActivity(intent)
+            }
+
         }
     }
 
@@ -197,13 +203,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
     override fun diaryDeleteListener(num: Int) {
         viewModel.diaryDelete(num)
     }
-    override fun onResume() {
-        super.onResume()
 
-        setCalenderView()
-
-
-    }
 
 }
 

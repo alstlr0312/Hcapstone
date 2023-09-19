@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.config.BaseActivity.Companion.DISMISS_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_TEXT_LOADING
 import com.unity.mynativeapp.features.login.LoginViewModel
 import com.unity.mynativeapp.model.*
 import com.unity.mynativeapp.network.MyError
@@ -13,19 +16,17 @@ import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
 import com.unity.mynativeapp.network.util.*
 
-import kotlinx.coroutines.NonDisposableHandle.parent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.regex.Pattern
 
 class SignUpViewModel : ViewModel() {
 
 	private val _toastMessage = MutableLiveData<String>()
 	val toastMessage: LiveData<String> = _toastMessage
 
-	private val _loading = MutableLiveData<Boolean>()
-	val loading: LiveData<Boolean> = _loading
+	private val _loading = MutableLiveData<Int>()
+	val loading: LiveData<Int> = _loading
 
 	private val _checkSuccess = MutableLiveData<Boolean>(false)
 	val checkSuccess: LiveData<Boolean> = _checkSuccess
@@ -33,18 +34,17 @@ class SignUpViewModel : ViewModel() {
 	private val _signupSuccess = MutableLiveData<Boolean>(false)
 	val signupSuccess: LiveData<Boolean> = _signupSuccess
 
-
 	private var checkCode = ""
 	fun check(email: String) {
 
-		_loading.postValue(true)
+		_loading.postValue(SHOW_LOADING)
 		postCheckAPI(email)
 	}
 
 	private fun postCheckAPI(email: String) {
-		RetrofitClient.getApiService().email(CheckRequest(email)).enqueue(object : Callback<MyResponse<CheckData>> {
-			override fun onResponse(call: Call<MyResponse<CheckData>>, response: Response<MyResponse<CheckData>>) {
-				_loading.postValue(false)
+		RetrofitClient.getApiService().emailCode(EmailCodeRequest(email)).enqueue(object : Callback<MyResponse<EmailCodeResponse>> {
+			override fun onResponse(call: Call<MyResponse<EmailCodeResponse>>, response: Response<MyResponse<EmailCodeResponse>>) {
+				_loading.postValue(DISMISS_LOADING)
 				val code = response.code()
 				if (code == 200) {
 					val data = response.body()?.data ?: return
@@ -59,14 +59,17 @@ class SignUpViewModel : ViewModel() {
 			}
 
 
-			override fun onFailure(call: Call<MyResponse<CheckData>>, t: Throwable) {
+			override fun onFailure(call: Call<MyResponse<EmailCodeResponse>>, t: Throwable) {
 				Log.e(TAG, "Error: ${t.message}")
-				_loading.postValue(false)
+				_loading.postValue(DISMISS_LOADING)
 			}
 		})
 	}
 
-	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String, code: String) {
+	fun signup(id: String, password: String, passwordCheck: String, email: String, nickname: String, field: String?, code: String) {
+
+		_loading.postValue(SHOW_TEXT_LOADING)
+
 		if (id.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return
@@ -97,9 +100,9 @@ class SignUpViewModel : ViewModel() {
 			return
 		}
 
-		RetrofitClient.getApiService().signup(checkCode, SignUpRequest(id, password, nickname, email)).enqueue(object : Callback<MyResponse<String>> {
+		RetrofitClient.getApiService().signup(checkCode, SignUpRequest(id, password, nickname, email, field)).enqueue(object : Callback<MyResponse<String>> {
 			override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-				_loading.postValue(false)
+				_loading.postValue(DISMISS_LOADING)
 
 				val code = response.code()
 				val data = response.body()?.data
@@ -127,7 +130,7 @@ class SignUpViewModel : ViewModel() {
 
 			override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
 				Log.e(LoginViewModel.TAG, "Error: ${t.message}")
-				_loading.postValue(false)
+				_loading.postValue(DISMISS_LOADING)
 			}
 		})
 	}

@@ -5,7 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.config.BaseActivity.Companion.DISMISS_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_LOADING
+import com.unity.mynativeapp.config.BaseActivity.Companion.SHOW_TEXT_LOADING
 import com.unity.mynativeapp.model.DiaryResponse
+import com.unity.mynativeapp.model.FeedbackPostureRequest
 import com.unity.mynativeapp.network.MyError
 import com.unity.mynativeapp.network.MyResponse
 import com.unity.mynativeapp.network.RetrofitClient
@@ -20,13 +24,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.URL
 
-class DiaryViewModel: ViewModel() {
+open class DiaryViewModel: ViewModel() {
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> = _toastMessage
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
+    private val _loading = MutableLiveData<Int>()
+    val loading: LiveData<Int> = _loading
 
     private val _logout = MutableLiveData<Boolean>(false)
     val logout: LiveData<Boolean> = _logout
@@ -43,11 +47,16 @@ class DiaryViewModel: ViewModel() {
     private val _diaryEditSuccess = MutableLiveData<Boolean>()
     val diaryEditSuccess: LiveData<Boolean> = _diaryEditSuccess
 
+    private val _diaryDeleteData = MutableLiveData<Int?>()
+    val diaryDeleteData: LiveData<Int?> = _diaryDeleteData
+
+    private val _postureFeedbackData = MutableLiveData<String?>()
+    val postureFeedbackData: MutableLiveData<String?> = _postureFeedbackData
 
 
     // 다이어리 작성
     fun diaryWrite(body: RequestBody, body1: MutableList<MultipartBody.Part>) {
-        _loading.postValue(true)
+        _loading.postValue(SHOW_TEXT_LOADING)
         postDiaryWrite(body,body1)
     }
 
@@ -55,7 +64,7 @@ class DiaryViewModel: ViewModel() {
         RetrofitClient.getApiService().postDiaryWrite(body,body1).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 if(code == 201){ // 다이어리 작성 성공
@@ -82,7 +91,7 @@ class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })
@@ -90,31 +99,32 @@ class DiaryViewModel: ViewModel() {
 
     // 다이어리 상세 조회
     fun diaryDetail(date: String) {
-        _loading.postValue(true)
+        _loading.postValue(SHOW_LOADING)
         getDiaryAPI(date)
     }
 
     private fun getDiaryAPI(date: String) {
         RetrofitClient.getApiService().getDiary(date).enqueue(object :
             Callback<MyResponse<DiaryResponse>> {
-            override fun onResponse(call: Call<MyResponse<DiaryResponse>>, response: Response<MyResponse<DiaryResponse>>) {
-                _loading.postValue(false)
+            override fun onResponse(
+                call: Call<MyResponse<DiaryResponse>>,
+                response: Response<MyResponse<DiaryResponse>>
+            ) {
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 Log.d(TAG, code.toString())
 
-                when(code) {
+                when (code) {
                     200 -> { // 다이어리 상세조회 성공
                         val data = response.body()?.data
                         Log.d(TAG, data.toString())
-                        data?.let {
-                            _diaryData.postValue(data)
-                        }
+                        _diaryData.postValue(data)
                     }
                     400 -> {//  실패
                         val body = response.errorBody()?.string()
                         val data = GsonBuilder().create().fromJson(body, MyError::class.java)
-                        _toastMessage.postValue(data.error.toString())
+                        Log.d(TAG, data.error.toString())
                         _diaryData.postValue(null)
                     }
                     401 -> {
@@ -129,53 +139,22 @@ class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<DiaryResponse>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-            }
-        })
-    }
-    fun media(num: Int) {
-        _loading.postValue(true)
-        getMediaAPI(num)
-    }
-
-    private fun getMediaAPI(num: Int) {
-        RetrofitClient.getApiService().getMedia(num).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                _loading.postValue(false)
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    _mediaData.postValue(data)
-
-                } else {
-                    // 응답이 실패한 경우 처리하는 코드 작성
-                    val body = response.errorBody()?.string()
-                    val data = GsonBuilder().create().fromJson(body, MyError::class.java)
-                    _toastMessage.postValue(data.error.toString())
-                }
-
-            }
-
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e(DiaryViewModel.TAG, "Error: ${t.message}")
-                _loading.postValue(false)
-
+                _loading.postValue(DISMISS_LOADING)
             }
         })
     }
 
     // 다이어리 수정
-    fun diaryEdit(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
-        _loading.postValue(true)
+    fun diaryEdit(diaryId: Int, diaryDto: RequestBody, files: MutableList<MultipartBody.Part>) {
+        _loading.postValue(SHOW_TEXT_LOADING)
         patchDiaryEditAPI(diaryDto,files, diaryId)
     }
 
     private fun patchDiaryEditAPI(diaryDto: RequestBody, files: MutableList<MultipartBody.Part>, diaryId: Int) {
-        RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto,files).enqueue(object :
+        RetrofitClient.getApiService().patchDiaryEdit(diaryId, diaryDto, files).enqueue(object :
             Callback<MyResponse<String>> {
             override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
                 val code = response.code()
                 if(code == 200){ // 다이어리 수정 성공
@@ -202,12 +181,51 @@ class DiaryViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
                 Log.e(TAG, "Error: ${t.message}")
-                _loading.postValue(false)
+                _loading.postValue(DISMISS_LOADING)
 
             }
         })
     }
 
+    // 운동 자극 피드백
+    fun postureFeedback(exerciseName: String, bodyPart: String) {
+        _loading.postValue(SHOW_LOADING)
+        postPostureFeedback(FeedbackPostureRequest(exerciseName, bodyPart))
+    }
+    private fun postPostureFeedback(body: FeedbackPostureRequest) {
+        RetrofitClient.getApiService().postFeedbackPosture(body).enqueue(object :
+            Callback<MyResponse<String>> {
+            override fun onResponse(call: Call<MyResponse<String>>, response: Response<MyResponse<String>>) {
+                _loading.postValue(DISMISS_LOADING)
+
+                val code = response.code()
+                when(code){
+                    200 -> {// 운동 자극 피드백 요청 성공
+                        val data = response.body()?.data
+                        _postureFeedbackData.postValue(data)
+                    }
+                    401 -> {// 존재하지 않는 유저
+                        Log.d(TAG, "$code 존재하지 않는 유저")
+                        _logout.postValue(true)
+                    }
+
+                    else -> {
+                        val body = response.errorBody()?.string()
+                        val data = GsonBuilder().create().fromJson(body, MyError::class.java)
+                        _toastMessage.postValue(data.error.toString())
+                        Log.d(TAG, "$code: ${data.error.toString()}")
+                    }
+                }
+
+            }
+
+            override fun onFailure(call: Call<MyResponse<String>>, t: Throwable) {
+                Log.e(TAG, "Error: ${t.message}")
+                _loading.postValue(DISMISS_LOADING)
+
+            }
+        })
+    }
 
 
     companion object {

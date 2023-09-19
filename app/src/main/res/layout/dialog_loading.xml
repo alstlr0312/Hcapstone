@@ -15,4 +15,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_loss_warning"
+        style="@style/SmallBoldTextStyle"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_constraintStart_toStartOf="@id/progress"
+        app:layout_constraintTop_toBottomOf="@id/progress"
+        app:layout_constraintEnd_toEndOf="@id/progress"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

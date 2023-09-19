@@ -1,4 +1,4 @@
-package com.unity.mynativeapp.features.ar;
+/*package com.unity.mynativeapp.features.ar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,7 +44,7 @@ public class MainUnityActivity extends OverrideUnityActivity {
         showMainActivity("");
     }
 
-   /* public void addControlsToUnityFrame() {
+   public void addControlsToUnityFrame() {
         UnityPlayerForActivityOrService layout = mUnityPlayer;
         {
             Button myButton = new Button(this);
@@ -99,7 +99,8 @@ public class MainUnityActivity extends OverrideUnityActivity {
                 }
             });
         }
-    }*/
+    }
 
 
 }
+*/

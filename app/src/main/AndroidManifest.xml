@@ -3,6 +3,7 @@
     package="com.unity.mynativeapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,27 +14,54 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher_foreground"
+        android:icon="@mipmap/ic_app_logo_round"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_app_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/Theme.Capstone"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
-
+        <activity
+            android:name=".features.mypage.mycomments.MyCommentsActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".features.mypage.MemberPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.mypage.setting.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.diary.FeedbackPostureActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.mypage.editprofile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.home.recommend.RecommendActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.mypage.myposts.MyPostsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.login.find.FindIdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.login.find.FindPwActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="uyhy60cpcq" />
+            android:value="${NAVER_CLIENT_ID}"/>
 
         <activity
             android:name=".features.media.MediaFullActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="behind"/>
         <activity
             android:name=".features.comment.CommentActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".features.postdetail.PostDetailActivity"
             android:exported="false" />
@@ -54,10 +82,10 @@
             android:exported="false" />
         <activity
             android:name=".features.login.SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -67,7 +95,8 @@
         </activity>
         <activity
             android:name=".features.BaseActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -84,9 +113,10 @@
             android:label="@string/app_name"
             android:process=":Unity"
             android:screenOrientation="fullSensor" />
+
         <activity
-            android:name=".features.ar.MapActivity"
-            android:exported="false" />
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

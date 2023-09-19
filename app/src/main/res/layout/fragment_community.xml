@@ -22,36 +22,40 @@
             app:contentScrim="@color/main_black"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/fab_margin"
+                android:layout_marginVertical="12dp">
                 <ImageView
                     android:id="@+id/iv_logo"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginVertical="13dp"
-                    android:src="@drawable/logo"/>
+                    android:layout_width="@dimen/logo_width"
+                    android:layout_height="@dimen/logo_height"
+                    android:src="@drawable/logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+                <TextView
+                    android:id="@+id/iv_exercise_community"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/exercise_community"
+                    style="@style/TitleTextStyle"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintStart_toEndOf="@id/iv_logo"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/line_red"/>
-            </LinearLayout>
-
-
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-
-
-        <ImageView
-            android:id="@+id/iv_exercise_community"
-            android:layout_width="210dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:src="@drawable/txt_exercise_community"
-            android:layout_gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_red"/>
 
         <LinearLayout
             android:id="@+id/layout_filter"
@@ -61,9 +65,7 @@
             android:paddingHorizontal="10dp"
             android:paddingVertical="3dp"
             android:layout_gravity="end"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_margin="@dimen/fab_margin"
             android:background="@drawable/shape_bg_red_rounded_10">
             <TextView
                 android:id="@+id/tv_filter"
@@ -103,7 +105,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_post"
         android:textColor="@color/main_gray_light2"
-        android:textSize="18sp"
+        style="@style/NormalTextStyle"
         android:visibility="invisible"
         android:layout_gravity="center"/>
 

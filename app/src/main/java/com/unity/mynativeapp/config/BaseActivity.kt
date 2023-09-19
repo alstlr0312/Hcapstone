@@ -1,19 +1,27 @@
 package com.unity.mynativeapp.config
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.viewbinding.ViewBinding
 import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.R
+import com.unity.mynativeapp.databinding.ActivityCommentBinding
 import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
 import com.unity.mynativeapp.network.util.X_REFRESH_TOKEN
@@ -27,6 +35,12 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
     lateinit var inputMethodManager: InputMethodManager
     var keyBoardIsShowing: Boolean = false
 
+
+    companion object {
+        const val SHOW_LOADING = 0
+        const val SHOW_TEXT_LOADING = 1
+        const val DISMISS_LOADING = 2
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = inflate(layoutInflater)
@@ -40,8 +54,8 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun showLoadingDialog(context: Context) {
-        loadingDialog = LoadingDialog(context)
+    fun showLoadingDialog(context: Context, title: String = "") {
+        loadingDialog = LoadingDialog(context, title)
         loadingDialog.show()
     }
 
@@ -51,9 +65,15 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
         }
     }
 
-    fun logout() {
+    fun logout(memberDelete: Boolean = false) {
+
         MyApplication.prefUtil.removeString(X_ACCESS_TOKEN)
         MyApplication.prefUtil.removeString(X_REFRESH_TOKEN)
+
+        if(memberDelete){ // 회원 탈퇴
+            MyApplication.prefUtil.removeString("id")
+            MyApplication.prefUtil.removeString("username")
+        }
 
         try {
             startActivity(
@@ -67,18 +87,57 @@ abstract class BaseActivity<B: ViewBinding>(private val inflate: (LayoutInflater
         }
     }
 
-    // 키보드 보이기
+    // 화면 터치시 키보드 숨기기
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+
+        if (ev?.action == MotionEvent.ACTION_DOWN && binding !is ActivityCommentBinding ) {
+            val v: View? = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
+        }
+
+        return super.dispatchTouchEvent(ev)
+    }
+
+
+
+
+
+
+
+
+
     fun hideKeyBoard(){
-        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        //inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
+    // 키보드 보이기
     fun showKeyBoard(edtText: EditText){
-        keyBoardIsShowing = inputMethodManager.showSoftInput(edtText, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        keyBoardIsShowing = inputMethodManager.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
+        //keyBoardIsShowing = inputMethodManager.showSoftInput(edtText, InputMethodManager.HIDE_IMPLICIT_ONLY)
 
     }
 
+    // alert dialog
+    fun showAlertDialog(message: String){
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.notification))
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.confirm)) { p0, _ -> p0.dismiss()}
+            .create()
+        dialog.show()
+    }
 
-    // 키보드 숨기기
 
 
     fun getRealPathFromUri(uri: Uri): String {

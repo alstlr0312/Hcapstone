@@ -24,10 +24,13 @@
         android:layout_height="45dp"
         android:src="@drawable/ic_add"
         app:tint="@color/white"
-        android:visibility="gone"
+        android:backgroundTint="@color/main_red"
         android:layout_margin="20dp"
         app:fabCustomSize="45dp"
         app:maxImageSize="35dp"
+        app:borderWidth="0dp"
+        android:tint="@null"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/frameLayout"
         app:layout_constraintEnd_toEndOf="parent"/>
 

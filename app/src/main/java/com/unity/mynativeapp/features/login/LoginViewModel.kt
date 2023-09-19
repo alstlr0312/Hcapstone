@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel : ViewModel() {
+open class LoginViewModel : ViewModel() {
 
 	private val _toastMessage = MutableLiveData<String>()
 	val toastMessage: LiveData<String> = _toastMessage
@@ -31,7 +31,7 @@ class LoginViewModel : ViewModel() {
 
 	fun login(id: String, password: String) {
 
-		// Email이 비어있을경우
+		// id가 비어있을경우
 		if (id.isEmpty()) {
 			_toastMessage.postValue(ID_EMPTY_ERROR)
 			return
@@ -59,15 +59,15 @@ class LoginViewModel : ViewModel() {
 				if(code == 200){ // 로그인 성공
 					val data = response.body()?.data
 
-					data?.let{
-						if(data.accessToken.isNotEmpty()){
-
-							MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
-							MyApplication.prefUtil.setString(X_REFRESH_TOKEN, data.refreshToken)
-							_toastMessage.postValue(LOGIN_SUCCESS)
-							_loginSuccess.postValue(true)
-						}
+					if(data != null){
+						MyApplication.prefUtil.setString("id", id)
+						MyApplication.prefUtil.setString(X_ACCESS_TOKEN, data.accessToken)
+						MyApplication.prefUtil.setString(X_REFRESH_TOKEN, data.refreshToken)
+						MyApplication.prefUtil.setString("username", data.username)
+						_toastMessage.postValue(LOGIN_SUCCESS)
+						_loginSuccess.postValue(true)
 					}
+
 				}else if(code == 401){// 로그인 실패
 					val body = response.errorBody()?.string()
 					val data = GsonBuilder().create().fromJson(body, MyError::class.java)
@@ -84,6 +84,7 @@ class LoginViewModel : ViewModel() {
 			}
 		})
 	}
+
 
 	companion object {
 		const val TAG = "LoginViewModel"

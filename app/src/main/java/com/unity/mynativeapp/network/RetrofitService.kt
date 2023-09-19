@@ -1,27 +1,46 @@
 package com.unity.mynativeapp.network
 
 import com.unity.mynativeapp.model.*
-import okhttp3.HttpUrl
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.net.URL
 
 interface RetrofitService {
 
+	// 이메일 인증 코드
 	@POST("email")
-	fun email(@Body CheckRequest: CheckRequest): Call<MyResponse<CheckData>>
+	fun emailCode(@Body codeRequest: EmailCodeRequest): Call<MyResponse<EmailCodeResponse>>
 
+	// 이메일 인증 코드 확인
+	@POST("email/check")
+	fun emailCheck(
+		@Query("code") code: String
+	): Call<MyResponse<String>>
+
+	// 로그인
 	@POST("signin")
 	fun login(@Body loginRequest: LoginRequest): Call<MyResponse<LoginData>>
 
+	// 회원가입
 	@POST("signup")
 	fun signup(
 		@Query("code") code: String,
 		@Body signUpRequest: SignUpRequest
 	) : Call<MyResponse<String>>
+
+	// 아이디 찾기
+	@GET("find/id")
+	fun getFindId(
+		@Query("code") code: String
+	): Call<MyResponse<String>>
+
+	// 비밀번호 찾기(비밀번호 변경)
+	@PATCH("find/pw")
+	fun patchFindPw(
+		@Body findPwRequest: FindPwRequest
+	): Call<MyResponse<String>>
 
 	// 토큰 재발급
 	@GET("/diary")
@@ -36,10 +55,10 @@ interface RetrofitService {
 	) : Call<MyResponse<HomeResponse>>
 
 	// 미디어 조회
-	@GET("/media/{num}")
-	fun getMedia(
-		@Path("num") num: Int
-	) : Call<ResponseBody>
+//	@GET("/media/{num}")
+//	fun getMedia(
+//		@Path("num") num: Int
+//	) : Call<ResponseBody>
 
 	/*
 	//////////////// 다이어리 ///////////////
@@ -83,6 +102,7 @@ interface RetrofitService {
 	fun getPost(
 		@Query("postType") postType: String?,
 		@Query("woryOutCategory") woryOutCategory: String?,
+		@Query("username") username: String?,
 		@Query("page") page: Int?,
 		@Query("size") size: Int?
 	) : Call<MyResponse<PostResponse>>
@@ -101,6 +121,20 @@ interface RetrofitService {
 		@Part imageFile: MutableList<MultipartBody.Part>
 	): Call<MyResponse<String>>
 
+	//게시글 수정
+	@Multipart
+	@PATCH("/post/edit/{postId}")
+	fun postPatchEdit(
+		@Path("postId") postId: Int,
+		@Part("writePostDto") writePostDto: RequestBody,
+		@Part imageFile: MutableList<MultipartBody.Part> // files
+	): Call<MyResponse<String>>
+
+	@PATCH("/post/delete/{postId}")
+	fun patchPostDelete(
+		@Path("postId") postId: Int,
+	): Call<MyResponse<String>>
+
 	// 좋아요
 	@PATCH("post/like")
 	fun patchPostLike(
@@ -111,19 +145,24 @@ interface RetrofitService {
 	/*
 	/////////// 댓글 ////////////////
 	 */
-	@GET("/comment")
+	@GET("/comment") // 댓글 조회
 	fun getComment(
-		@Query("postId") postId: Int,
+		@Query("postId") postId: Int?,
 		@Query("parentId") parent: Int?,
 		@Query("username") username: String?,
 		@Query("page") page: Int?,
 		@Query("size") size: Int?,
 	): Call<MyResponse<CommentGetResponse>>
 
-	@POST("/comment/write")
+	@POST("/comment/write") // 댓글 작성
 	fun postCommentWrite(
 		@Body commentWriteRequest: CommentWriteRequest
 	): Call<MyResponse<String>>
+
+	@PATCH("/comment/delete/{commentId}") // 댓글 삭제
+	fun patchCommentDelete(
+		@Path("commentId") commentId: Int,
+	): Call<MyResponse<Int>>
 
 	/*
 	//////////// 회원정보 ////////////////
@@ -134,7 +173,27 @@ interface RetrofitService {
 		@Query("username") username: String
 	): Call<MyResponse<MemberPageResponse>>
 
+	// 회원 정보 수정 전, 비밀 번호 검사
+	@POST("member/password/check")
+	fun postPasswordCheck(
+		@Body password: String
+	): Call<MyResponse<Int>>
 
+	// 회원 정보 수정
+	@Multipart
+	@PATCH("/member/edit")
+	fun patchMemberInfoEdit(
+		@Part("editMemberDto") editMemberDto: RequestBody,
+		@Part file: MultipartBody.Part?
+	): Call<MyResponse<String>>
+
+	// 회원 탈퇴
+	@PATCH("/member/delete")
+	fun patchMemberDelete(
+		@Body password: String
+	): Call<MyResponse<Int>>
+
+	////////////// 지도 /////////////////
 	//지도 체육관 가져오기
 	@GET("/api/exercise/seoul")
 	fun getMap(
@@ -142,4 +201,24 @@ interface RetrofitService {
 		@Query("offset") offset: Int,
 		@Query("limit") limit: Int
 	): Call<MyResponse<MapResponse>>
+
+
+	//////////// GPT ////////////////
+	// 운동 루틴 추천
+	@POST("/api/routines")
+	fun postRoutines(
+		@Body routineRequest: RoutineRequest
+	): Call<MyResponse<String>>
+
+	// 식단 추천
+	@POST("/api/diet")
+	fun postDietFood(
+		@Body dietFoodRequest: DietFoodRequest
+	): Call<MyResponse<String>>
+
+	///////// 운동 자극 피드백 ///////
+	@POST("/api/posture")
+	fun postFeedbackPosture(
+		@Body feedbackPostureRequest: FeedbackPostureRequest
+	): Call<MyResponse<String>>
 }

@@ -5,10 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.unity.mynativeapp.MyApplication
@@ -24,6 +27,12 @@ open class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @LayoutR
 
     lateinit var lodingDialog: LoadingDialog
     protected val binding get() = _binding!!
+
+    companion object {
+        const val SHOW_LOADING = 0
+        const val SHOW_TEXT_LOADING = 1
+        const val DISMISS_LOADING = 2
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = bind(super.onCreateView(inflater, container, savedInstanceState)!!)

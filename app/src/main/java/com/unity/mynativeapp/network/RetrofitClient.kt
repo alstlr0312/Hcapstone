@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.network
 
 import com.google.gson.GsonBuilder
+import com.unity.mynativeapp.BuildConfig
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -9,19 +10,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-private const val baseUrl = "https://you-have-to.duckdns.org/"
 
 object RetrofitClient{
 
 	private val okHttpClient = OkHttpClient.Builder()
-		.readTimeout(5000, TimeUnit.MILLISECONDS)
-		.connectTimeout(5000, TimeUnit.MILLISECONDS)
+		.readTimeout(30000, TimeUnit.MILLISECONDS)
+		.connectTimeout(30000, TimeUnit.MILLISECONDS)
 		.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 		.addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
 		.build()
 
 	private val retrofit = Retrofit.Builder()
-		.baseUrl(baseUrl)
+		.baseUrl(BuildConfig.BASE_URL)
 		.client(okHttpClient)
 		//.addConverterFactory(ScalarsConverterFactory.create())
 		.addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
@@ -31,6 +31,5 @@ object RetrofitClient{
 
 	fun getApiService(): RetrofitService = retrofitService
 
-	fun getBaseUrl(): String = baseUrl
 }
 

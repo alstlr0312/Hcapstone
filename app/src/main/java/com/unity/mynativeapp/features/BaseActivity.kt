@@ -11,11 +11,13 @@ import com.unity.mynativeapp.features.home.HomeFragment
 import com.unity.mynativeapp.features.mypage.MyPageFragment
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ActivityBaseBinding
+import com.unity.mynativeapp.features.map.MapFragment
 import com.unity.mynativeapp.features.postwrite.PostWriteActivity
 
 lateinit var homeFragment: HomeFragment
 lateinit var communityFragment: CommunityFragment
 lateinit var arFragment: ArFragment
+lateinit var mapFragment: MapFragment
 lateinit var mypageFragment: MyPageFragment
 
 class BaseActivity<T> : AppCompatActivity() {
@@ -44,6 +46,12 @@ class BaseActivity<T> : AppCompatActivity() {
                 R.id.menuAr -> {
                     arFragment = ArFragment()
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, arFragment).commitAllowingStateLoss()
+                    binding.btnWritePost.visibility = View.INVISIBLE
+                    true
+                }
+                R.id.menuMap -> {
+                    mapFragment = MapFragment()
+                    supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mapFragment).commitAllowingStateLoss()
                     binding.btnWritePost.visibility = View.INVISIBLE
                     true
                 }

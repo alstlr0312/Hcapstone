@@ -21,43 +21,29 @@
         app:contentScrim="@color/main_black"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_exercise_posting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exercise_posting"
+            style="@style/TitleTextStyle"
+            android:layout_marginVertical="@dimen/fab_margin"
+            android:layout_gravity="center"/>
 
-            <ImageView
-                android:id="@+id/iv_back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_arrow_left"
-                app:tint="@color/main_gray_light"
-                android:layout_marginStart="@dimen/fab_margin"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <ImageView
-                android:id="@+id/iv_logo"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginVertical="13dp"
-                android:src="@drawable/logo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/line_red"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white"
+            android:layout_gravity="center|end"/>
 
     </com.google.android.material.appbar.CollapsingToolbarLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_red"/>
     </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -68,95 +54,73 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/fab_margin">
 
-            <ImageView
-                android:id="@+id/iv_exercise_posting"
-                android:layout_width="180dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:src="@drawable/txt_exercise_posting"
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category"
+                style="@style/BoldTextStyle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="@id/view_spinner_post_category"/>
 
-            <LinearLayout
-                android:id="@+id/layout_spinner_post_style"
-                android:layout_width="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/view_spinner_post_category"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:background="@drawable/shape_edge_red_dark_rounded"
+                android:backgroundTint="@color/main_black_dark"
+                app:cardCornerRadius="5dp"
+                app:strokeColor="@color/main_red_light"
+                app:strokeWidth="1dp"
                 android:layout_marginStart="@dimen/fab_margin"
-                android:layout_marginEnd="60dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_exercise_posting">
-                <Spinner
-                    android:id="@+id/spinner_post_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown"
-                    android:layout_margin="2dp"
-                    android:backgroundTint="@color/main_red"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_spinner_post_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_edge_red_dark_rounded"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginStart="@dimen/fab_margin"
-                android:layout_marginEnd="60dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_spinner_post_style">
+                app:layout_constraintStart_toEndOf="@id/tv_category"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
                 <Spinner
                     android:id="@+id/spinner_post_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:spinnerMode="dropdown"
+                    android:popupBackground="@color/main_black_dark"
+                    android:layout_margin="2dp"
+                    android:backgroundTint="@color/main_red"
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_exercise_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exercise_type"
+                style="@style/BoldTextStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/view_spinner_post_type"
+                app:layout_constraintBottom_toBottomOf="@id/view_spinner_post_type"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/view_spinner_post_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:backgroundTint="@color/main_black_dark"
+                app:cardCornerRadius="5dp"
+                app:strokeColor="@color/main_red_light"
+                app:strokeWidth="1dp"
+                app:layout_constraintStart_toStartOf="@id/view_spinner_post_category"
+                app:layout_constraintTop_toBottomOf="@id/view_spinner_post_category"
+                app:layout_constraintEnd_toEndOf="parent">
+                <Spinner
+                    android:id="@+id/spinner_post_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:popupBackground="@color/main_black_dark"
+                    android:spinnerMode="dropdown"
                     android:layout_margin="2dp"
                     android:backgroundTint="@color/main_red"/>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/edt_post_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginHorizontal="@dimen/fab_margin"
-                android:hint="@string/please_input_title"
-                android:textColorHint="@color/main_gray"
-                android:textSize="16sp"
-                android:paddingHorizontal="@dimen/fab_margin"
-                android:paddingVertical="10dp"
-                android:textColor="@color/white"
-                android:background="@drawable/shape_edge_red_bg_black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_spinner_post_category"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <EditText
-                android:id="@+id/edt_post_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginHorizontal="@dimen/fab_margin"
-                android:hint="@string/please_input_text"
-                android:textColorHint="@color/main_gray"
-                android:textSize="16sp"
-                android:paddingHorizontal="@dimen/fab_margin"
-                android:paddingVertical="10dp"
-                android:textColor="@color/white"
-                android:maxLines="20"
-                android:lines="10"
-                android:lineSpacingExtra="3dp"
-                android:gravity="top"
-                android:background="@drawable/shape_edge_red_bg_black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edt_post_title"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_post_media"
@@ -166,12 +130,48 @@
                 android:layout_marginTop="@dimen/fab_margin"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edt_post_text"
+                app:layout_constraintTop_toBottomOf="@id/view_spinner_post_type"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <EditText
+                android:id="@+id/edt_post_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/please_input_title"
+                android:textColorHint="@color/main_gray"
+                android:textColor="@color/white"
+                style="@style/NormalTextStyle"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:paddingHorizontal="@dimen/fab_margin"
+                android:paddingVertical="12dp"
+                android:maxLength="100"
+                android:background="@drawable/shape_edge_red_bg_black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_post_media"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
+            <EditText
+                android:id="@+id/edt_post_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginBottom="80dp"
+                android:hint="@string/please_input_text"
+                android:textColorHint="@color/main_gray"
+                android:textColor="@color/white"
+                style="@style/NormalTextStyle"
+                android:paddingHorizontal="@dimen/fab_margin"
+                android:paddingVertical="12dp"
+                android:minLines="10"
+                android:maxLength="1000"
+                android:lineSpacingExtra="3dp"
+                android:gravity="top"
+                android:background="@drawable/shape_edge_red_bg_black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_post_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
@@ -197,8 +197,8 @@
             android:layout_marginHorizontal="@dimen/fab_margin"
             android:background="@drawable/sel_btn_red_pressed"
             android:text="@string/post_up"
-            android:textColor="@color/main_gray_light"
-            android:textSize="18sp"/>
+            android:textColor="@color/white"
+            style="@style/TitleTextStyle"/>
 
     </LinearLayout>
 

@@ -3,15 +3,12 @@ package com.unity.mynativeapp.features.community
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.unity.mynativeapp.MyApplication.Companion.postTypeHashMap
-import com.unity.mynativeapp.MyApplication.Companion.workOutCategoryHashMap
+import com.unity.mynativeapp.MyApplication.Companion.postCategoryHashMap
+import com.unity.mynativeapp.MyApplication.Companion.postExerciseTypeHashMap
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentCommunityBinding
@@ -29,7 +26,7 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
     private var getPostIsFirst = true
     private var getPostHasNext = false
     private var currentPage = 0
-    private val pageSize = 20
+    private val pageSize = 30
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,7 +43,7 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
 
             // 게시물 필터 설정
             layoutFilter.setOnClickListener {
-                var dialog = PostSortDialog(requireContext())
+                val dialog = PostSortDialog(requireContext())
                 dialog.show()
 
                 dialog.setOnDismissListener {
@@ -55,14 +52,14 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
 
                         if(dialog.checkedSortText != getString(R.string.total) && dialog.checkedSortText != null){
                             btnStr = btnStr + dialog.checkedSortText + " > "
-                            postType = postTypeHashMap[dialog.checkedSortText]
+                            postType = postCategoryHashMap[dialog.checkedSortText]
                         }else{
                             postType = null
                         }
 
                         if(dialog.checkedCateText != getString(R.string.total) && dialog.checkedCateText != null){
                             btnStr += dialog.checkedCateText
-                            workOutCategory = workOutCategoryHashMap[dialog.checkedCateText]
+                            workOutCategory = postExerciseTypeHashMap[dialog.checkedCateText]
                         }else{
                             btnStr = btnStr.split(" > ")[0]
                             workOutCategory = null
@@ -73,7 +70,8 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
                         }
 
                         binding.tvFilter.text = btnStr
-                        viewModel.community(postType, workOutCategory, currentPage, pageSize)
+                        viewModel.community(postType, workOutCategory, null, null, null)
+                        //viewModel.community("Q_AND_A", null, null, null, null)
                     }
                 }
             }
@@ -138,7 +136,8 @@ class CommunityFragment : BaseFragment<FragmentCommunityBinding>(
     override fun onResume() {
         super.onResume()
         postingRvAdapter.removeAllItem()
-        viewModel.community(postType, workOutCategory, currentPage, pageSize)
+        viewModel.community(postType, workOutCategory, null, null, null)
+        //viewModel.community("Q_AND_A", null, null, null, null)
     }
 
 }

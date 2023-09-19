@@ -1,42 +1,31 @@
 package com.unity.mynativeapp.features.signup
 
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.GsonBuilder
 import com.unity.mynativeapp.R
-
+import com.unity.mynativeapp.config.BaseActivity
 import com.unity.mynativeapp.databinding.ActivitySignUpBinding
-import com.unity.mynativeapp.features.BaseActivity
+import com.unity.mynativeapp.network.util.LOADING_LOSS_WARNING
 import com.unity.mynativeapp.network.util.LoadingDialog
 import com.unity.mynativeapp.network.util.hideKeyboard
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import org.json.JSONObject
-import java.io.IOException
 import java.util.regex.Pattern
 
 
-class SignUpActivity : AppCompatActivity(){
-    private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
+class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate){
     private val viewModel by viewModels<SignUpViewModel>()
 
-    val emailPattern = android.util.Patterns.EMAIL_ADDRESS
-    val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
-    val checkArr = arrayListOf(false, false, false, false)
-
+    private val emailPattern = android.util.Patterns.EMAIL_ADDRESS
+    private val pwPattern = Pattern.compile("^(?=.*([a-z].*[A-Z])|([A-Z].*[a-z]))(?=.*[0-9])(?=.*[\$@\$!%*#?&.])[A-Za-z[0-9]\$@\$!%*#?&.]{8,20}\$")
+    private val checkArr = arrayListOf(false, false, false, false)
+    private var firstStart = true
     lateinit var dialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         dialog = LoadingDialog(this)
 
@@ -57,17 +46,15 @@ class SignUpActivity : AppCompatActivity(){
             val pwCheck = binding.edtPasswordConfirm.text.toString()
             val name = binding.edtUsername.text.toString()
             val email = binding.edtEmail.text.toString()
+            var field: String? = binding.edtAddress.text.toString()
+            if (field == "") field = null
             val code = binding.edtAuthenticateCode.text.toString()
 
-            viewModel.signup(id, pw, pwCheck, email, name, code)
+            viewModel.signup(id, pw, pwCheck, email, name, field, code)
         }
 
         binding.btnBack.setOnClickListener {
             finish()
-        }
-
-        binding.layoutMain.setOnClickListener {
-            this.hideKeyboard()
         }
 
         // 아이디 입력 이벤트
@@ -171,8 +158,12 @@ class SignUpActivity : AppCompatActivity(){
         }
 
 
-        viewModel.loading.observe(this) { isLoading ->
-            if (isLoading) dialog.show() else dialog.dismiss()
+        viewModel.loading.observe(this) { type ->
+            when(type){
+                SHOW_LOADING -> showLoadingDialog(this)
+                SHOW_TEXT_LOADING -> showLoadingDialog(this, LOADING_LOSS_WARNING)
+                DISMISS_LOADING -> dismissLoadingDialog()
+            }
         }
 
         viewModel.checkSuccess.observe(this){ isSuccess ->
@@ -197,8 +188,11 @@ class SignUpActivity : AppCompatActivity(){
         }
 
     }
-
-
-
-
+    override fun onResume() {
+        super.onResume()
+        if(firstStart){
+            overridePendingTransition(R.drawable.anim_slide_in_right, R.drawable.anim_slide_out_left)
+            firstStart = false
+        }
+    }
 }

@@ -46,4 +46,5 @@ data class rowItem(
     @SerializedName("TRDSTATENM") val TRDSTATENM: String? = null,
     @SerializedName("BPLCNM") val BPLCNM: String? = null,
     @SerializedName("DTLSTATENM") val DTLSTATENM: String? = null,
+    @SerializedName("SITETEL") val SITELTEL: String? = null,
 )

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_black"
+    tools:context=".features.login.find.FindIdActivity">
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_arrow_left"
+        app:tint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/fab_margin"
+        android:text="@string/find_id"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/btn_back"
+        app:layout_constraintTop_toTopOf="@id/btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/btn_back"/>
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="130dp"
+        android:layout_height="65dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_find_by_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:text="이메일 인증"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo"/>
+
+    <LinearLayout
+        android:id="@+id/layout_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="@dimen/fab_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_find_by_email"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_edge_red_rounded"
+            android:hint="@string/input_email"
+            android:textColorHint="@color/main_gray"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp"
+            android:drawableStart="@drawable/ic_input_email"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/main_red_light"/>
+
+        <TextView
+            android:id="@+id/tv_warning_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_invalied_format"
+            android:textColor="@color/main_red_light"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:visibility="visible"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_email_authenticate"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/sel_btn_red_pressed"
+            android:text="@string/request_authenticate_code"
+            android:textColor="@color/main_gray_light"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/fab_margin"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="@dimen/fab_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_find_by_email"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/edt_authenticate_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_edge_red_rounded"
+            android:hint="@string/input_authenticate_code"
+            android:textColorHint="@color/main_gray"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp"
+            android:drawableStart="@drawable/ic_email_authenticate"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/main_red_light"/>
+
+        <TextView
+            android:id="@+id/tv_notification_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/please_input_email_code"
+            android:textColor="@color/main_red_light"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:visibility="visible"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_find"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/sel_btn_red_pressed"
+            android:text="@string/find_id"
+            android:textColor="@color/main_gray_light2"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/fab_margin"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_get_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_email"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_find"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="조회된 아이디"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_get_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_edge_red_rounded_10"
+            android:text="aaa"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:textIsSelectable="true"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

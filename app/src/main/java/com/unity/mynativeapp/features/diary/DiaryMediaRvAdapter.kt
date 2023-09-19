@@ -3,10 +3,6 @@ package com.unity.mynativeapp.features.diary
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,38 +11,41 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.ItemRvMediaBinding
 import com.unity.mynativeapp.features.media.MediaFullActivity
 import com.unity.mynativeapp.model.MediaRvItem
-import com.unity.mynativeapp.network.util.DeleteDialog
+import com.unity.mynativeapp.network.util.SimpleDialog
+import retrofit2.http.Url
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-
-class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class DiaryMediaRvAdapter(val context: Context, val listener: OnEditDiary): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private var itemList = mutableListOf<MediaRvItem>()
-    private var pathList = mutableListOf<String>()
 
-    // 다이어리 작성할 때 미디어 타입 -> Uri를 path로 변경하여 요청
+    // 다이어리 작성할 때 미디어 타입 -> Uri
     inner class ViewHolder_post(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    itemList.removeAt(adapterPosition)
-                    dialog.dismiss()
-                    notifyDataSetChanged()
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        notifyItemRemoved(adapterPosition)
+                        listener.diaryEditListener()
+                    }
                 }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
-                }
-
                 return@OnLongClickListener true
             }
         }
@@ -61,7 +60,7 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                 }
             }
 
-            setImage(uriItem.uri!!, binding)
+            binding.photo.setImageURI(uriItem.uri)
 
             binding.root.setOnClickListener {
                 val intent = Intent(context, MediaFullActivity::class.java)
@@ -73,40 +72,34 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    // 다이어리 상세조회할 때 받아서 출력하는 미디어 타입 -> bitmap
+    // 다이어리 상세조회할 때 받아서 출력하는 미디어 타입 -> URL
     inner class ViewHolder_get(val binding: ItemRvMediaBinding): RecyclerView.ViewHolder(binding.root){
         init{
             binding.root.setOnLongClickListener OnLongClickListener@{
-                var dialog = DeleteDialog(context, context.getString(R.string.delete_media))
+                val dialog = SimpleDialog(context, context.getString(R.string.you_want_delete_media))
                 dialog.show()
 
-                var btnYes = dialog.findViewById<TextView>(R.id.btn_yes)
-                var btnNo = dialog.findViewById<TextView>(R.id.btn_no)
-
-                btnYes.setOnClickListener {
-                    itemList.removeAt(adapterPosition)
-                    dialog.dismiss()
-                    notifyDataSetChanged()
-                }
-                btnNo.setOnClickListener {
-                    dialog.dismiss()
+                dialog.setOnDismissListener {
+                    if(dialog.resultCode == 1){
+                        itemList.removeAt(adapterPosition)
+                        notifyItemRemoved(adapterPosition)
+                        listener.diaryEditListener()
+                    }
                 }
 
                 return@OnLongClickListener true
             }
         }
-        fun bind_get(bitmapItem: MediaRvItem){
-            //val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            //binding.photo.setImageBitmap(bitmap)
+        fun bind_get(item: MediaRvItem){
 
-            bitmapItem.bitmap?.let{
-                when(bitmapItem.viewType){
+            item.url?.let{
+                when(item.viewType){
                     3 -> { // 사진
                         binding.iconPlay.visibility = View.GONE
                         binding.root.setOnClickListener {
                             val intent = Intent(context, MediaFullActivity::class.java)
-                            intent.putExtra("bitmap", bitmapItem.bitmap)
-                            intent.putExtra("viewType", bitmapItem.viewType)
+                            intent.putExtra("url", item.url)
+                            intent.putExtra("viewType", item.viewType)
                             context.startActivity(intent)
                         }
                     }
@@ -114,11 +107,9 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
                         binding.iconPlay.visibility = View.VISIBLE
                     }
                 }
+                binding.photo.setImageBitmap(item.bitmap)
 
-
-                setImage(it, binding)
             }
-
         }
     }
 
@@ -127,65 +118,56 @@ class DiaryMediaRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVi
             1 -> ViewHolder_post(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             2 -> ViewHolder_post(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             3 -> ViewHolder_get(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            4 -> ViewHolder_get(ItemRvMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw RuntimeException("DiaryMediaRvAdapter onCreateViewHolder ERROR")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is ViewHolder_post) itemList[position].uri?.let{holder.bind_post(itemList[position])}
-        else if(holder is ViewHolder_get) itemList[position].bitmap?.let{holder.bind_get(itemList[position])}
+        else if(holder is ViewHolder_get) itemList[position].url?.let{holder.bind_get(itemList[position])}
     }
 
     override fun getItemCount(): Int {
         return itemList.size
     }
 
-    fun addItem(media: MediaRvItem){
+    fun addItem(media: MediaRvItem) {
+        listener.diaryEditListener()
 
         itemList.add(media)
-        notifyDataSetChanged()
+        notifyItemChanged(itemCount-1)
     }
 
     fun getMediaList(): List<MediaRvItem>{
         return itemList
     }
 
-    fun getByteToPathList(): List<MediaRvItem>{
-        return itemList
+    fun setMediaList(mList: List<String>){
+        for(url in mList){ // url > bitmap 변환 후 리스트에 추가
+            Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        itemList.add(MediaRvItem(3, null, url, resource))
+                        notifyItemRemoved(itemCount-1)
+                    }
+                })
+        }
     }
+
     override fun getItemViewType(position: Int):Int {
-        if(itemList[position].viewType == 1)
-            return 1
+        return if(itemList[position].viewType == 1)
+            1
         else if(itemList[position].viewType == 2)
-            return 2
-        else return 3
+            2
+        else if(itemList[position].viewType == 3)
+            3
+        else 4
     }
 
-
-    fun getRealPathFromUri(uri: Uri): String {
-        val buildName = Build.MANUFACTURER
-        if(buildName.equals("Xiaomi")){
-            return uri.path!!
-        }
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, proj, null, null, null)
-        if(cursor!!.moveToFirst()){
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-        return result
-    }
-
-    private fun setImage(image: Any, binding: ItemRvMediaBinding){
-        Glide.with(binding.photo)
-            .load(image)
-            .placeholder(R.drawable.shape_bg_black_rounded)
-            .error(R.drawable.ic_image_failed)
-            .fallback(R.drawable.shape_bg_black_rounded)
-            .override(430, 430)
-            .apply(RequestOptions.centerCropTransform())
-            .into(binding.photo)
-    }
 }

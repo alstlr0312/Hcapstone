@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/list_item_bg"
+    app:cardElevation="5dp"
+    android:layout_marginHorizontal="@dimen/fab_margin"
+    android:layout_marginBottom="@dimen/fab_margin"
+    android:outlineSpotShadowColor="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="@dimen/fab_margin">
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="@dimen/appbar_icon_size"
+            android:layout_height="@dimen/appbar_icon_size"
+            android:src="@drawable/ic_password"
+            app:tint="@color/main_red_light"/>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="설정 아이템"
+            android:textColor="@color/main_gray_light"
+            style="@style/BoldTextStyle"
+            android:layout_marginHorizontal="@dimen/fab_margin"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

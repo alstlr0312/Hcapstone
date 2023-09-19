@@ -6,13 +6,15 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.unity.mynativeapp.MyApplication
 import com.unity.mynativeapp.R
 import com.unity.mynativeapp.config.BaseFragment
 import com.unity.mynativeapp.databinding.FragmentMypageBinding
 import com.unity.mynativeapp.model.MyPageRvItem
 import com.unity.mynativeapp.network.util.PreferenceUtil
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -23,23 +25,23 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
     private val viewModel by viewModels<MyPageViewModel>()
     private lateinit var myPageAdapter: MyPageAdapter
+    private lateinit var username: String
+    override fun onResume() {
+        super.onResume()
+        // 회원 정보 요청
+        viewModel.myPageInfo(username)
+
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myPageAdapter = MyPageAdapter(requireContext(), getRvItemList())
+        username = PreferenceUtil(requireContext()).getString("username", "")!!
+
+        myPageAdapter = MyPageAdapter(requireContext(), getRvItemList(), username)
         binding.rvMypage.adapter = myPageAdapter
 
         setUiEvent()
-
         subscribeUI()
-
-
-        val username = PreferenceUtil(requireContext()).getString("username", null)
-        if(username != null){
-            viewModel.myPageInfo(username)
-        }else{
-            showCustomToast("username is null")
-        }
     }
 
     private fun getRvItemList(): MutableList<MyPageRvItem>{
@@ -52,9 +54,8 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
     }
 
     private fun setUiEvent(){
-//        binding.appbarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-//            binding.rvMypage.alpha = (appBarLayout.totalScrollRange + verticalOffset).toFloat() / appBarLayout.totalScrollRange
-//        }
+
+
     }
 
     private fun subscribeUI() {
@@ -66,24 +67,22 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
             if (isLoading) showLoadingDialog(requireContext()) else dismissLoadingDialog()
         }
 
-        viewModel.logout.observe(viewLifecycleOwner){
-            if(it) logout()
+        viewModel.logout.observe(viewLifecycleOwner){ logout ->
+            if(!logout)return@observe
+            logout()
         }
 
         viewModel.myPageData.observe(viewLifecycleOwner) { data ->
             if(data==null) return@observe
 
             if(data.profileImage != null){
-                MainScope().async {
-                    val lastSegment = data.profileImage.substringAfterLast("/").toInt()
-                    viewModel.media(lastSegment)
-                    viewModel.mediaData.observe(viewLifecycleOwner) { data2 ->
-                        if (data2 != null) {
-                            Log.d("bodyPartsdfasd",data2.toString())
-                            val bitmap = BitmapFactory.decodeByteArray(data2.bytes(), 0, data2.bytes().size)
-                            binding.ivProfileImg.setImageBitmap(bitmap)
-                        }
-                    }
+                CoroutineScope(Dispatchers.Main).launch {
+                    Glide.with(binding.ivProfileImg)
+                        .load(data.profileImage)
+                        .placeholder(R.color.main_black)
+                        .error(R.drawable.ic_profile_photo_base)
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(binding.ivProfileImg)
                 }
             }else{
                 binding.ivProfileImg.setImageResource(R.drawable.ic_profile_photo_base)
@@ -91,8 +90,12 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
 
             binding.tvUsername.text = data.username
 
-            binding.layoutEmail.visibility = View.VISIBLE
-            binding.tvEmail.text = data.email
+            if(data.email != null){
+                binding.layoutEmail.visibility = View.VISIBLE
+                binding.tvEmail.text = data.email
+            }else{
+                binding.layoutEmail.visibility = View.GONE
+            }
 
             if(data.field != null){
                 binding.layoutField.visibility = View.VISIBLE
@@ -101,14 +104,16 @@ class MyPageFragment : BaseFragment<FragmentMypageBinding>(
                 binding.layoutField.visibility = View.GONE
             }
 
-            var date = data.createdAt
-            var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val date = data.createdAt
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             val dateTime: LocalDateTime = LocalDateTime.parse(date, formatter)
             val formatDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일에 가입함"))
             binding.tvStartDate.text = formatDate
             binding.layoutStartDate.visibility = View.VISIBLE
 
-            data.commentCount?.let { myPageAdapter.setCounts(data.postCount, it) }
+            // 게시글, 댓글 개수
+            myPageAdapter.setPostCounts(data.postCount)
+            data.commentCount?.let { myPageAdapter.setCmtCounts(data.commentCount)}
 
         }
     }
