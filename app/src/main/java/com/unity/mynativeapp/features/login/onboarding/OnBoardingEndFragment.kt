@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.unity.mynativeapp.MyApplication
+import com.unity.mynativeapp.R
 import com.unity.mynativeapp.databinding.FragmentOnBoardingEndBinding
 import com.unity.mynativeapp.features.login.onBoardingFragment
 import com.unity.mynativeapp.features.signup.SignUpActivity
@@ -21,7 +23,7 @@ class OnBoardingEndFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentOnBoardingEndBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -44,7 +46,7 @@ class OnBoardingEndFragment : Fragment() {
         //supportFragmentManager.beginTransaction().remove()
         if(activity != null){
             activity?.supportFragmentManager?.beginTransaction()?.remove(onBoardingFragment)?.commit()
-
+            activity?.findViewById<FrameLayout>(R.id.onBoardingLayout)?.visibility = View.INVISIBLE
         }else{
             Log.d("onboarding", "activity is null")
         }
