@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.1" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.unity.mynativeapp">
+    package="com.You.haveto">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.You.haveto.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,31 +23,31 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
         <activity
-            android:name=".features.mypage.mycomments.MyCommentsActivity"
+            android:name="com.You.haveto.features.mypage.mycomments.MyCommentsActivity"
             android:exported="false"/>
         <activity
-            android:name=".features.mypage.MemberPageActivity"
+            android:name="com.You.haveto.features.mypage.MemberPageActivity"
             android:exported="false" />
         <activity
-            android:name=".features.mypage.setting.SettingActivity"
+            android:name="com.You.haveto.features.mypage.setting.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".features.diary.FeedbackPostureActivity"
+            android:name="com.You.haveto.features.diary.FeedbackPostureActivity"
             android:exported="false" />
         <activity
-            android:name=".features.mypage.editprofile.ProfileActivity"
+            android:name="com.You.haveto.features.mypage.editprofile.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".features.home.recommend.RecommendActivity"
+            android:name="com.You.haveto.features.home.recommend.RecommendActivity"
             android:exported="false" />
         <activity
-            android:name=".features.mypage.myposts.MyPostsActivity"
+            android:name="com.You.haveto.features.mypage.myposts.MyPostsActivity"
             android:exported="false" />
         <activity
-            android:name=".features.login.find.FindIdActivity"
+            android:name="com.You.haveto.features.login.find.FindIdActivity"
             android:exported="false" />
         <activity
-            android:name=".features.login.find.FindPwActivity"
+            android:name="com.You.haveto.features.login.find.FindPwActivity"
             android:exported="false" />
 
         <meta-data
@@ -55,33 +55,33 @@
             android:value="${NAVER_CLIENT_ID}"/>
 
         <activity
-            android:name=".features.media.MediaFullActivity"
+            android:name="com.You.haveto.features.media.MediaFullActivity"
             android:exported="false"
             android:screenOrientation="behind"/>
         <activity
-            android:name=".features.comment.CommentActivity"
+            android:name="com.You.haveto.features.comment.CommentActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".features.postdetail.PostDetailActivity"
+            android:name="com.You.haveto.features.postdetail.PostDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".features.postwrite.PostWriteActivity"
+            android:name="com.You.haveto.features.postwrite.PostWriteActivity"
             android:exported="false" />
         <activity
-            android:name=".features.diary.DiaryActivity"
+            android:name="com.You.haveto.features.diary.DiaryActivity"
             android:exported="false" />
         <activity
-            android:name=".features.diary.AddExerciseActivity"
+            android:name="com.You.haveto.features.diary.AddExerciseActivity"
             android:exported="false" />
         <activity
-            android:name=".features.signup.SignUpActivity"
+            android:name="com.You.haveto.features.signup.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".features.login.LoginActivity"
+            android:name="com.You.haveto.features.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".features.login.SplashActivity"
+            android:name="com.You.haveto.features.login.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -94,7 +94,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".features.BaseActivity"
+            android:name="com.You.haveto.features.BaseActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <meta-data
@@ -102,12 +102,12 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".features.ar.MainActivity"
+            android:name="com.You.haveto.features.ar.MainActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".features.ar.MainUnityActivity"
+            android:name="com.You.haveto.features.ar.MainUnityActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
             android:hardwareAccelerated="false"
             android:label="@string/app_name"
