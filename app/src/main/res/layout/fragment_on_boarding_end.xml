@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.login.onboarding.OnBoardingEndFragment">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="헬스인 코멘트"
+        android:textColor="@color/main_red_light"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_review"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <ImageView
+            android:id="@+id/iv_reviewer1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/img_character_fg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_reviewer1_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="헬스 7년차\n전직 트레이너"
+            android:textColor="@color/main_red_light"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/iv_reviewer1"
+            app:layout_constraintStart_toStartOf="@id/iv_reviewer1"
+            app:layout_constraintTop_toBottomOf="@id/iv_reviewer1" />
+
+        <TextView
+            android:id="@+id/tv_reviewer1_content"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:background="@drawable/ic_speech_bubble_left"
+            android:backgroundTint="@color/main_red_bg"
+            android:lineSpacingExtra="2dp"
+            android:paddingVertical="15dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="20dp"
+            android:text="사람들이 부상 당하기 쉬운, 잘못된 자세를 보여주는 것이 초보자들에게 많은 도움이 될 것 같습니다."
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_reviewer1"
+            app:layout_constraintTop_toTopOf="@id/iv_reviewer1" />
+
+        <ImageView
+            android:id="@+id/iv_reviewer2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/img_character_fg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_reviewer1_name" />
+
+        <TextView
+            android:id="@+id/tv_reviewer2_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="헬스 5년차 B씨"
+            android:textColor="@color/main_red_light"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/iv_reviewer2"
+            app:layout_constraintStart_toStartOf="@id/iv_reviewer2"
+            app:layout_constraintTop_toBottomOf="@id/iv_reviewer2" />
+
+        <TextView
+            android:id="@+id/tv_reviewer2_content"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:background="@drawable/ic_speech_bubble_right"
+            android:backgroundTint="@color/main_red_bg"
+            android:lineSpacingExtra="2dp"
+            android:paddingVertical="15dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="30dp"
+            android:text="운동 부위의 수축과 이완에 따라 색깔을 통해 표현하는 것이 초보자들이 운동을 이해하는 데 도움을 줄 것으로 보입니다."
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/iv_reviewer2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_reviewer2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/line"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YouHaveTo"
+            android:textColor="@color/main_red_light"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="시작하기"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@color/main_red_light"
+        app:layout_constraintBottom_toTopOf="@id/layout_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/layout_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/sel_btn_red_pressed"
+            android:text="기존 회원(로그인)"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_sign_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/sel_btn_red_pressed"
+            android:text="신규 회원(회원가입)"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

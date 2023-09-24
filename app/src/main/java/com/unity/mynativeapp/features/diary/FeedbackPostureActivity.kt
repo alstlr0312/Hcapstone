@@ -32,8 +32,12 @@ class FeedbackPostureActivity : BaseActivity<ActivityFeedbackPostureBinding>(Act
         binding.tvExerciseName.text = intent.getStringExtra("exerciseName").toString()
 
         val bodyParts = intent.getStringExtra("bodyPart").toString()
-        if(bodyParts.isNotEmpty()){
-            selectedMuscleList = bodyParts.split(", ") as MutableList<String>
+        if(bodyParts.isNotEmpty()) {
+            if (bodyParts.contains(",")) {
+                selectedMuscleList = bodyParts.split(", ") as MutableList<String>
+            } else {
+                selectedMuscleList.add(bodyParts)
+            }
         }
         binding.tvSelectedMuscle.text = bodyParts
         setInitMuscleView()
@@ -181,10 +185,9 @@ class FeedbackPostureActivity : BaseActivity<ActivityFeedbackPostureBinding>(Act
         }
     }
 
-    private fun setSelectedMuscle(view: ImageView, muscleName: String){ // 0: add, 1: remove
+    private fun setSelectedMuscle(view: ImageView, muscleName: String){
 
         if(view.visibility == View.VISIBLE){
-
             when(muscleName){
                 getString(R.string.muscle_shoulder) -> {
                     binding.ivFrontShoulder.visibility = View.INVISIBLE

@@ -44,6 +44,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
+
+        binding.ivMapRefresh.setOnClickListener {
+            mapView.getMapAsync(this)
+        }
     }
 
     override fun onMapReady(@NonNull naverMap: NaverMap) {

@@ -1,6 +1,7 @@
 package com.unity.mynativeapp.features.login
 
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -19,14 +20,17 @@ import com.unity.mynativeapp.databinding.ActivityLoginBinding
 import com.unity.mynativeapp.features.diary.DiaryActivity
 import com.unity.mynativeapp.features.login.find.FindIdActivity
 import com.unity.mynativeapp.features.login.find.FindPwActivity
+import com.unity.mynativeapp.features.login.onboarding.OnBoardingFragment
 import com.unity.mynativeapp.features.signup.SignUpActivity
+import com.unity.mynativeapp.network.util.ON_BOARDING
 import com.unity.mynativeapp.network.util.PreferenceUtil
+import com.unity.mynativeapp.network.util.X_ACCESS_TOKEN
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
-
+lateinit var onBoardingFragment: OnBoardingFragment
 class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBinding>(
     ActivityLoginBinding::inflate) {
     private val viewModel by viewModels<LoginViewModel>()
@@ -35,6 +39,11 @@ class LoginActivity : com.unity.mynativeapp.config.BaseActivity<ActivityLoginBin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val onBoarding = MyApplication.prefUtil.getBoolean(ON_BOARDING, false)
+        if(!onBoarding){
+            onBoardingFragment = OnBoardingFragment()
+            supportFragmentManager.beginTransaction().add(R.id.onBoardingLayout, onBoardingFragment).commitAllowingStateLoss()
+        }
         setView()
 
         // viewModel의 Data를 Observe하는 이벤트 모음 함수

@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +37,7 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
             // 선택한 날짜 focus
             if(item.isSelectedDay == true){
                 selectedDayBinding = binding
-                binding.layoutDay.background = getDrawable(context, R.color.main_red_bg)
+                binding.layoutDay.background = getDrawable(context, R.color.main_red_light_bg)
                 binding.tvDailyPercentage.setTextColor(getColor(context, R.color.main_gray_light))
             }else{
                 if(item.exerciseDate == null){
@@ -79,7 +78,7 @@ class CalenderRvAdapter(val context: Context, listener: OnItemClick): RecyclerVi
 
                         selectedDayBinding.layoutDay.background = getDrawable(context, R.drawable.shape_edge_gray)
                         selectedDayBinding.tvDailyPercentage.setTextColor(getColor(context, R.color.main_red))
-                        binding.layoutDay.background = getDrawable(context, R.color.main_red_bg)
+                        binding.layoutDay.background = getDrawable(context, R.color.main_red_light_bg)
                         selectedDayBinding = binding
 
 
