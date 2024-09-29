@@ -27,8 +27,7 @@
 <img src="https://github.com/10000DOO/YouHaveTo/assets/57493546/516a690f-aae5-45b6-91dd-03e254d86ab0" width="200">
 <img src="https://github.com/10000DOO/YouHaveTo/assets/57493546/e42ec104-5716-4dd9-9f60-bd3f128f7f8c" width="200">
 ### Environment
-### 주요 적용 기술 및 구조
-### 백엔드
+### Environment
 - 프레임워크 : SpringBoot  
 - 주요 라이브러리 : Spring Security, SpringData JPA, spring-boot-starter-mail, Querydsl, jjwt  
 - 외부 API : 서울 열린데이터 광장  
@@ -44,7 +43,8 @@
 - 개발 언어 : Kotlin, C#
 - 개발 환경 : Window, Android   
 - 개발 도구 : Android Studio, Unity  
-- 협업 : Notion, Slack, Trello  
+- 협업 : Notion, Slack, Trello
+- 
 ## 구조
 <p align="center"><img src="https://user-images.githubusercontent.com/57493546/237001396-3e01c550-f99d-4b7d-86ac-e00a587139a8.png" alt="구조도"></p>
 
