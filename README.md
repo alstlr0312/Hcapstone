@@ -29,22 +29,22 @@
 ### Environment
 ### 주요 적용 기술 및 구조
 ### 백엔드
-프레임워크 : SpringBoot  
-주요 라이브러리 : Spring Security, SpringData JPA, spring-boot-starter-mail, Querydsl, jjwt  
-외부 API : 서울 열린데이터 광장  
-개발 언어 : JAVA   
-개발 환경 : Mac OS, Rocky Linux  
-개발 도구 : IntelliJ, Jenkins, Docker, Nginx  
-테스트 : Mockito, JUnit5  
-데이터 베이스 : Postgresql  
-협업 : Notion, Slack, trello  
+- 프레임워크 : SpringBoot  
+- 주요 라이브러리 : Spring Security, SpringData JPA, spring-boot-starter-mail, Querydsl, jjwt  
+- 외부 API : 서울 열린데이터 광장  
+- 개발 언어 : JAVA   
+- 개발 환경 : Mac OS, Rocky Linux  
+- 개발 도구 : IntelliJ, Jenkins, Docker, Nginx  
+- 테스트 : Mockito, JUnit5  
+- 데이터 베이스 : Postgresql  
+- 협업 : Notion, Slack, trello  
 ### 안드로이드
-주요 라이브러리 : Vuforia  
-외부 API : 네이버 지도  
-개발 언어 : Kotlin, C#
-개발 환경 : Window, Android   
-개발 도구 : Android Studio, Unity  
-협업 : Notion, Slack, Trello  
+- 주요 라이브러리 : Vuforia  
+- 외부 API : 네이버 지도  
+- 개발 언어 : Kotlin, C#
+- 개발 환경 : Window, Android   
+- 개발 도구 : Android Studio, Unity  
+- 협업 : Notion, Slack, Trello  
 ## 구조
 <p align="center"><img src="https://user-images.githubusercontent.com/57493546/237001396-3e01c550-f99d-4b7d-86ac-e00a587139a8.png" alt="구조도"></p>
 
